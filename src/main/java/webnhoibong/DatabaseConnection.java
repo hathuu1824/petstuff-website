@@ -19,7 +19,7 @@ public class DatabaseConnection {
         + "&serverTimezone=Asia/Ho_Chi_Minh"
         + "&useSSL=false&allowPublicKeyRetrieval=true";
     private static final String USER = "root";
-    private static final String PASS = "1234"; 
+    private static final String PASS = "your_password_here"; 
 
     public static Connection getConnection() {
         try {
