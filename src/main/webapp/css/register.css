@@ -1,0 +1,340 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 13 Sept 2025, 12:28:49 pm
+    Author     : hathuu24
+*/
+
+/* layout */
+display-flex, .display-flex, .display-flex-center,
+.signup-content, .social-login, .socials {
+    display: flex;
+    display: -webkit-flex;
+}
+list-type-ulli, .socials {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+:root {
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+body {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #222;
+    background: #f8f8f8 url("/2274820004_KieuHaThu/images/1323678.png") center / cover fixed no-repeat;
+    font-weight: 400;
+    font-family: var(--font-sans);
+}
+h2 {
+    line-height: 1.66;
+    margin: 0;
+    margin-bottom: 20px;
+    padding: 0;
+    font-weight: bold;
+    color: #4292dc;
+    font-family: var(--font-sans);
+    font-size: 36px;
+}
+p {
+    margin-bottom: 0;
+    font-size: 15px;
+    color: #777;
+}
+.container {
+    width: 900px;
+    background: #fff;
+    margin: 0 auto;
+    box-shadow: 0px 15px 16.83px 0.17px rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+}
+.main {
+    background: transparent;
+    padding: 50px 0;
+    padding-top: 100px;
+}
+.clear { 
+    clear: both; 
+}
+.display-flex {
+    justify-content: space-between;
+    align-items: center;
+}
+.display-flex-center {
+    justify-content: center;
+    align-items: center;
+}
+.position-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+input, select, textarea {
+    outline: none;
+    appearance: unset !important;
+}
+input:not([type="checkbox"]):not([type="radio"]) {
+    width: 100%;
+    display: block;
+    border: none;
+    border-bottom: 1px solid #999;
+    padding: 6px 30px;
+    font-family: var(--font-sans);
+    box-sizing: border-box;
+}
+input:not([type="checkbox"]):not([type="radio"]):focus {
+    border-bottom: 1px solid #222;
+}
+input::-webkit-input-placeholder, input::-moz-placeholder, 
+input:-ms-input-placeholder, input:-moz-placeholder { 
+    color: #999; 
+}
+input:focus::-webkit-input-placeholder, input:focus::-moz-placeholder,
+input:focus:-ms-input-placeholder, input:focus:-moz-placeholder { 
+    color: #222; 
+}
+.form-group {
+    position: relative;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+.form-group:last-child {
+    margin-bottom: 0;
+}
+label {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4292dc;
+}
+.form-remember {
+    margin-top: 6px;
+    overflow: visible;
+}
+.form-remember input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.label-agree-term {
+    position: static;
+    transform: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #222;
+    text-decoration: none;
+}
+.label-agree-term .box {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    background: #fff;
+    display: inline-block;
+}
+.form-remember input[type="checkbox"]:focus + .label-agree-term .box {
+    outline: 2px solid rgba(0, 0, 0, 0.25);
+    outline-offset: 2px;
+}
+.form-remember input[type="checkbox"]:checked + .label-agree-term .box {
+    background: #222;
+    box-shadow: inset 0 0 0 3px #fff;
+}
+.form-submit {
+    display: inline-block;
+    background: #6dabe4;
+    color: #fff;
+    border-bottom: none;
+    padding: 15px 39px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+.form-submit:hover {
+    background: #4292dc;
+}
+.form-remember + .form-submit,
+.form-remember + .form-group .form-submit,
+.form-remember + .form-button .form-submit {
+    margin-top: 8px; 
+}
+.social-login {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 40px;
+}
+.social-label {
+    display: inline-block;
+    margin-right: 0;
+    font-size: 15px;
+}
+.socials {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.socials a{
+    text-decoration: none;
+}
+.btn-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    transition: transform 0.2s ease;
+}
+.btn-social:hover {
+    transform: scale(1.05);
+}
+.btn-fb { 
+    background: #3b5998; 
+}
+.btn-tw { 
+    background: #1da0f2; 
+}
+.btn-go { 
+    background: #e72734; 
+}
+.btn-social i {
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+}
+.signup-form .form-remember + .form-submit { 
+    margin-top: 8px; 
+}
+.signup-form .form-remember + .form-group .form-submit { 
+    margin-top: 8px; 
+}
+.signup-form .form-remember + .form-button .form-submit { 
+    margin-top: 8px; 
+}
+@media (max-width: 1200px) {
+    .container {
+        width: calc(100% - 30px);
+        max-width: 100%;
+  }
+}
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+@media (max-width: 768px) {
+    .signup-content {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .signup-form {
+        margin: 0;
+        padding: 0 30px;
+    }
+    .signup-image {
+        margin: 50px 0 0;
+        order: 2;
+    }
+    .form-title {
+        text-align: center;
+    }
+}
+@media (max-width: 400px) {
+    .social-login {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .social-label {
+        margin-bottom: 0;
+    }
+}
+
+/* register */
+
+.signup {
+    margin-bottom: 50px;
+}
+.signup-content {
+    padding: 55px 0;
+}
+.signup-form, .signup-image {
+    width: 50%;
+    overflow: hidden;
+}
+.signup-form {
+    margin-left: 50px;
+    margin-right: 50px;
+    padding-left: 34px;
+}
+.signup-image {
+    margin: 0 45px;
+}
+.signup-image-link {
+    font-size: 14px;
+    color: #222;
+    display: block;
+    text-align: center;
+}
+.signup-image a {
+    text-decoration: none;
+    color: #1da0f2;
+    font-weight: 500;
+    font-size: 20px;
+    margin-left: 35px;
+}
+.signup-image a:hover{
+    text-decoration: none;
+    color: #4292dc;
+    font-weight: 500;
+    font-size: 20px;
+}
+.term-service {
+    font-size: 13px;
+    color: #222;
+}
+.form-group > .agree-term {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.form-group > .agree-term + .label-agree-term {
+    position: static !important;
+    transform: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #222;
+    text-decoration: none;
+}
+.form-group > .agree-term + .label-agree-term .box {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    background: #fff;
+    display: inline-block;
+}
+.form-group > .agree-term:focus + .label-agree-term .box { outline: 0; box-shadow: none; }
+.form-group > .agree-term:checked + .label-agree-term .box {
+    background: #222;
+    box-shadow: inset 0 0 0 3px #fff;
+}
+.signup-form .form-group > .agree-term + .label-agree-term,
+.signin-form .form-group > .agree-term + .label-agree-term { 
+    margin-bottom: 8px; 
+}

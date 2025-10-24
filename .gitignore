@@ -1,0 +1,27 @@
+# Java
+*.class
+*.log
+*.war
+*.ear
+
+# Maven target folder
+target/
+
+# NetBeans
+nbproject/private/
+build/
+dist/
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# System files
+.DS_Store
+Thumbs.db
