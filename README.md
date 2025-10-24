@@ -14,7 +14,7 @@
 
 ### Backend:
 - Java (JSP + Servlet)
-- JDBC (hoặc JPA nếu cấu hình)
+- JDBC
 - Maven
 - Apache Tomcat 10
 
