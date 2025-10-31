@@ -6,7 +6,7 @@
 - Hiển thị danh sách sản phẩm
 - Xem chi tiết sản phẩm
 - Kết nối cơ sở dữ liệu MySQL
-- Chạy trên Apache Tomcat
+- Chạy trên Apache Tomcat 10
 
 ---
 
@@ -44,6 +44,4 @@
 ```bash
 git clone https://github.com/hathuu1824/petstuff-website.git
 cd petstuff-website
-
-## Cấu trúc dự án:
 
