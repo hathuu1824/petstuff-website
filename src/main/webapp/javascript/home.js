@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function next(){ go(i + 1); }
 
     layout();
-    let timer = setInterval(next, 5000);
+    let timer = setInterval(next, 2500);
 
     dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.index); clearInterval(timer); timer = setInterval(next, 5000); }));
 

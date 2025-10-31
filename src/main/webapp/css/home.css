@@ -155,6 +155,10 @@ nav.container {
     list-style: none;
     border-bottom: 1px solid #d9f1f3;
 }
+.dd-toggle a{
+    text-decoration: none;
+    color: #fd7094;
+}
 .subnav-list > li > a, .dd-toggle {
     font-family: Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 800;
@@ -289,7 +293,7 @@ nav.container {
     box-shadow: 0 0 0 2px #fff, 0 3px 12px rgba(10,102,194,.5);
 }
 
-/*about us*/
+/* about us */
 
 .heading {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -415,7 +419,7 @@ nav.container {
     }
 }
 
-/*card*/
+/* card */
 
 .card-container {
     display: flex;
@@ -428,37 +432,65 @@ nav.container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .card {
-    width: 340px;
+    display: flex;
+    flex-direction: column;
+    width: 310px;
     height: 100%;
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     margin: 1.5rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12);
 }
 .card img {
+    flex: 0 0 250px;
     width: 100%;
+    height: 250px;
+    object-fit: cover;
 }
 .card-content {
     color: #3dade3;
-    padding: 16px;
+    padding: 16px 16px 8px 16px;
 }
 .card-content h3 {
     font-size: 28px;
     margin-bottom: 8px;
 }
 .card-content p {
-    font-size: 17px;
-    line-height: 1.25;
+    --lines: 2;          
+    --fz: 17px;          
+    --lh: 1.25;          
+    font-size: var(--fz);
+    line-height: var(--lh);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--lines);
+    overflow: hidden;
+    min-height: calc(var(--fz) * var(--lh) * var(--lines));
+    max-height: calc(var(--fz) * var(--lh) * var(--lines));
 }
-.card-content .btn {
+.card-button{
+    display: flex;
+    flex-direction: row;
+    margin-left: 17px;
+}
+.card-button .btn {
     display: inline-block;
     padding: 8px 16px;
     background-color: #a2d2ff;
     text-decoration: none;
     border-radius: 4px;
-    margin-top: 16px;
+    margin-bottom: 16px;
     color: white;
+    transition: background .2s ease;
+}
+.card-button .btn:hover {
+    background-color: #3dade3;
 }
 .button-container {
     width: 100%;
@@ -502,7 +534,7 @@ nav.container {
     }
 }
 
-/*location*/
+/* location */
 
 .review {
     padding: 0 20px;
@@ -595,7 +627,7 @@ footer {
 .footer-container {
     width: var(--container-w, min(1400px, 100%));
     margin-inline: auto;
-    padding: 50px 10px 30px 20px;
+    padding: 50px 10px 30px 0;
     display: grid;
     grid-template-columns: 3fr 1fr 1fr 1fr;
     gap: 28px;

@@ -50,9 +50,8 @@
                     <ul class="subnav-list">
                         <li><a href="trangchu">Trang chủ</a></li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button">Sản phẩm</button>
+                            <button class="dd-toggle" type="button"><a href="sanpham">Sản phẩm</a></button>
                             <ul class="dropdown">
-                                <li><a href="sanpham">Tất cả sản phẩm</a></li>
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
@@ -60,20 +59,15 @@
                             </ul>
                         </li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button">Bộ sưu tập</button>
+                            <button class="dd-toggle" type="button"><a href="bst">Bộ sưu tập</a></button>
                             <ul class="dropdown">
-                                <li><a href="#">Baby Three</a></li>
-                                <li><a href="#">Doraemon</a></li>
-                                <li><a href="#">Sanrio</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-                        <li class="has-dd">
-                            <button class="dd-toggle" type="button">Quà tặng</button>
-                            <ul class="dropdown">
-                                <li><a href="#">Khuyến mại</a></li>
-                                <li><a href="#">Set quà tặng</a></li>
-                            </ul>
-                        </li>
+                        <li><a href="discount">Khuyến mại</a></li>
                         <li><a href="#">Tin tức</a></li>
                     </ul>
                 </nav>
@@ -185,6 +179,8 @@
                         %>
                         <h3><%= giaFmt %></h3>
                         <p><%= p.get("tensp") %></p>
+                    </div>
+                    <div class="card-button">
                         <a href="detail.jsp?masp=<%= p.get("masp") %>" class="btn">Đặt hàng</a>
                     </div>
                 </div>
@@ -212,9 +208,10 @@
             </section>
         </main>
   
+        <!-- Liên hệ -->        
         <% String ctx = request.getContextPath(); %>
         <div class="floating-actions" aria-label="Quick actions">
-            <a class="fa-btn contact" href="<%= ctx %>/lienhe.jsp" title="Liên hệ" aria-label="Liên hệ">
+            <a class="fa-btn contact" href="<%= ctx %>/contact.jsp" title="Liên hệ" aria-label="Liên hệ">
                 <i class="fa-solid fa-phone"></i>
             </a>
             <a class="fa-btn chat" href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff" target="_blank" rel="noopener" title="Chatbot" aria-label="Chatbot">
@@ -234,11 +231,11 @@
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
                     <p><a href="#">Giới thiệu</a></p>
-                    <p><a href="#">Điều khoản dịch vụ</a></p>
+                    <p><a href="sanpham">Sản phẩm</a></p>
                 </div>
                 <div class="footer-contact">
                     <h4>Hỗ trợ</h4>
-                    <p><a href="#">Liên hệ</a></p>
+                    <p><a href="contact.jsp">Liên hệ</a></p>
                     <p><a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">Chatbot tư vấn</a></p>
                 </div>
                 <div class="footer-social">

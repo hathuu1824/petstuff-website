@@ -51,9 +51,8 @@
                     <ul class="subnav-list">
                         <li><a href="trangchu">Trang chủ</a></li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button">Sản phẩm</button>
+                            <button class="dd-toggle" type="button"><a href="sanpham">Sản phẩm</a></button>
                             <ul class="dropdown">
-                                <li><a href="sanpham">Tất cả sản phẩm</a></li>
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
@@ -61,24 +60,19 @@
                             </ul>
                         </li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button">Bộ sưu tập</button>
+                            <button class="dd-toggle" type="button"><a href="bst">Bộ sưu tập</a></button>
                             <ul class="dropdown">
-                                <li><a href="#">Baby Three</a></li>
-                                <li><a href="#">Doraemon</a></li>
-                                <li><a href="#">Sanrio</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-                        <li class="has-dd">
-                            <button class="dd-toggle" type="button">Quà tặng</button>
-                            <ul class="dropdown">
-                                <li><a href="#">Khuyến mại</a></li>
-                                <li><a href="#">Set quà tặng</a></li>
-                            </ul>
-                        </li>
+                        <li><a href="discount">Khuyến mại</a></li>
                         <li><a href="#">Tin tức</a></li>
                     </ul>
                 </nav>
-            </div>    
+            </div>        
         </header> 
 
         <%
@@ -167,6 +161,7 @@
                                 </button>
                                 <ul class="filter-list">
                                     <li><label><input type="checkbox" name="bst" value="babythree"   <%= bstSel.contains("babythree")   ? "checked" : "" %>> Baby Three</label></li>
+                                    <li><label><input type="checkbox" name="bst" value="capybara" <%= bstSel.contains("capybara")? "checked" : "" %>> Capybara</label></li>
                                     <li><label><input type="checkbox" name="bst" value="doraemon"    <%= bstSel.contains("doraemon")    ? "checked" : "" %>> Doraemon</label></li>
                                     <li><label><input type="checkbox" name="bst" value="sanrio" <%= bstSel.contains("sanrio")? "checked" : "" %>> Sanrio</label></li>
                                 </ul>
@@ -183,14 +178,14 @@
                                    java.math.BigDecimal price = (java.math.BigDecimal) p.get("giatien");
                                    String priceStr = (price != null) ? nf.format(price) : "";
                         %>
-                        <a class="p-card p-link" href="<%= ctx %>/chitiet?masp=<%= id %>">
+                        <a class="p-card p-link" href="<%= ctx %>/chitiet?id=<%= id %>">
                             <span class="p-thumb">
                                 <img src="images/<%= img %>" alt="<%= name %>" loading="lazy">
                             </span>
-                            <span class="p-title"><%= name %></span>
                             <span class="p-price">
                                 <%= priceStr %><span class="currency">đ</span>
                             </span>
+                            <span class="p-title"><%= name %></span>
                         </a>
                         <%     }
                            } else { %>

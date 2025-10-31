@@ -1,0 +1,185 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 16 Apr 2025, 2:07:51 pm
+    Author     : hathuu24
+*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+body{
+    background: url(/2274820004_KieuHaThu/images/1323678.png);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.container{
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    margin: 40px auto;
+    margin-top: 65px;
+    background-color: #ffffff;
+    border: 1px solid #ff8aa7;
+    border-radius: 10px;
+    padding: 40px 40px;
+}
+.left-column{
+    width: 45%;
+    padding: 10px;
+}
+.right-column{
+    width: 45%;
+    padding: 20px;
+    background-color: #fde9ff;
+    border-radius: 10px;
+}
+.contact{
+    color: #ff8aa7;
+    line-height: 1.5;
+}
+.contact h2{
+    font-size: 32px;
+    margin-top: 5px;
+}
+form{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+label{
+    display: block;
+    margin-top: 15px;
+    font-size: 20px;
+}
+input[type="text"],
+input[type="email"],
+textarea{
+    font-size: 18px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ff8aa7;
+    outline-color: #ff8aa7;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+textarea{
+    height: 100px;
+}
+button{
+    width: 125px;
+    display: inline-block;
+    color: #ff8aa7;
+    background-color: #ffbcd9;
+    font-size: 17px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.button-group button,
+.button-group .back {
+    padding: 10px 20px;
+    background-color: #fde9ff;
+    color: #ff8aa7;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+}
+.button-group button:hover, .button-group .back:hover{
+    background-color: #ff8aa7;
+    color: #ffffff;
+}
+.back{
+    margin-left: 20px;
+}
+.back a{
+    text-decoration: none;
+    color: #ff8aa7;
+}
+.back a:hover{
+    background-color: #ff8aa7;
+    color: #ffffff;
+}
+.content{
+    text-align: center;
+    padding: 10px;
+}
+.content h1{
+    font-size: 32px;
+    color: #ff8aa7;
+}
+.content p{
+    margin: 20px 0;
+    font-size: 20px;
+    line-height: 1.25;
+}
+.content h2{
+    margin-top: 20px;
+    color: #ff8aa7
+}
+.social-link{
+    margin-top: 15px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+}
+.social-link a{
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #ff8aa7;
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    transition: all 0.5s ease;
+}
+.social-link a:hover{
+    color: #ffffff;
+    background: white;
+}
+.social-link a[aria-label="Facebook"]:hover {
+    background: #1877f2;
+    color: #ffffff;
+}
+.social-link a[aria-label="TikTok"]:hover {
+    background: linear-gradient(135deg, #25F4EE 0%, #000 40%, #FE2C55 100%);
+    color: #ffffff;
+}
+.social-link a[aria-label="Instagram"]:hover {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    color: #ffffff;
+}
+.social-link a[aria-label="Twitter"]:hover {
+    background: #3dade3;
+    color: #ffffff;
+}
+@media screen and (max-width: 768px){
+    .container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .left-column{
+        width: 85%;
+    }
+    .right-column{
+        width: 85%;
+        margin-top: 25px;
+    }
+}
