@@ -113,6 +113,7 @@ public class ProductServlet extends HttpServlet {
         req.setAttribute("totalCount", totalCount);
 
         req.getRequestDispatcher("/product.jsp").forward(req, resp);
+        
     }
 
     private int parseInt(String s, int def) {
