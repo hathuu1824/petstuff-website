@@ -28,7 +28,6 @@
 
 ### Frontend:
 - JSP + HTML + CSS
-- Bootstrap (nếu có)
 - Ảnh + File tĩnh đặt trong `webapp/`
 
 ### Database:
