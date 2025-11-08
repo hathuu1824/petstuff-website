@@ -19,6 +19,30 @@
 CREATE DATABASE IF NOT EXISTS `nhoibong` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `nhoibong`;
 
+-- Dumping structure for table nhoibong.baiviet
+CREATE TABLE IF NOT EXISTS `baiviet` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `tieu_de` varchar(255) NOT NULL,
+  `tom_tat` text,
+  `noi_dung` longtext,
+  `anh_dai_dien` varchar(255) DEFAULT NULL,
+  `slug` varchar(200) DEFAULT NULL,
+  `noi_bat` tinyint(1) DEFAULT '0',
+  `kich_hoat` tinyint(1) DEFAULT '1',
+  `ngay_dang` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `slug` (`slug`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table nhoibong.baiviet: ~6 rows (approximately)
+INSERT INTO `baiviet` (`id`, `tieu_de`, `tom_tat`, `noi_dung`, `anh_dai_dien`, `slug`, `noi_bat`, `kich_hoat`, `ngay_dang`) VALUES
+	(1, 'Bộ sưu tập Baby Three chính thức ra mắt', 'Dòng sản phẩm “Baby Three” lấy cảm hứng từ nhân vật hoạt hình nổi tiếng, với thiết kế đáng yêu và chất liệu cao cấp.', 'Hôm nay, PetStuff chính thức ra mắt bộ sưu tập “Baby Three”. Sản phẩm được thiết kế bởi đội ngũ sáng tạo trong nước...', 'san-pham-1-1-1738991026-3249-1-2791-1254-1739035001.jpg', 'bo-suu-tap-baby-three', 1, 1, '2025-11-07 10:47:58'),
+	(2, 'Ưu đãi 20% dành cho khách hàng mới trong tháng 11', 'PetStuff triển khai chương trình ưu đãi đặc biệt: giảm 20% cho tất cả khách hàng mới khi mua lần đầu.', 'Từ ngày 1 đến 30/11, PetStuff gửi tặng mã giảm 20% cho tất cả đơn hàng đầu tiên. Áp dụng trên toàn bộ sản phẩm...', 'slide2.png', 'uu-dai-20-khach-hang-moi', 1, 1, '2025-11-07 10:47:58'),
+	(3, 'Workshop làm thú bông miễn phí tại Hà Nội', 'Sự kiện miễn phí giúp bạn tự tay tạo nên thú bông đáng yêu cùng PetStuff, diễn ra vào cuối tuần này.', 'Cuối tuần này, PetStuff phối hợp cùng CLB Handmade Việt tổ chức workshop làm thú nhồi bông miễn phí tại Nguyễn Chí Thanh...', 'workshop.jpg', 'workshop-thu-bong-ha-noi', 0, 1, '2025-11-07 10:47:58'),
+	(4, 'Mẹo giữ thú nhồi bông luôn mềm mại và thơm lâu', 'Chia sẻ 5 mẹo đơn giản để thú nhồi bông của bạn luôn như mới.', 'Thú nhồi bông sau thời gian sử dụng dễ bị bám bụi và mất mùi hương. PetStuff mách bạn 5 mẹo giữ thú bông mềm mại như mới...', 'fluffy-toy-texture-close-up_23-2149686894.avif', 'meo-giu-thu-bong-mem-mai', 0, 1, '2025-11-07 10:47:58'),
+	(5, 'PetStuff đồng hành cùng chiến dịch “Green Gift 2025”', 'Chương trình quyên góp thú bông cũ để tái chế tặng trẻ em vùng cao.', 'PetStuff khởi động chiến dịch “Green Gift 2025” nhằm lan tỏa thông điệp yêu thương và bảo vệ môi trường...', 'greengift.jpg', 'chien-dich-green-gift-2025', 0, 1, '2025-11-07 10:47:58'),
+	(6, 'Tổng hợp các mẫu thú bông bán chạy nhất 2024', 'Cùng xem qua top 5 mẫu thú bông được yêu thích nhất năm 2024 theo thống kê của PetStuff.', 'Trong năm 2024, PetStuff ghi nhận hơn 10.000 sản phẩm bán ra. Dưới đây là top 5 mẫu được yêu thích nhất...', 'top5-2024.jpg', 'thu-bong-ban-chay-2024', 0, 1, '2025-11-07 10:47:58');
+
 -- Dumping structure for table nhoibong.banners
 CREATE TABLE IF NOT EXISTS `banners` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -135,6 +159,24 @@ INSERT INTO `taikhoan` (`id`, `tendangnhap`, `matkhau`, `email`, `vaitro`) VALUE
 	(4, 'acc', '1234567', 'acc@gmail.com', 'user'),
 	(5, 'acctest', '12345678', 'acctest@gmail.com', 'user');
 
+-- Dumping structure for table nhoibong.tintuc_slider
+CREATE TABLE IF NOT EXISTS `tintuc_slider` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `anh_url` varchar(255) NOT NULL,
+  `tieu_de` varchar(255) DEFAULT NULL,
+  `lien_ket` varchar(255) DEFAULT NULL,
+  `thu_tu` int DEFAULT '0',
+  `kich_hoat` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table nhoibong.tintuc_slider: ~4 rows (approximately)
+INSERT INTO `tintuc_slider` (`id`, `anh_url`, `tieu_de`, `lien_ket`, `thu_tu`, `kich_hoat`) VALUES
+	(1, 'capyslide.jpg', 'Cập nhật bộ sưu tập Capybara siêu đáng yêu', 'tin?id=1', 1, 1),
+	(2, 'giamgia20.jpg', 'Khuyến mãi 20% cho khách hàng mới tuần này', 'tin?id=2', 2, 1),
+	(3, 'bb.webp', 'Ra mắt dòng thú nhồi bông “Baby Three” phiên bản giới hạn', 'tin?id=3', 3, 1),
+	(4, 'workshop.png', 'Workshop tặng thú bông miễn phí dành cho sinh viên', 'tin?id=4', 4, 1);
+
 -- Dumping structure for table nhoibong.tt_user
 CREATE TABLE IF NOT EXISTS `tt_user` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -182,12 +224,12 @@ CREATE TABLE IF NOT EXISTS `vouchers` (
 
 -- Dumping data for table nhoibong.vouchers: ~6 rows (approximately)
 INSERT INTO `vouchers` (`id`, `loai`, `ma`, `tieu_de`, `phan_tram`, `so_tien_giam`, `don_toi_thieu`, `giam_toi_da`, `het_han`, `san_pham_nhat_dinh`, `kich_hoat`, `thu_tu`, `ngay_tao`, `ngay_cap_nhat`) VALUES
-	(1, 'NHAP_MA', 'GIAM8', 'Giảm 8%', 8.00, 0, 169000, 20000, '2025-11-02 12:00:02', 0, 1, 1, '2025-10-31 05:00:02', '2025-10-31 06:56:32'),
-	(2, 'NHAP_MA', 'GIAM10', 'Giảm 10%', 10.00, 0, 50000, 100000, '2025-11-02 12:00:02', 0, 1, 2, '2025-10-31 05:00:02', '2025-10-31 06:56:29'),
-	(3, 'LUU', NULL, 'Giảm 5% đơn bất kỳ', 5.00, 0, 0, 20000, '2025-11-02 12:00:02', 0, 1, 3, '2025-10-31 05:00:02', '2025-10-31 07:51:15'),
-	(4, 'LUU', NULL, 'Giảm 10% đơn bất kỳ', 10.00, 0, 0, 55000, '2025-11-02 12:00:02', 0, 1, 4, '2025-10-31 05:00:02', '2025-10-31 07:51:38'),
-	(5, 'LUU', NULL, 'Giảm 50% đơn bất kỳ', 50.00, 0, 0, 25000, '2025-11-02 12:00:02', 1, 1, 5, '2025-10-31 05:00:02', '2025-10-31 07:51:24'),
-	(6, 'LUU', NULL, 'Giảm 50.000đ cho đơn bất kỳ', 0.00, 50000, 0, 50000, '2025-11-02 12:00:02', 1, 1, 6, '2025-10-31 05:00:02', '2025-10-31 07:50:53');
+	(1, 'NHAP_MA', 'GIAM8', 'Giảm 8%', 8.00, 0, 169000, 20000, '2025-11-20 12:00:02', 0, 1, 1, '2025-10-31 05:00:02', '2025-11-06 08:24:07'),
+	(2, 'NHAP_MA', 'GIAM10', 'Giảm 10%', 10.00, 0, 50000, 100000, '2025-11-20 12:00:02', 0, 1, 2, '2025-10-31 05:00:02', '2025-11-06 08:24:03'),
+	(3, 'LUU', NULL, 'Giảm 5% đơn bất kỳ', 5.00, 0, 0, 20000, '2025-11-20 12:00:02', 0, 1, 3, '2025-10-31 05:00:02', '2025-11-06 08:24:00'),
+	(4, 'LUU', NULL, 'Giảm 10% đơn bất kỳ', 10.00, 0, 0, 55000, '2025-11-20 12:00:02', 0, 1, 4, '2025-10-31 05:00:02', '2025-11-06 08:23:57'),
+	(5, 'LUU', NULL, 'Giảm 50% đơn bất kỳ', 50.00, 0, 0, 25000, '2025-11-20 12:00:02', 1, 1, 5, '2025-10-31 05:00:02', '2025-11-06 08:23:53'),
+	(6, 'LUU', NULL, 'Giảm 50.000đ cho đơn bất kỳ', 0.00, 50000, 0, 50000, '2025-11-20 12:00:02', 1, 1, 6, '2025-10-31 05:00:02', '2025-11-06 08:23:48');
 
 -- Dumping structure for trigger nhoibong.trg_taikhoan_email_to_ttuser
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
