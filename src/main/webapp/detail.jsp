@@ -125,8 +125,7 @@
                     </div>
                 </div>
                     
-                <div class="product-details"
-                        data-order-id="<%= orderId %>"
+                <div class="product-details">
                         data-bank-code="VCB"
                         data-bank-account="0123456789"
                         data-account-name="CONG TY PETSTUFF"
