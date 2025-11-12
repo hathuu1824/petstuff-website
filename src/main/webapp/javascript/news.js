@@ -142,13 +142,3 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.hidden) stopTimer(); else startTimer();
   });
 });
-
-//Tạo map
-window.addEventListener('load', function(){
-    var iframe = document.querySelector('.review .loc-map iframe');
-    if(!iframe) return;
-    var address = '68 Đ. Nguyễn Chí Thanh, Láng Thượng, Đống Đa, Hà Nội, Việt Nam';
-    iframe.src = 'https://www.google.com/maps?q=' + encodeURIComponent(address) + '&hl=vi&z=16&output=embed';
-    if(!iframe.hasAttribute('width')) iframe.setAttribute('width','100%');
-    if(!iframe.hasAttribute('height')) iframe.setAttribute('height','420');
-});
