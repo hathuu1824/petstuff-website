@@ -26,22 +26,22 @@ CREATE TABLE IF NOT EXISTS `baiviet` (
   `tom_tat` text,
   `noi_dung` longtext,
   `anh_dai_dien` varchar(255) DEFAULT NULL,
-  `slug` varchar(200) DEFAULT NULL,
   `noi_bat` tinyint(1) DEFAULT '0',
   `kich_hoat` tinyint(1) DEFAULT '1',
+  `hien_slide` tinyint(1) NOT NULL DEFAULT '0',
+  `thu_tu` int DEFAULT NULL,
   `ngay_dang` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `slug` (`slug`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table nhoibong.baiviet: ~6 rows (approximately)
-INSERT INTO `baiviet` (`id`, `tieu_de`, `tom_tat`, `noi_dung`, `anh_dai_dien`, `slug`, `noi_bat`, `kich_hoat`, `ngay_dang`) VALUES
-	(1, 'Bộ sưu tập Baby Three chính thức ra mắt', 'Dòng sản phẩm “Baby Three” lấy cảm hứng từ nhân vật hoạt hình nổi tiếng, với thiết kế đáng yêu và chất liệu cao cấp.', 'Hôm nay, PetStuff chính thức ra mắt bộ sưu tập “Baby Three”. Sản phẩm được thiết kế bởi đội ngũ sáng tạo trong nước...', 'san-pham-1-1-1738991026-3249-1-2791-1254-1739035001.jpg', 'bo-suu-tap-baby-three', 1, 1, '2025-11-07 10:47:58'),
-	(2, 'Ưu đãi 20% dành cho khách hàng mới trong tháng 11', 'PetStuff triển khai chương trình ưu đãi đặc biệt: giảm 20% cho tất cả khách hàng mới khi mua lần đầu.', 'Từ ngày 1 đến 30/11, PetStuff gửi tặng mã giảm 20% cho tất cả đơn hàng đầu tiên. Áp dụng trên toàn bộ sản phẩm...', 'slide2.png', 'uu-dai-20-khach-hang-moi', 1, 1, '2025-11-07 10:47:58'),
-	(3, 'Workshop làm thú bông miễn phí tại Hà Nội', 'Sự kiện miễn phí giúp bạn tự tay tạo nên thú bông đáng yêu cùng PetStuff, diễn ra vào cuối tuần này.', 'Cuối tuần này, PetStuff phối hợp cùng CLB Handmade Việt tổ chức workshop làm thú nhồi bông miễn phí tại Nguyễn Chí Thanh...', 'workshop.jpg', 'workshop-thu-bong-ha-noi', 0, 1, '2025-11-07 10:47:58'),
-	(4, 'Mẹo giữ thú nhồi bông luôn mềm mại và thơm lâu', 'Chia sẻ 5 mẹo đơn giản để thú nhồi bông của bạn luôn như mới.', 'Thú nhồi bông sau thời gian sử dụng dễ bị bám bụi và mất mùi hương. PetStuff mách bạn 5 mẹo giữ thú bông mềm mại như mới...', 'fluffy-toy-texture-close-up_23-2149686894.avif', 'meo-giu-thu-bong-mem-mai', 0, 1, '2025-11-07 10:47:58'),
-	(5, 'PetStuff đồng hành cùng chiến dịch “Green Gift 2025”', 'Chương trình quyên góp thú bông cũ để tái chế tặng trẻ em vùng cao.', 'PetStuff khởi động chiến dịch “Green Gift 2025” nhằm lan tỏa thông điệp yêu thương và bảo vệ môi trường...', 'greengift.jpg', 'chien-dich-green-gift-2025', 0, 1, '2025-11-07 10:47:58'),
-	(6, 'Tổng hợp các mẫu thú bông bán chạy nhất 2024', 'Cùng xem qua top 5 mẫu thú bông được yêu thích nhất năm 2024 theo thống kê của PetStuff.', 'Trong năm 2024, PetStuff ghi nhận hơn 10.000 sản phẩm bán ra. Dưới đây là top 5 mẫu được yêu thích nhất...', 'top5-2024.jpg', 'thu-bong-ban-chay-2024', 0, 1, '2025-11-07 10:47:58');
+INSERT INTO `baiviet` (`id`, `tieu_de`, `tom_tat`, `noi_dung`, `anh_dai_dien`, `noi_bat`, `kich_hoat`, `hien_slide`, `thu_tu`, `ngay_dang`) VALUES
+	(1, 'Bộ sưu tập Baby Three chính thức ra mắt', 'Dòng sản phẩm “Baby Three” lấy cảm hứng từ nhân vật hoạt hình nổi tiếng, với thiết kế đáng yêu và chất liệu cao cấp.', 'Hôm nay, PetStuff chính thức ra mắt bộ sưu tập “Baby Three”. Sản phẩm được thiết kế bởi đội ngũ sáng tạo trong nước...', 'bb3-400.jpg', 1, 1, 1, 3, '2025-11-07 10:47:58'),
+	(2, 'Ưu đãi 20% dành cho khách hàng mới trong tháng 11', 'PetStuff triển khai chương trình ưu đãi đặc biệt: giảm 20% cho tất cả khách hàng mới khi mua lần đầu.', 'Từ ngày 1 đến 30/11, PetStuff gửi tặng mã giảm 20% cho tất cả đơn hàng đầu tiên. Áp dụng trên toàn bộ sản phẩm...', 'giamgia20.jpg', 1, 1, 1, 2, '2025-11-07 10:47:58'),
+	(3, 'Workshop làm thú bông miễn phí tại Hà Nội', 'Sự kiện miễn phí giúp bạn tự tay tạo nên thú bông đáng yêu cùng PetStuff, diễn ra vào cuối tuần này.', 'Cuối tuần này, PetStuff phối hợp cùng CLB Handmade Việt tổ chức workshop làm thú nhồi bông miễn phí tại Nguyễn Chí Thanh...', 'workshop.png', 0, 1, 1, 4, '2025-11-07 10:47:58'),
+	(4, 'Mẹo giữ thú nhồi bông luôn mềm mại và thơm lâu', 'Chia sẻ 5 mẹo đơn giản để thú nhồi bông của bạn luôn như mới.', 'Thú nhồi bông sau thời gian sử dụng dễ bị bám bụi và mất mùi hương. PetStuff mách bạn 5 mẹo giữ thú bông mềm mại như mới...', 'capyslide.jpg', 0, 1, 0, NULL, '2025-11-07 10:47:58'),
+	(5, 'PetStuff đồng hành cùng chiến dịch “Green Gift 2025”', 'Chương trình quyên góp thú bông cũ để tái chế tặng trẻ em vùng cao.', 'PetStuff khởi động chiến dịch “Green Gift 2025” nhằm lan tỏa thông điệp yêu thương và bảo vệ môi trường...', 'volunteer.jpg', 0, 1, 0, NULL, '2025-11-07 10:47:58'),
+	(6, 'Tổng hợp các mẫu thú bông bán chạy nhất 2024', 'Cùng xem qua top 5 mẫu thú bông được yêu thích nhất năm 2024 theo thống kê của PetStuff.', 'Trong năm 2024, PetStuff ghi nhận hơn 10.000 sản phẩm bán ra. Dưới đây là top 5 mẫu được yêu thích nhất...', 'fluffy-toy-texture-close-up_23-2149686894.avif', 0, 1, 1, 1, '2025-11-07 10:47:58');
 
 -- Dumping structure for table nhoibong.banners
 CREATE TABLE IF NOT EXISTS `banners` (
@@ -61,41 +61,6 @@ INSERT INTO `banners` (`id`, `url_anh`, `an_hien`, `thu_tu`, `banner_anh`, `hien
 	(3, 'slide2.png', 1, 3, 'doremon.png', 1),
 	(4, 'slide1.png', 1, 4, 'sanrioo.png', 1);
 
--- Dumping structure for table nhoibong.donhang
-CREATE TABLE IF NOT EXISTS `donhang` (
-  `madon` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `taikhoan_id` int DEFAULT NULL,
-  `masp` int NOT NULL,
-  `tennguoinhan` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `sdt` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `diachi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `soluong` int NOT NULL DEFAULT '1',
-  `phisp` int NOT NULL DEFAULT '0',
-  `phiship` int NOT NULL DEFAULT '0',
-  `giamgia` int NOT NULL DEFAULT '0',
-  `tongtien` int NOT NULL DEFAULT '0',
-  `tiendoisoat` int NOT NULL DEFAULT '0',
-  `phuongthuc` enum('COD','BANK') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'BANK',
-  `trangthai` enum('PENDING','PAID','CANCELLED','FAILED') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PENDING',
-  `manh` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `stk` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tenctk` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `noidung` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `magiaodich` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `thoigianthanhtoan` datetime DEFAULT NULL,
-  `thoigianhuy` datetime DEFAULT NULL,
-  `ngaytao` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ngaycapnhat` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`madon`),
-  KEY `idx_taikhoan` (`taikhoan_id`),
-  KEY `idx_masp` (`masp`),
-  KEY `idx_trangthai_tien` (`trangthai`,`tiendoisoat`,`ngaytao`),
-  CONSTRAINT `fk_donhang_sanpham` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_donhang_tt_user` FOREIGN KEY (`taikhoan_id`) REFERENCES `tt_user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dumping data for table nhoibong.donhang: ~0 rows (approximately)
-
 -- Dumping structure for table nhoibong.giamgia
 CREATE TABLE IF NOT EXISTS `giamgia` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -107,18 +72,28 @@ CREATE TABLE IF NOT EXISTS `giamgia` (
   `ngay_tao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `ngay_cap_nhat` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table nhoibong.giamgia: ~2 rows (approximately)
+-- Dumping data for table nhoibong.giamgia: ~3 rows (approximately)
 INSERT INTO `giamgia` (`id`, `anh_url`, `tieu_de`, `link`, `thu_tu`, `kich_hoat`, `ngay_tao`, `ngay_cap_nhat`) VALUES
 	(1, 'slide2.png', 'TƯNG BỪNG MỪNG KHAI TRƯƠNG', 'sanpham?sort=discount', 1, 1, '2025-10-30 08:56:22', '2025-10-30 09:35:24'),
-	(2, 'slide1.png', 'SIÊU SALE CUỐI NĂM', 'sanpham?deal=plus400', 2, 1, '2025-10-30 08:56:22', '2025-10-30 09:35:30');
+	(2, 'slide1.png', 'SIÊU SALE CUỐI NĂM', 'sanpham?deal=plus400', 2, 1, '2025-10-30 08:56:22', '2025-10-30 09:35:30'),
+	(3, 'slide4.png', 'ƯU ĐÃI MỚI CẬP NHẬT', NULL, 3, 1, '2025-11-11 10:18:00', '2025-11-11 10:18:00');
 
 -- Dumping structure for table nhoibong.sanpham
 CREATE TABLE IF NOT EXISTS `sanpham` (
   `masp` int NOT NULL AUTO_INCREMENT,
   `tensp` varchar(255) NOT NULL,
   `giatien` decimal(12,2) NOT NULL,
+  `giakm` decimal(12,2) DEFAULT NULL,
+  `giam_pt` tinyint unsigned DEFAULT NULL,
+  `giam_tien` decimal(12,2) DEFAULT NULL,
+  `km_tu` datetime DEFAULT NULL,
+  `km_den` datetime DEFAULT NULL,
+  `bogo` tinyint(1) NOT NULL DEFAULT '0',
+  `qua_moi_don` tinyint(1) NOT NULL DEFAULT '0',
+  `uu_tien` int DEFAULT NULL,
+  `kich_hoat` tinyint(1) NOT NULL DEFAULT '1',
   `mota` text,
   `anhsp` varchar(255) DEFAULT NULL,
   `noibat` tinyint NOT NULL DEFAULT '0',
@@ -128,16 +103,16 @@ CREATE TABLE IF NOT EXISTS `sanpham` (
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table nhoibong.sanpham: ~9 rows (approximately)
-INSERT INTO `sanpham` (`masp`, `tensp`, `giatien`, `mota`, `anhsp`, `noibat`, `bst`, `loai`) VALUES
-	(1, 'Gấu bông có kèm chăn', 90000.00, 'Chăn gối văn phòng 3 trong 1', 'c5c9e4e3dfeece6a7f9aaac418e1086e.jfif', 0, 'khong', 'changoi'),
-	(2, 'Thú nhồi bông Sanrio', 105000.00, 'Thú nhồi bông Sanrio (Kuromi, Cinnamoroll, MyMelody,...) lông mịn', '20230116_G5nEiVQo5U5UQaRo.jpg', 1, 'sanrio', 'tnb'),
-	(3, 'Móc khóa gấu trúc đỏ dễ thương', 65000.00, 'Móc khóa gấu trúc đỏ nhồi bông kéo được đuôi dễ thương', 'sg-11134201-7ren6-m1qdnfz1sgug03.jfif', 1, 'khong', 'mockhoa'),
-	(4, 'Thú nhồi bông Doraemon mặc trang phục Rock cỡ vừa', 110500.00, 'Thú nhồi bông Doraemon mặc trang phục Rock cỡ vừa', 'images.jfif', 0, 'doraemon', 'tnb'),
-	(5, 'Gấu bông trắng cỡ lớn kèm gấu cỡ nhỏ', 120000.00, 'Gấu bông trắng đeo nơ cổ cỡ lớn kèm gấu trắng cỡ nhỏ', 'gau-bong-dep-tn.jpg', 1, 'khong', 'tnb'),
-	(6, 'Thú nhồi bông Capybara gõ mõ', 85000.00, 'Thú nhồi bông Capybara gõ mõ ngộ nghĩnh - Size 35cm', '4384959201a0a8bfeec9dff8f1e6e8c6.jpeg', 0, 'capybara', 'tnb'),
-	(7, 'Dây buộc rèm gắn hình thú', 55000.00, 'Dây buộc rèm gắn hình thú nhồi bông đáng yêu', 'Day-buoc-rem-gan-hinh-thu-nhoi-bong-dang-yeu-FSH7454-14.jpg', 0, 'khong', 'khac'),
-	(8, 'Thú nhồi bông Baby Three', 195500.00, 'Thú nhồi bông Baby Three với các loại mắt khác nhau', 'san-pham-1-1-1738991026-3249-1-2791-1254-1739035001.jpg', 0, 'babythree', 'tnb'),
-	(9, 'Thú nhồi bông bạch tuộc 2 cảm xúc', 130000.00, 'Thú nhồi bông bạch tuộc 2 cảm xúc lông mịn 3D nhiều kích thước', 'unnamed.jpg', 1, 'khong', 'tnb');
+INSERT INTO `sanpham` (`masp`, `tensp`, `giatien`, `giakm`, `giam_pt`, `giam_tien`, `km_tu`, `km_den`, `bogo`, `qua_moi_don`, `uu_tien`, `kich_hoat`, `mota`, `anhsp`, `noibat`, `bst`, `loai`) VALUES
+	(1, 'Gấu bông có kèm chăn', 90000.00, NULL, NULL, 25000.00, NULL, NULL, 0, 0, NULL, 1, 'Chăn gối văn phòng 3 trong 1', 'c5c9e4e3dfeece6a7f9aaac418e1086e.jfif', 0, 'khong', 'changoi'),
+	(2, 'Thú nhồi bông Sanrio', 105000.00, NULL, 50, NULL, NULL, NULL, 0, 0, 1, 1, 'Thú nhồi bông Sanrio (Kuromi, Cinnamoroll, MyMelody,...) lông mịn', '20230116_G5nEiVQo5U5UQaRo.jpg', 1, 'sanrio', 'tnb'),
+	(3, 'Móc khóa gấu trúc đỏ dễ thương', 65000.00, NULL, NULL, 15000.00, NULL, NULL, 0, 0, 2, 1, 'Móc khóa gấu trúc đỏ nhồi bông kéo được đuôi dễ thương', 'sg-11134201-7ren6-m1qdnfz1sgug03.jfif', 1, 'khong', 'mockhoa'),
+	(4, 'Thú nhồi bông Doraemon mặc trang phục Rock cỡ vừa', 110500.00, NULL, 50, NULL, NULL, NULL, 0, 0, 3, 1, 'Thú nhồi bông Doraemon mặc trang phục Rock cỡ vừa', 'images.jfif', 0, 'doraemon', 'tnb'),
+	(5, 'Gấu bông trắng cỡ lớn kèm gấu cỡ nhỏ', 120000.00, 100000.00, NULL, NULL, NULL, NULL, 0, 0, 4, 1, 'Gấu bông trắng đeo nơ cổ cỡ lớn kèm gấu trắng cỡ nhỏ', 'gau-bong-dep-tn.jpg', 1, 'khong', 'tnb'),
+	(6, 'Thú nhồi bông Capybara gõ mõ', 85000.00, NULL, 50, NULL, NULL, NULL, 0, 0, 5, 1, 'Thú nhồi bông Capybara gõ mõ ngộ nghĩnh - Size 35cm', '4384959201a0a8bfeec9dff8f1e6e8c6.jpeg', 0, 'capybara', 'tnb'),
+	(7, 'Dây buộc rèm gắn hình thú', 55000.00, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 1, 'Dây buộc rèm gắn hình thú nhồi bông đáng yêu', 'Day-buoc-rem-gan-hinh-thu-nhoi-bong-dang-yeu-FSH7454-14.jpg', 0, 'khong', 'khac'),
+	(8, 'Thú nhồi bông Baby Three', 195500.00, NULL, 50, NULL, NULL, NULL, 0, 0, 6, 1, 'Thú nhồi bông Baby Three với các loại mắt khác nhau', 'san-pham-1-1-1738991026-3249-1-2791-1254-1739035001.jpg', 0, 'babythree', 'tnb'),
+	(9, 'Thú nhồi bông bạch tuộc 2 cảm xúc', 130000.00, 95000.00, NULL, NULL, NULL, NULL, 0, 0, 7, 1, 'Thú nhồi bông bạch tuộc 2 cảm xúc lông mịn 3D nhiều kích thước', 'unnamed.jpg', 1, 'khong', 'tnb');
 
 -- Dumping structure for table nhoibong.taikhoan
 CREATE TABLE IF NOT EXISTS `taikhoan` (
@@ -158,24 +133,6 @@ INSERT INTO `taikhoan` (`id`, `tendangnhap`, `matkhau`, `email`, `vaitro`) VALUE
 	(3, 'suabien', 'suabien', 'suabien@gmail.com', 'user'),
 	(4, 'acc', '1234567', 'acc@gmail.com', 'user'),
 	(5, 'acctest', '12345678', 'acctest@gmail.com', 'user');
-
--- Dumping structure for table nhoibong.tintuc_slider
-CREATE TABLE IF NOT EXISTS `tintuc_slider` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `anh_url` varchar(255) NOT NULL,
-  `tieu_de` varchar(255) DEFAULT NULL,
-  `lien_ket` varchar(255) DEFAULT NULL,
-  `thu_tu` int DEFAULT '0',
-  `kich_hoat` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Dumping data for table nhoibong.tintuc_slider: ~4 rows (approximately)
-INSERT INTO `tintuc_slider` (`id`, `anh_url`, `tieu_de`, `lien_ket`, `thu_tu`, `kich_hoat`) VALUES
-	(1, 'capyslide.jpg', 'Cập nhật bộ sưu tập Capybara siêu đáng yêu', 'tin?id=1', 1, 1),
-	(2, 'giamgia20.jpg', 'Khuyến mãi 20% cho khách hàng mới tuần này', 'tin?id=2', 2, 1),
-	(3, 'bb.webp', 'Ra mắt dòng thú nhồi bông “Baby Three” phiên bản giới hạn', 'tin?id=3', 3, 1),
-	(4, 'workshop.png', 'Workshop tặng thú bông miễn phí dành cho sinh viên', 'tin?id=4', 4, 1);
 
 -- Dumping structure for table nhoibong.tt_user
 CREATE TABLE IF NOT EXISTS `tt_user` (
