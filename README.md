@@ -12,6 +12,10 @@
 - Hiển thị thanh trượt các chương trình giảm giá đang diễn ra
 - Hiển thị danh sách bộ sưu tập cùng hình ảnh và mô tả sản phẩm liên quan
 - Cho phép xem chi tiết từng bộ sưu tập theo chủ đề
+- Hỗ trợ quản lý khuyến mãi và voucher, hiển thị chi tiết mức giảm, điều kiện áp dụng và hạn sử dụng
+- Trang voucher hiển thị danh sách mã giảm giá chia theo loại nhập tay và lưu, kèm mức giảm, điều kiện áp dụng, hạn dùng và cho phép người dùng nhập hoặc lưu mã để sử dụng
+- Trang khuyến mãi có thanh trượt động hiển thị các chương trình giảm giá đang diễn ra
+- Trang tin tức đã có khung hiển thị danh sách bài viết và hình ảnh minh họa, chờ bổ sung nội dung
 - Cung cấp giao diện liên hệ với thông tin cửa hàng và khung gửi phản hồi
 - Kết nối cơ sở dữ liệu MySQL
 - Chạy trên Apache Tomcat 10
