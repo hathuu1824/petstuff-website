@@ -1,6 +1,6 @@
 <%-- 
-    Document   : gift
-    Created on : 29 Oct 2025, 10:38:05 am
+    Document   : voucher
+    Created on : 31 Oct 2025, 10:26:10 am
     Author     : hathuu24
 --%>
 <%@page import="java.util.List"%>
@@ -10,10 +10,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="css/discount.css">
+        <link rel="stylesheet" href="css/voucher.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <title>Khuyến mại</title>
+        <title>Voucher</title>
     </head>
     <body>
         <%
@@ -71,22 +71,111 @@
                     </ul>
                 </nav>
             </div>    
-        </header> 
-                            
+        </header>
+                   
+        <%
+            String ctx = request.getContextPath();
+        %>                    
         <main class="main">
-            <!-- Banner chính -->
-            <div class="banner">
-                <% String ctx = request.getContextPath(); %>
-                <img src="<%= ctx %>/images/gift.png" alt="Banner" />
-            </div>
-            
-            <!-- Voucher -->
+            <!-- Voucher giới hạn -->
             <section class="voucher-wrap">
-                <h1 class="heading">VOUCHER</h1>
-                <!-- Banner voucher -->
-                <div class="banner">
-                    <img src="<%= ctx %>/images/voucher.png" alt="Banner" />
-                </div>
+                <h1 class="heading">VOUCHER GIỚI HẠN</h1>
+                <div class="voucher-scroller" id="voucherScroller">
+                    <%
+                      @SuppressWarnings("unchecked")
+                      List<Map<String,Object>> limited =
+                          (List<Map<String,Object>>) request.getAttribute("limited");
+
+                      if (limited != null && !limited.isEmpty()) {
+                        for (Map<String,Object> v : limited) {
+                          String loai  = String.valueOf(v.get("loai"));
+                          String ma    = String.valueOf(v.get("ma"));
+                          boolean badge = Boolean.TRUE.equals(v.get("badge"));
+                    %>
+                          <article class="coupon">
+                            <div class="coupon-left">
+                              <h3 class="coupon-title"><%= v.get("title") %></h3>
+                              <p class="coupon-sub"><%= v.get("sub") %></p>
+                              <p class="coupon-exp"><%= v.get("exp") %></p>
+                            </div>
+
+                            <div class="coupon-sep"></div>
+
+                            <div class="coupon-right">
+                              <%-- Nếu là voucher nhập mã: hiện chính cái mã để người dùng copy/áp dụng --%>
+                              <% if ("NHAP_MA".equals(loai)) { %>
+                                <button class="btn-save" type="button">
+                                  <%= (ma == null || "null".equalsIgnoreCase(ma)) ? "NHẬP MÃ" : ma %>
+                                </button>
+                              <% } else { %>
+                                <%-- Nếu là voucher “LƯU”: gửi id về /claim-voucher --%>
+                                <form method="post" action="<%= request.getContextPath() %>/claim-voucher">
+                                  <input type="hidden" name="id" value="<%= v.get("id") %>">
+                                  <button class="btn-save" type="submit">Lưu</button>
+                                </form>
+                              <% } %>
+
+                              <% if (badge) { %>
+                                <span class="badge-outline">Sản phẩm nhất định</span>
+                              <% } %>
+                            </div>
+
+                            <span class="coupon-edge left"></span>
+                            <span class="coupon-edge right"></span>
+                          </article>
+                    <%
+                        } // end for
+                      } else {
+                    %>
+                        <article class="coupon is-empty">
+                          <div class="coupon-left">
+                            <h3 class="coupon-title">Đang cập nhật voucher</h3>
+                            <p class="coupon-sub">Vui lòng quay lại sau</p>
+                            <p class="coupon-exp"></p>
+                          </div>
+                          <div class="coupon-sep"></div>
+                          <div class="coupon-right">
+                            <button class="btn-save" type="button" disabled>Không có</button>
+                          </div>
+                          <span class="coupon-edge left"></span>
+                          <span class="coupon-edge right"></span>
+                        </article>
+                    <%
+                      }
+                    %>
+                  </div>
+                  <button class="v-nav v-prev" type="button" aria-label="Prev">‹</button>
+                  <button class="v-nav v-next" type="button" aria-label="Next">›</button>
+            </section>
+            
+            <!-- Tất cả voucher -->
+            <div class="all-voucher">
+                <h1 class="heading">TẤT CẢ VOUCHER</h1>
+                <!-- Nhập mã voucher -->
+                <section class="voucher-input-wrap">
+                    <form id="voucherForm" class="voucher-input" method="post" action="<%= ctx %>/claim-voucher">
+                        <i class="fa-solid fa-ticket"></i>
+                        <input
+                            type="text"
+                            id="voucherCode"
+                            name="code"
+                            maxlength="24"
+                            autocomplete="off"
+                            spellcheck="false"
+                            placeholder="Nhập mã voucher (ví dụ: PET20, WELCOME...)">
+                        <button class="v-btn" type="submit">Áp dụng</button>
+                    </form>
+                    <%
+                        String claimMsg  = (String) request.getAttribute("claimMsg");   // thông báo
+                        String claimType = (String) request.getAttribute("claimType");  // "success" | "error"
+                        if (claimMsg != null) {
+                    %>
+                        <div class="v-alert <%= "success".equalsIgnoreCase(claimType) ? "ok" : "err" %>">
+                            <%= claimMsg %>
+                        </div>
+                    <% } %>
+                </section>
+                <!-- Lưu voucher -->
                 <div class="voucher-list" id="voucherList">
                     <%
                         List<Map<String,Object>> vouchers =
@@ -105,17 +194,17 @@
                             </div>
                             <div class="coupon-sep"></div>
                             <div class="coupon-right">
-                                <% if ("NHAP_MA".equals(loai)) { %>
-                                      <button class="btn-save" type="button"><%= (ma == null ? "NHẬP MÃ" : ma) %></button>
-                                <% } else { %>
-                                      <form method="post" action="<%= request.getContextPath() %>/claim-voucher">
-                                          <input type="hidden" name="id" value="<%= v.get("id") %>">
-                                          <button class="btn-save" type="submit">Lưu</button>
-                                      </form>
-                                <% } %>
-                                <% if (badge) { %>
-                                      <span class="badge-outline">Sản phẩm nhất định</span>
-                                <% } %>
+                              <% if ("NHAP_MA".equals(loai)) { %>
+                                    <button class="btn-save" type="button"><%= (ma == null ? "NHẬP MÃ" : ma) %></button>
+                              <% } else { %>
+                                    <form method="post" action="<%= request.getContextPath() %>/claim-voucher">
+                                        <input type="hidden" name="id" value="<%= v.get("id") %>">
+                                        <button class="btn-save" type="submit">Lưu</button>
+                                    </form>
+                              <% } %>
+                              <% if (badge) { %>
+                                    <span class="badge-outline">Sản phẩm nhất định</span>
+                              <% } %>
                             </div>
                             <span class="coupon-edge left"></span>
                             <span class="coupon-edge right"></span>
@@ -128,88 +217,30 @@
                     <%
                         }
                     %>
-                </div>
-                <div class="button-container">
-                    <a href="voucher" class="view-btn">Xem tất cả</a>
-                </div>
-            </section>
-            
-            <!-- Khuyến mại -->
-            <div class="discount-container">
-                <h1 class="heading">KHUYẾN MẠI</h1>
-                <!-- Banner khuyến mại -->
-                <div class="banner">
-                    <img src="<%= ctx %>/images/discounts.png" alt="Banner" />
-                </div>
-                <%
-                    java.util.List<java.util.Map<String,Object>> promos =
-                        (java.util.List<java.util.Map<String,Object>>) request.getAttribute("promos");
+                    <%
+                    int pg  = (request.getAttribute("page")       != null) ? (Integer) request.getAttribute("page")       : 1;
+                    int sz  = (request.getAttribute("size")       != null) ? (Integer) request.getAttribute("size")       : 12;
+                    int tp  = (request.getAttribute("totalPages") != null) ? (Integer) request.getAttribute("totalPages") : 1;
+                    String base = request.getContextPath() + "/voucher?size=" + sz + "&page=";
                 %>
-                <div class="promo-slider" id="promoSlider">
-                    <%
-                        if (promos != null && !promos.isEmpty()) {
-                            for (java.util.Map<String,Object> p : promos) {
-                                String img = (String) p.get("image");   
-                                String cap = (String) p.get("caption");  
-                                String link = (String) p.get("link");    
-                                String alt  = (cap != null && !cap.isEmpty()) ? cap : "Khuyến mại";
-                    %>
-                        <div class="promo-item">
-                            <% if (link != null && !link.isEmpty()) { %>
-                                <a href="<%= link %>">
-                                    <img src="<%= ctx %>/images/<%= img %>" alt="<%= alt %>">
-                                </a>
-                            <% } else { %>
-                                <img src="<%= ctx %>/images/<%= img %>" alt="<%= alt %>">
-                            <% } %>
-
-                            <% if (cap != null && !cap.isEmpty()) { %>
-                                <h2 class="promo-caption"><%= cap %></h2>
-                            <% } %>
-                        </div>
-                    <%
-                            }
-                        } else {
-                    %>
-                        <div class="promo-item">
-                            <img src="<%= ctx %>/images/promo1.jpg" alt="Khuyến mại">
-                            <h2 class="promo-caption">Ưu đãi đang cập nhật</h2>
-                        </div>
-                    <%
-                        }
-                    %>
-                </div>
-                <button class="p-nav p-prev" type="button" aria-label="Prev">‹</button>
-                <button class="p-nav p-next" type="button" aria-label="Next">›</button>
-                <section class="deals-wrap">
-                    <a class="deals-banner" href="#">
-                      <img src="images/flashsale.jpg" alt="Săn deal siêu hot">
-                    </a>
-                    <%
-                        java.util.List<java.util.Map<String,Object>> deals =
-                            (java.util.List<java.util.Map<String,Object>>) request.getAttribute("deals");
+                <% if (tp >= 1) { %>
+                    <div class="pager">
+                        <a class="p-btn <%= (pg <= 1) ? "disabled" : "" %>" href="<%= (pg <= 1) ? "#" : base + (pg - 1) %>">‹</a>
+                        <%
+                          int window = 5;
+                          int start = Math.max(1, pg - 2);
+                          int end   = Math.min(tp, start + window - 1);
+                          start     = Math.max(1, end - window + 1);
+                          for (int p = start; p <= end; p++) {
                         %>
-
-                        <div class="deals-grid">
-                        <% if (deals != null && !deals.isEmpty()) {
-                             for (java.util.Map<String,Object> d : deals) { %>
-                          <article class="deal-card">
-                            <a class="deal-image" href="<%= ctx %>/sanpham?id=<%= d.get("id") %>">
-                              <img src="<%= ctx %>/images/<%= d.get("img") %>" alt="<%= d.get("tensp") %>">
-                            </a>
-                            <div class="deal-tag"><%= d.get("tag") %></div>
-                            <% String note = String.valueOf(d.get("note"));
-                               if (note != null && !note.isBlank()) { %>
-                              <div class="deal-note"><%= note %></div>
-                            <% } %>
-                          </article>
-                        <% } } else { %>
-                          <div class="deal-empty">Đang cập nhật khuyến mại…</div>
+                          <a class="p-btn <%= (p == pg) ? "active" : "" %>" href="<%= base + p %>"><%= p %></a>
                         <% } %>
-                        </div>
-                </section>
+                        <a class="p-btn <%= (pg >= tp) ? "disabled" : "" %>" href="<%= (pg >= tp) ? "#" : base + (pg + 1) %>">›</a>
+                    </div>
+                <% } %>
+                </div>
             </div>
-        </main>          
+        </main>
                             
         <!-- Liên hệ -->
         <div class="floating-actions" aria-label="Quick actions">
@@ -254,6 +285,6 @@
                 <p>Copyright &copy; 2025</p>
             </div>
         </footer>   
-        <script src="javascript/discount.js"></script>
+        <script src="javascript/voucher.js"></script>
     </body>
 </html>

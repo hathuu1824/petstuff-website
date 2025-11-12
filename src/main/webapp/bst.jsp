@@ -67,8 +67,8 @@
                                 <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-                        <li><a href="discount">Khuyến mại</a></li>
-                        <li><a href="#">Tin tức</a></li>
+                        <li><a href="giamgia">Khuyến mại</a></li>
+                        <li><a href="tintuc">Tin tức</a></li>
                     </ul>
                 </nav>
             </div>       
@@ -159,6 +159,8 @@
                                 <img src="<%= ctx %>/images/<%= slideUrls.get(i) %>" alt="banner <%= i+1 %>">
                             </div>
                         <% } %>
+                        <button class="hero-nav prev" aria-label="Trước">‹</button>
+                        <button class="hero-nav next" aria-label="Tiếp">›</button>
                         <div class="dots">
                             <% for (int i = 0; i < slideUrls.size(); i++) { %>
                                 <button class="dot <%= (i==0 ? "active" : "") %>" data-index="<%= i %>"></button>
@@ -258,7 +260,7 @@
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
                     <p><a href="#">Giới thiệu</a></p>
-                    <p><a href="#">Điều khoản dịch vụ</a></p>
+                    <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
                 <div class="footer-contact">
                     <h4>Hỗ trợ</h4>
