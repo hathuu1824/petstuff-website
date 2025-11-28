@@ -18,10 +18,19 @@
     </head>
     <body>
         <%
-            Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
-            String username = (String) request.getAttribute("username");
-            if (isLoggedIn == null) {
-                isLoggedIn = false;
+            HttpSession ss = request.getSession(false);
+
+            boolean isLoggedIn = false;
+            String username = null;
+            String role = null;
+
+            if (ss != null) {
+                Integer userId = (Integer) ss.getAttribute("userId");
+                if (userId != null) {
+                    isLoggedIn = true;
+                    username = (String) ss.getAttribute("username"); 
+                    role     = (String) ss.getAttribute("role");   
+                }
             }
         %>
         <header>
@@ -29,15 +38,40 @@
             <nav class="container">
                 <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
-                    <a class="icon-btn" href="<%= request.getContextPath() %>/cart.jsp" aria-label="Giỏ hàng" title="Giỏ hàng">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </a>
-                    <a class="icon-btn" href="<%= request.getContextPath() %>/AccountServlet" aria-label="Tài khoản" title="Tài khoản">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
                     <% if (isLoggedIn) { %>
+                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <div class="user-menu">
+                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <div class="user-popup" id="userPopup">
+                                <div class="user-popup-header">
+                                    <div class="user-popup-avatar">
+                                        <img src="images/avatar-default.png" alt="Avatar">
+                                    </div>
+                                    <div class="user-popup-name"><%= username %></div>
+                                    <div class="user-popup-role-pill"><%= role %></div>
+                                </div>
+                                <div class="user-popup-body">
+                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
+                                        <i class="fa-solid fa-box"></i>
+                                        <span>Đơn hàng của bạn</span>
+                                    </a>
+                                </div>
+                                <div class="user-popup-footer">
+                                    <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
+                                        <span>Đăng xuất</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
-                        <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn">Đăng xuất</a>
                     <% } else { %>
                         <a href="login.jsp" class="home-btn">Đăng nhập</a>
                         <a href="register.jsp" class="home-btn">Đăng ký</a>
@@ -171,19 +205,37 @@
                     <img src="images/<%= p.get("anhsp") %>" height="250px" alt="<%= p.get("tensp") %>">
                     <div class="card-content">
                         <%
-                            java.math.BigDecimal raw = (java.math.BigDecimal) p.get("giatien");
+                            java.math.BigDecimal giaGocBD = (java.math.BigDecimal) p.get("giatien");
+                            java.math.BigDecimal giaKmBD  = (java.math.BigDecimal) p.get("giakm");   // đã đẩy từ servlet
+                            Integer ptkm                  = (Integer) p.get("ptkm");                // % giảm (nếu có)
 
                             java.text.NumberFormat vn = java.text.NumberFormat.getInstance(new java.util.Locale("vi","VN"));
-                            vn.setGroupingUsed(true);      
+                            vn.setGroupingUsed(true);
                             vn.setMaximumFractionDigits(0);
 
-                            String giaFmt = vn.format(raw.longValue()) + "đ";
+                            String giaGocFmt = vn.format(giaGocBD.longValue()) + "đ";
+
+                            boolean hasKm = (giaKmBD != null
+                                             && giaKmBD.compareTo(java.math.BigDecimal.ZERO) > 0
+                                             && giaKmBD.compareTo(giaGocBD) < 0);
+
+                            String giaKmFmt = hasKm ? vn.format(giaKmBD.longValue()) + "đ" : giaGocFmt;
                         %>
-                        <h3><%= giaFmt %></h3>
+                        <% if (hasKm) { %>
+                            <div class="price-row">
+                                <span class="price-now"><%= giaKmFmt %></span>
+                                <span class="price-old"><%= giaGocFmt %></span>
+                            </div>
+                        <% } else { %>
+                            <h3 class="price-now"><%= giaGocFmt %></h3>
+                        <% } %>
                         <p><%= p.get("tensp") %></p>
                     </div>
+                    <%
+                        String ctx = request.getContextPath();
+                    %>
                     <div class="card-button">
-                        <a href="detail.jsp?masp=<%= p.get("masp") %>" class="btn">Đặt hàng</a>
+                        <a href="<%= ctx %>/chitiet?id=<%= p.get("masp") %>" class="btn">Đặt hàng</a>
                     </div>
                 </div>
             <%

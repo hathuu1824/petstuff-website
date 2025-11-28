@@ -3,65 +3,187 @@
     Created on : 16 Apr 2025, 2:06:08 pm
     Author     : hathuu24
 --%>
-<%-- <%@ page import="java.sql.*" %>
+<%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="webnhoibong.DatabaseConnection" %>
 <%
-    HttpSession sessionUser = request.getSession(false);
-    if (sessionUser == null || sessionUser.getAttribute("username") == null) {
-        response.sendRedirect("login.jsp");
-        return;
+    String ctx = request.getContextPath();
+
+    HttpSession ss = request.getSession(false);
+
+    boolean isLoggedIn = false;
+    String username = null;
+    String role = null;
+
+    if (ss != null) {
+        Integer userId = (Integer) ss.getAttribute("userId");
+        if (userId != null) {
+            isLoggedIn = true;
+            username   = (String) ss.getAttribute("username"); 
+            role       = (String) ss.getAttribute("role");   
+        }
     }
-%> --%>
+%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="css/contact.css">
+        <link rel="stylesheet" href="<%= ctx %>/css/contact.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <title>Liên hệ</title>
     </head>
     <body>
-        <div class="container">
-            <!-- Phản hồi -->
-            <div class="left-column">
-                <div class="contact">
-                    <h2>Phản hồi</h2>
-                    <%
-                        String success = request.getParameter("success");
-                        String error = request.getParameter("error");
-                    %>
-                    <% if ("true".equals(success)) { %>
-                        <p style="color: green;">Phản hồi của bạn đã được gửi đến admin!</p>
-                    <% } else if ("duplicate".equals(success)) { %>
-                        <p style="color: orange;">Phản hồi này đã tồn tại!</p>
-                    <% } else if ("true".equals(error)) { %>
-                        <p style="color: red;">Có lỗi xảy ra khi gửi phản hồi.</p>
+        <header>
+            <!-- Header -->
+            <nav class="container">
+                <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
+                <div class="buttons">
+                    <% if (isLoggedIn) { %>
+                        <a class="icon-btn"
+                           href="<%= ctx %>/cart"
+                           aria-label="Giỏ hàng"
+                           title="Giỏ hàng">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <div class="user-menu">
+                            <a class="icon-btn user-toggle"
+                               href="#"
+                               aria-label="Tài khoản"
+                               title="Tài khoản">
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <div class="user-popup" id="userPopup">
+                                <div class="user-popup-header">
+                                    <div class="user-popup-avatar">
+                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                    </div>
+                                    <div class="user-popup-name"><%= username %></div>
+                                    <div class="user-popup-role-pill"><%= role %></div>
+                                </div>
+                                <div class="user-popup-body">
+                                    <a href="<%= ctx %>/profile" class="user-popup-item">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="<%= ctx %>/donhang" class="user-popup-item">
+                                        <i class="fa-solid fa-box"></i>
+                                        <span>Đơn hàng của bạn</span>
+                                    </a>
+                                </div>
+                                <div class="user-popup-footer">
+                                    <a href="<%= ctx %>/dangxuat" class="home-btn logout-btn">
+                                        <span>Đăng xuất</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>    
+                        <span class="home">Xin chào, <%= username %>!</span>
+                    <% } else { %>
+                        <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
+                        <a href="<%= ctx %>/register.jsp" class="home-btn">Đăng ký</a>
                     <% } %>
-                    <form action="${pageContext.request.contextPath}/ContactServlet" method="post">
-                        <label for="name">Tên đăng nhập:</label>
-                        <input type="text" name="name" required>
-                        <label for="email">Email:</label>
-                        <input type="text" name="email" required>
-                        <label for="message">Phản hồi:</label>
-                        <textarea name="message" required></textarea>
-                        <div class="button-group">
-                            <button type="submit">Gửi</button>
-                            <button class="back"><a href="home.jsp">Quay lại</a></button>
+                </div>
+            </nav>
+
+            <!-- Dropdown -->
+            <div class="subbar" id="subbar">
+                <nav class="subnav">
+                    <ul class="subnav-list">
+                        <li><a href="<%= ctx %>/trangchu">Trang chủ</a></li>
+                        <li class="has-dd">
+                            <button class="dd-toggle" type="button">
+                                <a href="<%= ctx %>/sanpham">Sản phẩm</a>
+                            </button>
+                            <ul class="dropdown">
+                                <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-dd">
+                            <button class="dd-toggle" type="button">
+                                <a href="<%= ctx %>/bst">Bộ sưu tập</a>
+                            </button>
+                            <ul class="dropdown">
+                                <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="<%= ctx %>/giamgia">Khuyến mại</a></li>
+                        <li><a href="<%= ctx %>/tintuc">Tin tức</a></li>
+                    </ul>
+                </nav>
+            </div>    
+        </header> 
+        
+        <main class="main">
+            <div class="contact-container">
+                <div class="contact-left">
+                    <div class="thankyou-person"></div>
+                </div>
+                <div class="contact-right">
+                    <div class="content">
+                        <h1>Liên hệ</h1>
+                        <p>Website đang trong quá trình phát triển và hoàn thiện.</p>
+                        <p>Nếu bạn có phản hồi, đóng góp ý kiến hay phát hiện lỗi trong website này,
+                           xin hãy liên hệ qua:</p>
+                        <h2>Thông tin liên hệ</h2>
+                        <div class="social-link">
+                            <a href="https://www.facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.tiktok.com" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                            <a href="https://www.instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.twitter.com" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-                        
-            <!-- Liên hệ -->            
-            <div class="right-column">
-                <div class="content">
-                    <h1>Liên hệ</h1>
-                    <p>Nếu bạn có phản hồi, đóng góp ý kiến hay thấy lỗi trong website này, xin hãy liên hệ qua:</p>
-                    <h2>Thông tin liên hệ</h2>
-                    <div class="social-link">
+        </main>
+        
+        <!-- Liên hệ -->        
+        <div class="floating-actions" aria-label="Quick actions">
+            <a class="fa-btn contact"
+               href="<%= ctx %>/contact.jsp"
+               title="Liên hệ"
+               aria-label="Liên hệ">
+                <i class="fa-solid fa-phone"></i>
+            </a>
+            <a class="fa-btn chat"
+               href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff"
+               target="_blank"
+               rel="noopener"
+               title="Chatbot"
+               aria-label="Chatbot">
+                <i class="fa-regular fa-comments"></i>
+            </a>
+        </div>
+
+        <!-- Footer -->        
+        <footer>
+            <div class="footer-container">
+                <div class="footer-infor">
+                    <h4>PetStuff</h4>
+                    <p>Địa chỉ: 68 Nguyễn Chí Thanh, Láng Thượng, Đống Đa, Hà Nội</p>
+                    <p>Điện thoại: +84 23 4597 6688</p> 
+                    <p>Email: petstuff6688@hotmail.com</p>
+                </div>
+                <div class="footer-about">
+                    <h4>Về chúng tôi</h4>
+                    <p><a href="#">Giới thiệu</a></p>
+                    <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
+                </div>
+                <div class="footer-contact">
+                    <h4>Hỗ trợ</h4>
+                    <p><a href="contact.jsp">Liên hệ</a></p>
+                    <p><a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">Chatbot tư vấn</a></p>
+                </div>
+                <div class="footer-social">
+                    <h4>Theo dõi</h4>
+                    <div class="social">
                         <a href="https://www.facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://www.tiktok.com" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
                         <a href="https://www.instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -69,16 +191,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <script>
-            window.onload = function () {
-                if (window.location.href.includes("success=true")) {
-                    document.querySelector("form").reset();
-                    setTimeout(() => {
-                        window.history.replaceState(null, "", window.location.pathname);
-                    }, 2000);
-                }
-            };
-        </script>
+            <div class="footer-bottom">
+                <p>Copyright &copy; 2025</p>
+            </div>
+        </footer>
+        <script src="<%= ctx %>/javascript/cart.js"></script>
     </body>
 </html>

@@ -1,21 +1,102 @@
 <%-- 
-    Document   : news
-    Created on : 29 Oct 2025, 2:29:56 pm
+    Document   : newsdetail
+    Created on : 25 Nov 2025, 2:48:24 pm
     Author     : hathuu24
 --%>
-<%@ page import="java.util.*" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.*"%>
+<%@page import="webnhoibong.DatabaseConnection"%>
+
+<%
+    String ctx = request.getContextPath();
+
+    // ==== Lấy id bài viết từ URL ====
+    String idStr = request.getParameter("id");
+    if (idStr == null || idStr.trim().isEmpty()) {
+        response.sendRedirect(ctx + "/tintuc");
+        return;
+    }
+
+    int id;
+    try {
+        id = Integer.parseInt(idStr);
+    } catch (NumberFormatException e) {
+        response.sendRedirect(ctx + "/tintuc");
+        return;
+    }
+
+    // ==== Biến hiển thị bài chính ====
+    String title      = "";
+    String content    = "";
+    String imagePath  = "";
+    String dateStr    = "";
+
+    // ==== Danh sách tin khác ====
+    List<Map<String,Object>> otherNews = new ArrayList<>();
+
+    try (Connection conn = DatabaseConnection.getConnection()) {
+
+        // --- Lấy bài viết chính ---
+        String sqlMain =
+            "SELECT tieu_de, ngay_dang, anh_dai_dien, noi_dung " +
+            "FROM baiviet WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sqlMain)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    title     = rs.getString("tieu_de");
+                    content   = rs.getString("noi_dung");
+                    imagePath = rs.getString("anh_dai_dien"); // file trong /images
+
+                    java.sql.Date d = rs.getDate("ngay_dang");
+                    if (d != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                        dateStr = sdf.format(d);
+                    }
+                } else {
+                    // Không tìm thấy bài -> quay lại danh sách
+                    response.sendRedirect(ctx + "/tintuc");
+                    return;
+                }
+            }
+        }
+
+        // --- Lấy các tin khác (trừ bài đang xem) ---
+        String sqlOther =
+            "SELECT id, tieu_de, anh_dai_dien, ngay_dang " +
+            "FROM baiviet WHERE id <> ? " +
+            "ORDER BY ngay_dang DESC, id DESC LIMIT 5";
+        try (PreparedStatement ps = conn.prepareStatement(sqlOther)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                while (rs.next()) {
+                    Map<String,Object> row = new HashMap<>();
+                    row.put("id",      rs.getInt("id"));
+                    row.put("tieude",  rs.getString("tieu_de"));
+                    row.put("anh",     rs.getString("anh_dai_dien"));
+                    java.sql.Date d = rs.getDate("ngay_dang");
+                    row.put("ngay", (d != null ? sdf.format(d) : ""));
+                    otherNews.add(row);
+                }
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%
-            String ctx = request.getContextPath();
-        %>
-        <link rel="stylesheet" href="<%= ctx %>/css/news.css">
+        <link rel="stylesheet" href="<%= ctx %>/css/newsdetail.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <title>Tin tức</title>
+        <title><%= (title != null && !title.isEmpty()) ? title : "Tin tức" %></title>
     </head>
     <body>
         <%
@@ -108,141 +189,56 @@
                 </nav>
             </div>    
         </header>
-                            
+                   
         <main class="main">
-            <!-- ===== Tin nổi bật ===== -->
-            <div class="hotnews-title">
-                <h2>Tin nổi bật</h2>
-            </div>
-            <div class="hotnews-container">
-                <div class="slider">
-                    <section class="background">
-                        <%
-                            List<Map<String,Object>> slides = 
-                                (List<Map<String,Object>>) request.getAttribute("slides");
-                            if (slides == null) slides = java.util.Collections.emptyList();
+            <section class="news-wrapper">
+                <article class="news-main">
+                    <h1 class="news-title"><%= title %></h1>
+                    <p class="news-meta">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span><%= dateStr %></span>
+                    </p>
+                    <% if (imagePath != null && !imagePath.isEmpty()) { %>
+                        <div class="news-image">
+                            <img src="<%= ctx %>/images/<%= imagePath %>" alt="<%= title %>">
+                        </div>
+                    <% } %>
+                    <div class="news-content">
+                        <%= (content != null ? content.replaceAll("\n", "<br>") : "") %>
+                    </div>
+                </article>
+                <aside class="news-sidebar">
+                    <h2 class="sidebar-heading">Tin khác</h2>
+                    <div class="sidebar-list">
+                        <% if (otherNews != null && !otherNews.isEmpty()) { 
+                               for (Map<String,Object> row : otherNews) {
+                                   int    oid   = (Integer) row.get("id");
+                                   String otit  = (String) row.get("tieude");
+                                   String oimg  = (String) row.get("anh");
+                                   String ongay = (String) row.get("ngay");
                         %>
-                        <div class="hero-slider" id="hero">
-                            <% if (!slides.isEmpty()) { %>
-                                <% for (int i = 0; i < slides.size(); i++) { 
-                                       Map<String,Object> s = slides.get(i);
-                                       String img   = String.valueOf(s.getOrDefault("image","placeholder-hero.jpg"));
-                                       String title = String.valueOf(s.getOrDefault("title","Tin nổi bật " + (i+1)));
-                                %>
-                                    <div class="slide <%= (i==0 ? "is-active" : "") %>">
-                                        <img src="<%= ctx %>/images/<%= img %>" alt="<%= title %>">
-                                        <div class="slide-caption">
-                                            <h3><%= title %></h3>
-                                        </div>
-                                    </div>
-                                <% } %>
-                                <button class="hero-nav prev" aria-label="Trước">‹</button>
-                                <button class="hero-nav next" aria-label="Tiếp">›</button>
-                                <div class="dots">
-                                    <% for (int i = 0; i < slides.size(); i++) { %>
-                                        <button class="dot <%= (i==0 ? "active" : "") %>" data-index="<%= i %>"></button>
+                            <a class="sidebar-item" href="<%= ctx %>/newsdetail?id=<%= oid %>">
+                                <div class="sidebar-thumb">
+                                    <% if (oimg != null && !oimg.isEmpty()) { %>
+                                        <img src="<%= ctx %>/images/<%= oimg %>" alt="<%= otit %>">
                                     <% } %>
                                 </div>
-                            <% } else { %>
-                                <div class="slide is-active">
-                                    <img src="<%= ctx %>/images/placeholder-hero.jpg" alt="placeholder">
-                                    <div class="slide-caption">
-                                        <h3>Đang cập nhật tin nổi bật...</h3>
-                                    </div>
-                                </div>
-                            <% } %>
-                        </div>
-                    </section>
-                </div>
-
-                <!-- 2 tin nổi bật bên phải -->
-                <div class="hot-news">
-                    <%
-                        List<Map<String,Object>> hotNews =
-                            (List<Map<String,Object>>) request.getAttribute("hotNews");
-                        if (hotNews != null && !hotNews.isEmpty()) {
-                            for (Map<String,Object> n : hotNews) {
-                                Number idNum = (Number) n.get("id");
-                                int id       = (idNum != null ? idNum.intValue() : 0);
-
-                                String img     = String.valueOf(n.getOrDefault("image","placeholder-news.jpg"));
-                                String title   = String.valueOf(n.getOrDefault("title","Tiêu đề tin"));
-                                String excerpt = String.valueOf(n.getOrDefault("excerpt","Mô tả ngắn..."));
-
-                                // Link sang servlet chi tiết /newsdetail
-                                String link    = ctx + "/newsdetail?id=" + id;
-                    %>
-                        <article class="hot-card">
-                            <a href="<%= link %>">
-                                <img src="<%= ctx %>/images/<%= img %>" alt="<%= title %>">
-                                <div class="hc-body">
-                                    <h3 class="hc-title"><%= title %></h3>
-                                    <p class="hc-excerpt"><%= excerpt %></p>
+                                <div class="sidebar-info">
+                                    <h3><%= otit %></h3>
+                                    <span class="sidebar-date"><%= ongay %></span>
+                                    <span class="sidebar-readmore"><strong>Đọc tiếp →</strong></span>
                                 </div>
                             </a>
-                        </article>
-                    <%
-                            }
-                        } else {
-                    %>
-                        <div class="hot-empty">Đang cập nhật tin nổi bật</div>
-                    <%
-                        }
-                    %>
-                </div>
-            </div>
-
-            <!-- ===== Tất cả tin tức ===== -->
-            <div class="news-container">
-                <div class="allnews-title">
-                    <h2>Tất cả tin tức</h2>
-                    <a href="all" class="view-btn">Xem tất cả</a>
-                </div>
-
-                <%
-                    @SuppressWarnings("unchecked")
-                    List<Map<String,Object>> newsList =
-                        (List<Map<String,Object>>) request.getAttribute("newsList");
-
-                    if (newsList != null && !newsList.isEmpty()) {
-                        for (Map<String,Object> n : newsList) {
-                            String img     = String.valueOf(n.getOrDefault("image", "placeholder-news.jpg"));
-                            String title   = String.valueOf(n.getOrDefault("title", "Tiêu đề tin tức"));
-                            String excerpt = String.valueOf(n.getOrDefault("excerpt", "Tóm tắt ngắn..."));
-                            int    id      = ((Number)n.get("id")).intValue();
-
-                            String detailLink = ctx + "/newsdetail?id=" + id;   // dùng servlet /newsdetail
-                %>
-                    <article class="news-card">
-                        <a href="<%= detailLink %>" class="news-thumb">
-                            <img src="<%= ctx %>/images/<%= img %>" alt="<%= title %>">
-                        </a>
-
-                        <!-- Giữ .news-body để khớp CSS cũ -->
-                        <div class="news-body">
-                            <h3 class="news-title">
-                                <a href="<%= detailLink %>"><%= title %></a>
-                            </h3>
-                            <p class="news-excerpt"><%= excerpt %></p>
-                            <a href="<%= detailLink %>" class="read-more">
-                                Đọc tiếp <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </article>
-                <%
-                        }
-                    } else {
-                %>
-                    <div class="news-empty">
-                        Hiện chưa có bài viết nào được đăng tải
+                        <%    }
+                           } else { %>
+                            <p>Chưa có tin nào khác.</p>
+                        <% } %>
                     </div>
-                <%
-                    }
-                %>
-            </div>
-        </main>
-                               
-        <!-- Liên hệ -->      
+                </aside>
+            </section>
+        </main>                    
+                            
+        <!-- Liên hệ -->        
         <div class="floating-actions" aria-label="Quick actions">
             <a class="fa-btn contact" href="<%= ctx %>/contact.jsp" title="Liên hệ" aria-label="Liên hệ">
                 <i class="fa-solid fa-phone"></i>
@@ -286,6 +282,6 @@
             </div>
         </footer>
 
-        <script src="<%= ctx %>/javascript/news.js"></script>                      
+        <script src="<%= ctx %>/javascript/home.js"></script>                       
     </body>
 </html>

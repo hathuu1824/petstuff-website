@@ -21,10 +21,19 @@
     </head>
     <body>
         <%
-            Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
-            String username = (String) request.getAttribute("username");
-            if (isLoggedIn == null) {
-                isLoggedIn = false;
+            HttpSession ss = request.getSession(false);
+
+            boolean isLoggedIn = false;
+            String username = null;
+            String role = null;
+
+            if (ss != null) {
+                Integer userId = (Integer) ss.getAttribute("userId");
+                if (userId != null) {
+                    isLoggedIn = true;
+                    username = (String) ss.getAttribute("username"); 
+                    role     = (String) ss.getAttribute("role");   
+                }
             }
         %>
         <header>
@@ -32,15 +41,40 @@
             <nav class="container">
                 <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
-                    <a class="icon-btn" href="<%= request.getContextPath() %>/cart.jsp" aria-label="Giỏ hàng" title="Giỏ hàng">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </a>
-                    <a class="icon-btn" href="<%= request.getContextPath() %>/AccountServlet" aria-label="Tài khoản" title="Tài khoản">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
                     <% if (isLoggedIn) { %>
+                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <div class="user-menu">
+                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <div class="user-popup" id="userPopup">
+                                <div class="user-popup-header">
+                                    <div class="user-popup-avatar">
+                                        <img src="images/avatar-default.png" alt="Avatar">
+                                    </div>
+                                    <div class="user-popup-name"><%= username %></div>
+                                    <div class="user-popup-role-pill"><%= role %></div>
+                                </div>
+                                <div class="user-popup-body">
+                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
+                                        <i class="fa-solid fa-box"></i>
+                                        <span>Đơn hàng của bạn</span>
+                                    </a>
+                                </div>
+                                <div class="user-popup-footer">
+                                    <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
+                                        <span>Đăng xuất</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
-                        <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn">Đăng xuất</a>
                     <% } else { %>
                         <a href="login.jsp" class="home-btn">Đăng nhập</a>
                         <a href="register.jsp" class="home-btn">Đăng ký</a>

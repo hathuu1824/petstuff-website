@@ -1,6 +1,6 @@
 <%-- 
     Document   : bst
-    Created on : 28 Oct 2025, 8:42:02 am
+    Created on : 28 Oct 2025, 8:42:02 am
     Author     : hathuu24
 --%>
 
@@ -18,10 +18,19 @@
     </head>
     <body>
         <%
-            Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
-            String username = (String) request.getAttribute("username");
-            if (isLoggedIn == null) {
-                isLoggedIn = false;
+            HttpSession ss = request.getSession(false);
+
+            boolean isLoggedIn = false;
+            String username = null;
+            String role = null;
+
+            if (ss != null) {
+                Integer userId = (Integer) ss.getAttribute("userId");
+                if (userId != null) {
+                    isLoggedIn = true;
+                    username = (String) ss.getAttribute("username"); 
+                    role     = (String) ss.getAttribute("role");   
+                }
             }
         %>
         <header>
@@ -29,15 +38,40 @@
             <nav class="container">
                 <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
-                    <a class="icon-btn" href="<%= request.getContextPath() %>/cart.jsp" aria-label="Giỏ hàng" title="Giỏ hàng">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </a>
-                    <a class="icon-btn" href="<%= request.getContextPath() %>/AccountServlet" aria-label="Tài khoản" title="Tài khoản">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
                     <% if (isLoggedIn) { %>
+                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <div class="user-menu">
+                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <div class="user-popup" id="userPopup">
+                                <div class="user-popup-header">
+                                    <div class="user-popup-avatar">
+                                        <img src="images/avatar-default.png" alt="Avatar">
+                                    </div>
+                                    <div class="user-popup-name"><%= username %></div>
+                                    <div class="user-popup-role-pill"><%= role %></div>
+                                </div>
+                                <div class="user-popup-body">
+                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>Thông tin cá nhân</span>
+                                    </a>
+                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
+                                        <i class="fa-solid fa-box"></i>
+                                        <span>Đơn hàng của bạn</span>
+                                    </a>
+                                </div>
+                                <div class="user-popup-footer">
+                                    <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
+                                        <span>Đăng xuất</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
-                        <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn">Đăng xuất</a>
                     <% } else { %>
                         <a href="login.jsp" class="home-btn">Đăng nhập</a>
                         <a href="register.jsp" class="home-btn">Đăng ký</a>
@@ -105,36 +139,62 @@
                                     }
                                 }
                             }
-                          %>
-                          <a href="<%= allBstUrl.toString() %>" class="view-btn">Xem tất cả</a>
+                        %>
+                        <a href="<%= allBstUrl.toString() %>" class="view-btn">Xem tất cả</a>
                     </div>
+
                     <div class="list-product">
                         <%
                             java.util.List<java.util.Map<String,Object>> suggestList =
                                 (java.util.List<java.util.Map<String,Object>>) request.getAttribute("suggestList");
+
                             if (suggestList != null && !suggestList.isEmpty()) {
-                                java.text.NumberFormat vn = java.text.NumberFormat.getInstance(new java.util.Locale("vi","VN"));
+                                java.text.NumberFormat vn =
+                                    java.text.NumberFormat.getInstance(new java.util.Locale("vi","VN"));
                                 vn.setGroupingUsed(true);
                                 vn.setMaximumFractionDigits(0);
+
                                 for (java.util.Map<String,Object> p : suggestList) {
-                                  String tensp = (String) p.get("tensp");
-                                  String anhsp = (String) p.get("anhsp");
-                                  Number giatienNum = (Number) p.get("giatien");
-                                  String giaFmt = vn.format(giatienNum.longValue()) + "đ";
-                                  int masp = ((Number) p.get("masp")).intValue();
-                          %>
+                                    String tensp = (String) p.get("tensp");
+                                    String anhsp = (String) p.get("anhsp");
+                                    int masp     = ((Number) p.get("masp")).intValue();
+
+                                    Number giaGoc = (Number) p.get("giatien");
+                                    Number giaKm  = (Number) p.get("giakm");
+                                    Integer ptkm  = (Integer) p.get("ptkm");
+                                    String makm   = (String) p.get("makm");
+
+                                    boolean hasKm = (giaKm != null && giaKm.doubleValue() > 0
+                                                     && giaKm.doubleValue() < giaGoc.doubleValue());
+
+                                    String giaGocFmt = vn.format(giaGoc.longValue()) + "đ";
+                                    String giaKmFmt  = hasKm ? vn.format(giaKm.longValue()) + "đ" : giaGocFmt;
+                        %>
                             <div class="card">
                                 <img src="<%= ctx %>/images/<%= anhsp %>" height="250px" alt="<%= tensp %>">
                                 <div class="card-content">
-                                    <h3><%= giaFmt %></h3>
+                                    <% if (hasKm) { %>
+                                        <div class="price-row">
+                                            <span class="price-now"><%= giaKmFmt %></span>
+                                            <span class="price-old"><%= giaGocFmt %></span>
+                                            <% if (ptkm != null && ptkm > 0) { %>
+                                                <span class="price-badge">-<%= ptkm %>%</span>
+                                            <% } %>
+                                        </div>
+                                        <% if (makm != null && !makm.isEmpty()) { %>
+                                            <div class="promo-code">Mã KM: <%= makm %></div>
+                                        <% } %>
+                                    <% } else { %>
+                                        <h3 class="price-now"><%= giaGocFmt %></h3>
+                                    <% } %>
                                     <p><%= tensp %></p>
                                 </div>
                                 <div class="card-button">
-                                    <a href="<%= ctx %>/detail.jsp?masp=<%= masp %>" class="btn">Đặt hàng</a>
+                                    <a href="<%= ctx %>/chitiet?id=<%= masp %>" class="btn">Đặt hàng</a>
                                 </div>
                             </div>
                         <%
-                                }
+                                } // end for suggestList
                             } else {
                         %>
                             <p>Không có sản phẩm</p>
@@ -185,55 +245,79 @@
                     <p>Không có sản phẩm.</p>
                 <%
                     } else {
-                      java.text.NumberFormat vn = java.text.NumberFormat.getInstance(new java.util.Locale("vi","VN"));
-                      vn.setGroupingUsed(true);
-                      vn.setMaximumFractionDigits(0);
+                        java.text.NumberFormat vn2 =
+                            java.text.NumberFormat.getInstance(new java.util.Locale("vi","VN"));
+                        vn2.setGroupingUsed(true);
+                        vn2.setMaximumFractionDigits(0);
 
-                      for (String bst : mapBST.keySet()) {
-                        java.util.List<java.util.Map<String, Object>> list = mapBST.get(bst);
-
-                        String bstId = bst.trim().toLowerCase().replaceAll("\\s+", "");
+                        for (String bst : mapBST.keySet()) {
+                            java.util.List<java.util.Map<String, Object>> list = mapBST.get(bst);
+                            String bstId = bst.trim().toLowerCase().replaceAll("\\s+", "");
                 %>
                     <div class="bst-list" id="<%= bstId %>">
                         <div class="bst-title">
                             <img src="<%= ctx %>/images/<%= bst %>.png" alt="<%= bst %>" class="bst-cover">
                         </div>
+
                         <div class="bst-product">
                             <%
                                 for (java.util.Map<String, Object> p : list) {
                                     String tensp = (String) p.get("tensp");
                                     String anhsp = (String) p.get("anhsp");
-                                    Number giatien = (Number) p.get("giatien"); 
-                                    String giaFmt = vn.format(giatien.doubleValue()) + "đ";
-                                    int masp = ((Number) p.get("masp")).intValue();
+                                    int masp     = ((Number) p.get("masp")).intValue();
+
+                                    Number giaGoc = (Number) p.get("giatien");
+                                    Number giaKm  = (Number) p.get("giakm");
+                                    Integer ptkm  = (Integer) p.get("ptkm");
+                                    String makm   = (String) p.get("makm");
+
+                                    boolean hasKm = (giaKm != null && giaKm.doubleValue() > 0
+                                                     && giaKm.doubleValue() < giaGoc.doubleValue());
+
+                                    String giaGocFmt = vn2.format(giaGoc.longValue()) + "đ";
+                                    String giaKmFmt  = hasKm ? vn2.format(giaKm.longValue()) + "đ" : giaGocFmt;
                             %>
                                 <div class="card">
                                     <img src="<%= ctx %>/images/<%= anhsp %>" height="250px" alt="<%= tensp %>">
                                     <div class="card-content">
-                                        <h3><%= giaFmt %></h3>
+                                        <% if (hasKm) { %>
+                                            <div class="price-row">
+                                                <span class="price-now"><%= giaKmFmt %></span>
+                                                <span class="price-old"><%= giaGocFmt %></span>
+                                                <% if (ptkm != null && ptkm > 0) { %>
+                                                    <span class="price-badge">-<%= ptkm %>%</span>
+                                                <% } %>
+                                            </div>
+                                            <% if (makm != null && !makm.isEmpty()) { %>
+                                                <div class="promo-code">Mã KM: <%= makm %></div>
+                                            <% } %>
+                                        <% } else { %>
+                                            <h3 class="price-now"><%= giaGocFmt %></h3>
+                                        <% } %>
                                         <p><%= tensp %></p>
                                     </div>
                                     <div class="card-button">
-                                        <a href="<%= ctx %>/detail.jsp?masp=<%= masp %>" class="btn">Đặt hàng</a>
+                                        <a href="<%= ctx %>/chitiet?id=<%= masp %>" class="btn">Đặt hàng</a>
                                     </div>
                                 </div>
                             <%
-                                } 
+                                } // end for p
                             %>
+                        </div> <!-- /.bst-product -->
+
+                        <%
+                            String slug = bst.trim().toLowerCase().replaceAll("\\s+","");
+                        %>
+                        <div class="bst-view-more">
+                            <a class="view-btn"
+                               href="<%= ctx %>/sanpham?size=12&page=1&bst=<%= slug %>">
+                               Xem tất cả
+                            </a>
                         </div>
-                    </div>
-                    <%
-                        String slug = bst.trim().toLowerCase().replaceAll("\\s+","");
-                    %>
-                    <div class="bst-view-more">
-                        <a class="view-btn"
-                           href="<%= ctx %>/sanpham?size=12&page=1&bst=<%= slug %>">
-                           Xem tất cả
-                        </a>
-                    </div>
+                    </div> <!-- /.bst-list -->
                 <%
-                      } 
-                    }
+                        } // end for bst
+                    } // end else mapBST
                 %>
             </div>
         </main>  
