@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `baiviet` (
   `thu_tu` int DEFAULT NULL,
   `ngay_dang` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table nhoibong.baiviet: ~6 rows (approximately)
 INSERT INTO `baiviet` (`id`, `tieu_de`, `tom_tat`, `noi_dung`, `anh_dai_dien`, `noi_bat`, `kich_hoat`, `hien_slide`, `thu_tu`, `ngay_dang`) VALUES
@@ -61,6 +61,91 @@ INSERT INTO `banners` (`id`, `url_anh`, `an_hien`, `thu_tu`, `banner_anh`, `hien
 	(3, 'slide2.png', 1, 3, 'doremon.png', 1),
 	(4, 'slide1.png', 1, 4, 'sanrioo.png', 1);
 
+-- Dumping structure for table nhoibong.donhang
+CREATE TABLE IF NOT EXISTS `donhang` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `madon` bigint NOT NULL,
+  `taikhoan_id` int DEFAULT NULL,
+  `masp` int NOT NULL,
+  `tennguoinhan` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sdt` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `diachi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `soluong` int NOT NULL DEFAULT '1',
+  `phisp` int NOT NULL DEFAULT '0',
+  `phiship` int NOT NULL DEFAULT '0',
+  `giamgia` int NOT NULL DEFAULT '0',
+  `tongtien` int NOT NULL DEFAULT '0',
+  `tiendoisoat` int NOT NULL DEFAULT '0',
+  `phuongthuc` enum('COD','BANK') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'BANK',
+  `trangthai` enum('PENDING','WAIT_PACK','WAIT_SHIP','DELIVERED','RETURNED','CANCELED') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PENDING',
+  `manh` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stk` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tenctk` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `noidung` varchar(140) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `magiaodich` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `thoigianthanhtoan` datetime DEFAULT NULL,
+  `thoigianhuy` datetime DEFAULT NULL,
+  `ngaytao` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ngaycapnhat` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_taikhoan` (`taikhoan_id`),
+  KEY `idx_masp` (`masp`),
+  KEY `idx_trangthai_tien` (`trangthai`,`tiendoisoat`,`ngaytao`),
+  KEY `idx_donhang_madon` (`madon`),
+  CONSTRAINT `fk_donhang_sanpham` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_donhang_tt_user` FOREIGN KEY (`taikhoan_id`) REFERENCES `tt_user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table nhoibong.donhang: ~10 rows (approximately)
+INSERT INTO `donhang` (`id`, `madon`, `taikhoan_id`, `masp`, `tennguoinhan`, `sdt`, `diachi`, `soluong`, `phisp`, `phiship`, `giamgia`, `tongtien`, `tiendoisoat`, `phuongthuc`, `trangthai`, `manh`, `stk`, `tenctk`, `noidung`, `magiaodich`, `thoigianthanhtoan`, `thoigianhuy`, `ngaytao`, `ngaycapnhat`) VALUES
+	(1, 1, 4, 5, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 2, 76250, 30000, 0, 182500, 182500, 'COD', 'WAIT_SHIP', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 14:56:23', '2025-11-27 16:39:34'),
+	(2, 2, 4, 9, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 2, 95000, 30000, 0, 177500, 177500, 'COD', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 15:06:39', '2025-11-27 15:06:39'),
+	(3, 3, 4, 2, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 3, 52500, 30000, 0, 187500, 187500, 'COD', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 20:24:52', '2025-11-27 20:24:52'),
+	(4, 4, 4, 9, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 1, 95000, 30000, 0, 125000, 125000, 'COD', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 20:28:30', '2025-11-27 20:28:30'),
+	(5, 5, 4, 2, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 2, 52500, 30000, 0, 82500, 82500, 'COD', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 20:52:51', '2025-11-27 20:52:51'),
+	(6, 6, 4, 5, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 3, 100000, 30000, 0, 130000, 130000, 'COD', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 21:01:35', '2025-11-27 21:01:35'),
+	(7, 7, 4, 9, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 2, 95000, 30000, 0, 125000, 125000, 'COD', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 21:02:19', '2025-11-27 21:02:19'),
+	(8, 8, 4, 5, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 2, 100000, 30000, 0, 82500, 82500, 'COD', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-27 21:29:42', '2025-11-27 21:29:42'),
+	(9, 9, 4, 2, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 1, 52500, 30000, 0, 82500, 82500, 'BANK', 'WAIT_PACK', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-28 01:34:28', '2025-11-28 01:34:49'),
+	(10, 10, 4, 9, 'Lê Hoàng D', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 1, 95000, 30000, 0, 125000, 125000, 'BANK', 'PENDING', 'VCB', '0123456789', 'CONG TY PETSTUFF', NULL, NULL, NULL, NULL, '2025-11-28 12:47:52', '2025-11-28 12:47:52');
+
+-- Dumping structure for table nhoibong.donhang_ct
+CREATE TABLE IF NOT EXISTS `donhang_ct` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `donhang_id` int unsigned NOT NULL,
+  `masp` int NOT NULL,
+  `soluong` int NOT NULL DEFAULT '1',
+  `gia` int NOT NULL,
+  `thanhtien` int NOT NULL,
+  `loai` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tensp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_donhang_ct_sanpham` (`masp`),
+  KEY `fk_donhang_ct_donhang` (`donhang_id`),
+  CONSTRAINT `fk_donhang_ct_donhang` FOREIGN KEY (`donhang_id`) REFERENCES `donhang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_donhang_ct_sanpham` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table nhoibong.donhang_ct: ~17 rows (approximately)
+INSERT INTO `donhang_ct` (`id`, `donhang_id`, `masp`, `soluong`, `gia`, `thanhtien`, `loai`, `tensp`) VALUES
+	(2, 1, 5, 2, 76250, 152500, 'Kèm gấu nhỏ', 'Gấu bông trắng cỡ lớn kèm gấu cỡ nhỏ'),
+	(3, 2, 9, 1, 95000, 95000, 'Xanh dương - Hồng', 'Thú nhồi bông bạch tuộc hai cảm xúc'),
+	(4, 2, 2, 1, 52500, 52500, 'Cinamonroll', 'Thú nhồi bông Sanrio'),
+	(5, 3, 2, 1, 52500, 52500, 'Kuromi', 'Thú nhồi bông Sanrio'),
+	(6, 3, 2, 2, 52500, 105000, 'My Melody', 'Thú nhồi bông Sanrio'),
+	(7, 4, 9, 1, 95000, 95000, 'Xanh dương - Hồng', 'Thú nhồi bông bạch tuộc hai cảm xúc'),
+	(8, 5, 2, 1, 52500, 52500, 'Kuromi', 'Thú nhồi bông Sanrio'),
+	(9, 5, 2, 1, 52500, 52500, 'Pochaco', 'Thú nhồi bông Sanrio'),
+	(10, 6, 5, 1, 100000, 100000, 'Lẻ gấu lớn', 'Gấu bông trắng cỡ lớn kèm gấu cỡ nhỏ'),
+	(11, 6, 2, 1, 52500, 52500, 'Pochaco', 'Thú nhồi bông Sanrio'),
+	(12, 6, 9, 1, 95000, 95000, 'Xanh dương - Hồng', 'Thú nhồi bông bạch tuộc hai cảm xúc'),
+	(13, 7, 9, 1, 95000, 95000, 'Xanh dương - Hồng', 'Thú nhồi bông bạch tuộc hai cảm xúc'),
+	(14, 7, 5, 1, 100000, 100000, 'Kèm gấu nhỏ', 'Gấu bông trắng cỡ lớn kèm gấu cỡ nhỏ'),
+	(15, 8, 5, 1, 100000, 100000, 'Kèm gấu nhỏ', 'Gấu bông trắng cỡ lớn kèm gấu cỡ nhỏ'),
+	(16, 8, 2, 1, 52500, 52500, 'Pochaco', 'Thú nhồi bông Sanrio'),
+	(17, 9, 2, 1, 52500, 52500, 'Pochaco', 'Thú nhồi bông Sanrio'),
+	(18, 10, 9, 1, 95000, 95000, 'Xanh dương - Hồng', 'Thú nhồi bông bạch tuộc hai cảm xúc');
+
 -- Dumping structure for table nhoibong.giamgia
 CREATE TABLE IF NOT EXISTS `giamgia` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -72,13 +157,35 @@ CREATE TABLE IF NOT EXISTS `giamgia` (
   `ngay_tao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `ngay_cap_nhat` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table nhoibong.giamgia: ~3 rows (approximately)
+-- Dumping data for table nhoibong.giamgia: ~6 rows (approximately)
 INSERT INTO `giamgia` (`id`, `anh_url`, `tieu_de`, `link`, `thu_tu`, `kich_hoat`, `ngay_tao`, `ngay_cap_nhat`) VALUES
-	(1, 'slide2.png', 'TƯNG BỪNG MỪNG KHAI TRƯƠNG', 'sanpham?sort=discount', 1, 1, '2025-10-30 08:56:22', '2025-10-30 09:35:24'),
-	(2, 'slide1.png', 'SIÊU SALE CUỐI NĂM', 'sanpham?deal=plus400', 2, 1, '2025-10-30 08:56:22', '2025-10-30 09:35:30'),
-	(3, 'slide4.png', 'ƯU ĐÃI MỚI CẬP NHẬT', NULL, 3, 1, '2025-11-11 10:18:00', '2025-11-11 10:18:00');
+	(1, 'slide2.png', 'TƯNG BỪNG MỪNG KHAI TRƯƠNG', '', 1, 1, '2025-10-30 08:56:22', '2025-11-28 07:55:51'),
+	(2, 'slide1.png', 'SIÊU SALE CUỐI NĂM', '', 2, 1, '2025-10-30 08:56:22', '2025-11-28 07:55:53'),
+	(3, 'slide4.png', 'CHƯƠNG TRÌNH MỚI CẬP NHẬT', NULL, 3, 1, '2025-11-11 10:18:00', '2025-11-25 10:17:32'),
+	(4, 'giamgia20.jpg', 'ƯU ĐÃI KHÁCH HÀNG MỚI', NULL, 4, 1, '2025-11-24 08:37:23', '2025-11-25 10:16:24'),
+	(5, 'gift.png', 'ƯU ĐÃI KHÁCH HÀNG THÂN THIẾT', NULL, 5, 1, '2025-11-24 08:40:38', '2025-11-25 10:17:50'),
+	(6, 'workshop.png', 'SIÊU SALE SINH NHẬT', NULL, 6, 1, '2025-11-24 08:41:01', '2025-11-24 08:41:01');
+
+-- Dumping structure for table nhoibong.giohang
+CREATE TABLE IF NOT EXISTS `giohang` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `sanpham_id` int NOT NULL,
+  `loai_id` int NOT NULL,
+  `gia` decimal(10,1) NOT NULL,
+  `soluong` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `fk_giohang_user` (`user_id`),
+  KEY `fk_giohang_sanpham` (`sanpham_id`),
+  KEY `fk_giohang_loai` (`loai_id`),
+  CONSTRAINT `fk_giohang_loai` FOREIGN KEY (`loai_id`) REFERENCES `sanpham_loai` (`id`),
+  CONSTRAINT `fk_giohang_sanpham` FOREIGN KEY (`sanpham_id`) REFERENCES `sanpham` (`masp`),
+  CONSTRAINT `fk_giohang_user` FOREIGN KEY (`user_id`) REFERENCES `taikhoan` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table nhoibong.giohang: ~0 rows (approximately)
 
 -- Dumping structure for table nhoibong.sanpham
 CREATE TABLE IF NOT EXISTS `sanpham` (
@@ -100,19 +207,66 @@ CREATE TABLE IF NOT EXISTS `sanpham` (
   `bst` varchar(50) DEFAULT NULL,
   `loai` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`masp`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table nhoibong.sanpham: ~9 rows (approximately)
+-- Dumping data for table nhoibong.sanpham: ~10 rows (approximately)
 INSERT INTO `sanpham` (`masp`, `tensp`, `giatien`, `giakm`, `giam_pt`, `giam_tien`, `km_tu`, `km_den`, `bogo`, `qua_moi_don`, `uu_tien`, `kich_hoat`, `mota`, `anhsp`, `noibat`, `bst`, `loai`) VALUES
 	(1, 'Gấu bông có kèm chăn', 90000.00, NULL, NULL, 25000.00, NULL, NULL, 0, 0, NULL, 1, 'Chăn gối văn phòng 3 trong 1', 'c5c9e4e3dfeece6a7f9aaac418e1086e.jfif', 0, 'khong', 'changoi'),
 	(2, 'Thú nhồi bông Sanrio', 105000.00, NULL, 50, NULL, NULL, NULL, 0, 0, 1, 1, 'Thú nhồi bông Sanrio (Kuromi, Cinnamoroll, MyMelody,...) lông mịn', '20230116_G5nEiVQo5U5UQaRo.jpg', 1, 'sanrio', 'tnb'),
 	(3, 'Móc khóa gấu trúc đỏ dễ thương', 65000.00, NULL, NULL, 15000.00, NULL, NULL, 0, 0, 2, 1, 'Móc khóa gấu trúc đỏ nhồi bông kéo được đuôi dễ thương', 'sg-11134201-7ren6-m1qdnfz1sgug03.jfif', 1, 'khong', 'mockhoa'),
-	(4, 'Thú nhồi bông Doraemon mặc trang phục Rock cỡ vừa', 110500.00, NULL, 50, NULL, NULL, NULL, 0, 0, 3, 1, 'Thú nhồi bông Doraemon mặc trang phục Rock cỡ vừa', 'images.jfif', 0, 'doraemon', 'tnb'),
+	(4, 'Thú nhồi bông Doraemon mặc trang phục Rock ', 110500.00, NULL, 50, NULL, NULL, NULL, 0, 0, 3, 1, 'Thú nhồi bông Doraemon mặc trang phục Rock cỡ vừa', 'images.jfif', 0, 'doraemon', 'tnb'),
 	(5, 'Gấu bông trắng cỡ lớn kèm gấu cỡ nhỏ', 120000.00, 100000.00, NULL, NULL, NULL, NULL, 0, 0, 4, 1, 'Gấu bông trắng đeo nơ cổ cỡ lớn kèm gấu trắng cỡ nhỏ', 'gau-bong-dep-tn.jpg', 1, 'khong', 'tnb'),
 	(6, 'Thú nhồi bông Capybara gõ mõ', 85000.00, NULL, 50, NULL, NULL, NULL, 0, 0, 5, 1, 'Thú nhồi bông Capybara gõ mõ ngộ nghĩnh - Size 35cm', '4384959201a0a8bfeec9dff8f1e6e8c6.jpeg', 0, 'capybara', 'tnb'),
 	(7, 'Dây buộc rèm gắn hình thú', 55000.00, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 1, 'Dây buộc rèm gắn hình thú nhồi bông đáng yêu', 'Day-buoc-rem-gan-hinh-thu-nhoi-bong-dang-yeu-FSH7454-14.jpg', 0, 'khong', 'khac'),
 	(8, 'Thú nhồi bông Baby Three', 195500.00, NULL, 50, NULL, NULL, NULL, 0, 0, 6, 1, 'Thú nhồi bông Baby Three với các loại mắt khác nhau', 'san-pham-1-1-1738991026-3249-1-2791-1254-1739035001.jpg', 0, 'babythree', 'tnb'),
-	(9, 'Thú nhồi bông bạch tuộc 2 cảm xúc', 130000.00, 95000.00, NULL, NULL, NULL, NULL, 0, 0, 7, 1, 'Thú nhồi bông bạch tuộc 2 cảm xúc lông mịn 3D nhiều kích thước', 'unnamed.jpg', 1, 'khong', 'tnb');
+	(9, 'Thú nhồi bông bạch tuộc hai cảm xúc', 130000.00, 95000.00, NULL, NULL, NULL, NULL, 0, 0, 7, 1, 'Thú nhồi bông bạch tuộc 2 cảm xúc lông mịn 3D nhiều kích thước', 'unnamed.jpg', 1, 'khong', 'tnb'),
+	(10, 'Móc khóa mèo máy Doraemon kèm nhiều charm khác nhau', 60000.00, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 1, 'Móc khóa mèo máy Doraemon với đa dạng mẫu mã khác nhau', 'dr2.jpg', 0, 'doraemon', 'mockhoa');
+
+-- Dumping structure for table nhoibong.sanpham_loai
+CREATE TABLE IF NOT EXISTS `sanpham_loai` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sanpham_id` int NOT NULL,
+  `ten_loai` varchar(100) NOT NULL,
+  `gia` decimal(12,2) DEFAULT NULL,
+  `soluong` int DEFAULT NULL,
+  `anh` varchar(255) DEFAULT NULL,
+  `is_default` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `fk_loai_sanpham` (`sanpham_id`),
+  CONSTRAINT `fk_loai_sanpham` FOREIGN KEY (`sanpham_id`) REFERENCES `sanpham` (`masp`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table nhoibong.sanpham_loai: ~29 rows (approximately)
+INSERT INTO `sanpham_loai` (`id`, `sanpham_id`, `ten_loai`, `gia`, `soluong`, `anh`, `is_default`) VALUES
+	(1, 2, 'Cinamonroll', 105000.00, 100, NULL, 1),
+	(2, 2, 'Kuromi', 105000.00, 100, NULL, 1),
+	(3, 2, 'My Melody', 105000.00, 100, NULL, 1),
+	(4, 2, 'Pochaco', 105000.00, 100, NULL, 1),
+	(5, 5, 'Kèm gấu nhỏ', 120000.00, 100, NULL, 1),
+	(6, 5, 'Lẻ gấu lớn', 120000.00, 100, NULL, 1),
+	(7, 9, 'Xanh dương - Hồng', 130000.00, 100, NULL, 0),
+	(9, 1, 'Thỏ - Cà rốt', 90000.00, 100, NULL, 0),
+	(10, 1, 'Mèo - Cá', 90000.00, 100, NULL, 0),
+	(11, 1, 'Chó - Thịt đùi', 90000.00, 100, NULL, 0),
+	(12, 3, 'Gấu trúc đỏ', 65000.00, 100, NULL, 0),
+	(13, 3, 'Gấu trúc', 65000.00, 100, NULL, 0),
+	(14, 4, 'Nhỏ', 110500.00, 100, NULL, 0),
+	(15, 4, 'Vừa', 110500.00, 100, NULL, 0),
+	(16, 4, 'Lớn', 110500.00, 100, NULL, 0),
+	(17, 6, 'Nhỏ', 85000.00, 100, NULL, 0),
+	(18, 6, 'Vừa', 85000.00, 100, NULL, 0),
+	(19, 6, 'Lớn', 85000.00, 100, NULL, 0),
+	(20, 7, 'Bambi', 55000.00, 100, NULL, 0),
+	(21, 7, 'Totoro', 55000.00, 100, NULL, 0),
+	(22, 7, 'Pikachu', 55000.00, 100, NULL, 0),
+	(23, 7, 'Cloud', 55000.00, 100, NULL, 0),
+	(24, 8, 'Mắt lè khe', 195000.00, 100, NULL, 0),
+	(25, 8, 'Mắt lấp lánh', 195000.00, 100, NULL, 0),
+	(26, 9, 'Xanh lá - Vàng', 130000.00, 100, NULL, 0),
+	(27, 9, 'Đỏ - Cam', 130000.00, 100, NULL, 0),
+	(28, 10, 'Bồn tắm', 60000.00, 100, NULL, 0),
+	(29, 10, 'Bình nước', 60000.00, 100, NULL, 0),
+	(30, 10, 'Ngôi sao', 60000.00, 100, NULL, 0);
 
 -- Dumping structure for table nhoibong.taikhoan
 CREATE TABLE IF NOT EXISTS `taikhoan` (
@@ -124,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `taikhoan` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `tendangnhap` (`tendangnhap`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table nhoibong.taikhoan: ~5 rows (approximately)
 INSERT INTO `taikhoan` (`id`, `tendangnhap`, `matkhau`, `email`, `vaitro`) VALUES
@@ -139,7 +293,6 @@ CREATE TABLE IF NOT EXISTS `tt_user` (
   `id` int NOT NULL AUTO_INCREMENT,
   `taikhoan_id` int DEFAULT NULL,
   `hoten` varchar(120) DEFAULT NULL,
-  `email` varchar(150) DEFAULT NULL,
   `ngaysinh` date DEFAULT NULL,
   `sdt` varchar(20) DEFAULT NULL,
   `diachi` varchar(255) DEFAULT NULL,
@@ -150,12 +303,12 @@ CREATE TABLE IF NOT EXISTS `tt_user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table nhoibong.tt_user: ~5 rows (approximately)
-INSERT INTO `tt_user` (`id`, `taikhoan_id`, `hoten`, `email`, `ngaysinh`, `sdt`, `diachi`, `anh`) VALUES
-	(1, 1, 'Nguyễn Văn A', 'admin@example.com', '1990-04-15', '0901234567', '68 Nguyễn Chí Thanh, Đống Đa, Hà Nội', 'uploads/avatars/admin.jpg'),
-	(2, 2, 'Trần Thị B', 'user@example.com', '1995-08-21', '0912345678', '12 Lý Thường Kiệt, Hoàn Kiếm, Hà Nội', 'uploads/avatars/user.jpg'),
-	(3, 3, 'Phạm Hữu C', 'suabien@gmail.com', '1998-11-02', '0933456789', '22 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh', 'uploads/avatars/suabien.jpg'),
-	(4, 4, 'Lê Hoàng D', 'acc@gmail.com', '2000-01-10', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 'uploads/avatars/acc.jpg'),
-	(5, 5, 'Đỗ Minh E', 'acctest@gmail.com', '1999-06-25', '0965678901', '8 Trần Phú, Nha Trang, Khánh Hòa', 'uploads/avatars/acctest.jpg');
+INSERT INTO `tt_user` (`id`, `taikhoan_id`, `hoten`, `ngaysinh`, `sdt`, `diachi`, `anh`) VALUES
+	(1, 1, 'Nguyễn Văn A', '1990-04-15', '0901234567', '68 Nguyễn Chí Thanh, Đống Đa, Hà Nội', 'logo - Copy.png'),
+	(2, 2, 'Trần Thị B', '1995-08-21', '0912345678', '12 Lý Thường Kiệt, Hoàn Kiếm, Hà Nội', 'pink-flowers-blue-sky-pastel-desktop-wallpaper-preview.jpg'),
+	(3, 3, 'Phạm Hữu C', '1998-11-02', '0933456789', '22 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh', 'unnamed.jpg'),
+	(4, 4, 'Lê Hoàng D', '2000-01-10', '0944567890', '45 Điện Biên Phủ, Bình Thạnh, TP. Hồ Chí Minh', 'uploads/avatars/1764007316681_capyslide.jpg'),
+	(5, 5, 'Đỗ Minh E', '1999-06-25', '0965678901', '8 Trần Phú, Nha Trang, Khánh Hòa', '20230116_G5nEiVQo5U5UQaRo.jpg');
 
 -- Dumping structure for table nhoibong.vouchers
 CREATE TABLE IF NOT EXISTS `vouchers` (
@@ -177,11 +330,11 @@ CREATE TABLE IF NOT EXISTS `vouchers` (
   UNIQUE KEY `uq_ma` (`ma`),
   KEY `idx_v_active` (`kich_hoat`,`het_han`),
   KEY `idx_v_order` (`thu_tu`,`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table nhoibong.vouchers: ~6 rows (approximately)
 INSERT INTO `vouchers` (`id`, `loai`, `ma`, `tieu_de`, `phan_tram`, `so_tien_giam`, `don_toi_thieu`, `giam_toi_da`, `het_han`, `san_pham_nhat_dinh`, `kich_hoat`, `thu_tu`, `ngay_tao`, `ngay_cap_nhat`) VALUES
-	(1, 'NHAP_MA', 'GIAM8', 'Giảm 8%', 8.00, 0, 169000, 20000, '2025-11-20 12:00:02', 0, 1, 1, '2025-10-31 05:00:02', '2025-11-06 08:24:07'),
+	(1, 'NHAP_MA', 'GIAM8', 'Giảm 8%', 8.00, 0, 169000, 20000, '2025-12-12 12:00:00', 0, 1, 1, '2025-10-31 05:00:02', '2025-11-24 08:14:49'),
 	(2, 'NHAP_MA', 'GIAM10', 'Giảm 10%', 10.00, 0, 50000, 100000, '2025-11-20 12:00:02', 0, 1, 2, '2025-10-31 05:00:02', '2025-11-06 08:24:03'),
 	(3, 'LUU', NULL, 'Giảm 5% đơn bất kỳ', 5.00, 0, 0, 20000, '2025-11-20 12:00:02', 0, 1, 3, '2025-10-31 05:00:02', '2025-11-06 08:24:00'),
 	(4, 'LUU', NULL, 'Giảm 10% đơn bất kỳ', 10.00, 0, 0, 55000, '2025-11-20 12:00:02', 0, 1, 4, '2025-10-31 05:00:02', '2025-11-06 08:23:57'),
