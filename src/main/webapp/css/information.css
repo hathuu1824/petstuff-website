@@ -3,9 +3,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
 */
 /* 
-    Created on : 31 Oct 2025, 10:27:39 am
+    Created on : 25 Nov 2025, 12:11:17 am
     Author     : hathuu24
 */
+
 * {
     padding: 0;
     margin: 0;
@@ -346,389 +347,184 @@ nav.container {
     }
 }
 
-/* voucher */
-
-.main {
-    flex: 1 0 auto;
-    padding-top: var(--header-h);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: rgba(255, 255, 255, 0.5);
-    background-repeat: no-repeat;
-    background-position: top;
-    width: 100%;
+.profile-container {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    max-width: 700px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
 }
-.heading {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+.profile-header {
+    background: linear-gradient(135deg, #ff8aa7, #3dade3);
+    padding: 30px;
     text-align: center;
-    font-size: 3rem;
-    padding: 1rem;
-    margin: 1rem;
-    background: aliceblue;
-    color: #a2d2ff;
+    color: white;
 }
-.voucher-wrap {
-    position: relative;
-    padding: 8px 0 24px;
-}
-.voucher-scroller{
-    --gap: 18px;                       
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: calc((100% - var(--gap)) / 2);
-    gap: var(--gap);
-    overflow-x: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: clamp(16px, 6vw, 80px);
-    padding: 12px clamp(16px, 6vw, 80px);
-}
-.voucher-scroller::-webkit-scrollbar{ 
-    height: 8px; 
-}
-.voucher-scroller::-webkit-scrollbar-thumb{
-    background: #eee;
-    border-radius: 999px;
-}
-.coupon{
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1px auto;
-    align-items: center;
-    background: #fff5f5;
-    border: 1px solid #ffd6d6;
-    border-radius: 6px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.04);
-    padding: 20px 16px;
-    scroll-snap-align: start;
-    color: #d70000;
-    min-height: 120px;
-    overflow: visible;
-}
-.voucher-wrap::before {
-    left: 0;
-    background: linear-gradient(to right, #ffffff, #ffffff 60%);
-}
-.voucher-wrap::after {
-    right: 0;
-    background: linear-gradient(to left, #ffffff, #ffffff 60%);
-}
-.coupon-left {
-    padding-right: 12px;
-}
-.coupon-title {
-    font-size: 20px;
-    line-height: 1.2;
-    margin: 0 0 6px;
-}
-.coupon-sub {
-    margin: 0 0 8px;
-    font-size: 16px;
-}
-.coupon-exp {
-    margin: 0;
-    font-size: 14px;
-    color: #d36c6c;
-}
-.coupon-sep {
-    width: 1px;
-    height: 100%;
-    background: repeating-linear-gradient(to bottom, #f2c3c3 0 10px, transparent 10px 20px);
-    opacity: .8;
-}
-.coupon-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding-left: 16px;
-}
-.btn-save {
-    border: 0;
-    background: #d70000;
-    color: #fff;
-    font-weight: 700;
-    padding: 10px 26px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-.badge-outline {
-    border: 1px solid #d70000;
-    color: #d70000;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 14px;
-}
-.coupon-edge {
-    position: absolute;
-    top: 8px;
-    bottom: 8px;
-    width: 14px;
-    background: radial-gradient(circle, #ffffff 6px, #ffd6d6 5px, transparent 6px) center / 14px 20px repeat-y;
-    pointer-events: none;
-}
-.coupon-edge.left {
-    left: -7px;
-    border-left: 1px solid transparent;
-    border-radius: 6px 0 0 6px;
-}
-.coupon-edge.right {
-    right: -7px;
-    transform: scaleX(-1);
-    border-right: 1px solid transparent;
-    border-radius: 0 6px 6px 0;
-}
-.v-nav {
-    position: absolute; 
-    top: calc(65% + 10px);
-    transform: translateY(-50%);
-    width: 42px; 
-    height: 42px; 
-    border-radius: 999px;
-    border: 0; 
-    background: #ffffff; 
-    box-shadow: 0 4px 16px rgba(0,0,0,.2);
-    cursor: pointer; 
-    font-size: 26px; 
-    color: #d70000;
-}
-.v-nav:hover {
-    background: #ffe6e6;
-}
-.v-prev {
-    left: 20px;
-}
-.v-next {
-    right: 20px;
-}
-.voucher-input-wrap {
-    max-width: 1080px;
-    margin: 50px auto 35px;
-    padding: 0 8px;
-}
-.voucher-input {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-    border-radius: 14px;
-    padding: 10px 12px 10px 16px;
-}
-.voucher-input i.fa-ticket {
-    font-size: 18px;
-    color: #3dade3;
-    opacity: .9;
-}
-#voucherCode {
-    flex: 1;
-    height: 46px;
-    border: 1px solid transparent;
-    border-radius: 10px;
-    padding: 0 12px;
-    font-size: 16px;
-    outline: none;
-    background: #f8fafc;
-    transition: border-color .2s, background .2s;
-}
-#voucherCode:focus {
-    border-color: #3dade3;
-    background: #ffffff;
-}
-#voucherCode.is-error {
-    border-color: #ef4444;
-    background: #fff5f5;
-}
-.v-btn {
-    height: 46px;
-    padding: 0 18px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: #a2d2ff;
-    color: #ffffff;
+
+.profile-header h2 {
+    margin: 20px 0 0;
+    font-size: 28px;
     font-weight: 600;
-    transition: transform .05s ease, box-shadow .2s ease, background .2s ease;
-    box-shadow: 0 4px 12px rgba(10, 102, 194, .25);
-}
-.v-btn:hover { 
-    background: #3dade3; 
-}
-.v-btn:active { 
-    transform: translateY(1px); 
-}
-.v-alert {
-    margin-top: 20px;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 14px;
-    line-height: 1.45;
-    border: 1px solid transparent;
-}
-.v-alert.ok  { 
-    background: #e8f7ee; 
-    color: #0a7a3b; 
-    border-color: #bfe7cd; 
-}
-.v-alert.err { 
-    background: #fff2f1; 
-    color: #c24131; 
-    border-color: #f3c2bd; 
-}
-@media (max-width: 900px) {
-    .voucher-scroller {
-      grid-auto-columns: 100%;
-    }
 }
 
-/* all */
-
-.news-container, .voucher-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.voucher-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
-    gap: 30px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 15px clamp(16px, 6vw, 80px);
-}
-.voucher-list::-webkit-scrollbar {
-    height: 8px;
-}
-.voucher-list::-webkit-scrollbar-thumb {
-    background: #eee;
-    border-radius: 999px;
-}
-.coupon {
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
     position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1px auto;
-    align-items: center;
-    background: #fff5f5;
-    border: 1px solid #ffd6d6;
-    border-radius: 6px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .04);
-    padding: 20px 30px;
-    scroll-snap-align: start;
-    color: #d70000;
-    min-height: 120px;
-    overflow: visible;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
-.coupon-left {
-    padding-right: 12px;
-}
-.coupon-title {
-    font-size: 20px;
-    line-height: 1.2;
-    margin: 0 0 6px;
-}
-.coupon-sub {
-    margin: 0 0 8px;
-    font-size: 16px;
-}
-.coupon-exp {
-    margin: 0;
-    font-size: 14px;
-    color: #d36c6c;
-}
-.coupon-sep {
-    width: 1px;
+
+.profile-avatar img {
+    width: 100%;
     height: 100%;
-    background: repeating-linear-gradient(to bottom, #f2c3c3 0 10px, transparent 10px 20px);
-    opacity: .8;
+    object-fit: cover;
+    border-radius: 50%;
 }
-.coupon-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding-left: 16px;
-}
-.btn-save {
-    border: 0;
-    background: #d70000;
-    color: #ffffff;
-    font-weight: 700;
-    padding: 10px 26px;
-    margin-left: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-.badge-outline {
-    border: 1px solid #d70000;
-    color: #d70000;
-    padding: 6px 10px;
-    margin-left: 5px;
-    border-radius: 6px;
-    font-size: 14px;
-}
-.coupon-edge {
+
+.avatar-overlay {
     position: absolute;
-    top: 8px;
-    bottom: 8px;
-    width: 14px;
-    background: radial-gradient(circle, #ffffff 6px, #ffd6d6 5px, transparent 6px) center / 14px 20px repeat-y;
-    pointer-events: none;
-}
-.coupon-edge.left {
-    left: -7px;
-    border-left: 1px solid transparent;
-    border-radius: 6px 0 0 6px;
-}
-.coupon-edge.right {
-    right: -7px;
-    transform: scaleX(-1);
-    border-right: 1px solid transparent;
-    border-radius: 0 6px 6px 0;
-}
-.v-nav {
-    position: absolute; 
-    top: calc(65% + 10px);
-    transform: translateY(-50%);
-    width: 42px; 
-    height: 42px; 
-    border-radius: 999px;
-    border: 0; 
-    background: #ffffff; 
-    box-shadow: 0 4px 16px rgba(0,0,0,.2);
-    cursor: pointer; 
-    font-size: 26px; 
-    color: #d70000;
-}
-.pager{
-    display: flex;
-    justify-content: center;  
-    align-items: center;       
-    gap: 8px;
-    width: fit-content;  
-    margin: 24px 620px 0;
-}
-.p-btn{
-    min-width: 36px;
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 9px;
-    background: #ffffff;
-    border: 1px solid #e6eef4;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
-    color: #3dade3;
-    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 24px;
 }
-.p-btn.active{
-    background: #3dade3;
+
+.profile-avatar.editing:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.05);
+}
+
+.profile-form {
+    padding: 30px;
+}
+
+/* Chuyển form-grid sang 2 cột, gap đều */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Những trường full-width chiếm 2 cột */
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.profile-form label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-left: 5px;
+    font-weight: 500;
+    color: #2f3542;
+    font-size: 16px;
+}
+
+.profile-form label i {
+    margin-right: 8px;
+    color: #2f3542;
+}
+
+.profile-form input,
+.profile-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+    background-color: #f9f9f9;
+}
+
+.profile-form input:focus,
+.profile-form textarea:focus {
+    border-color: #333333;
+    box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.2);
+    outline: none;
+    background-color: white;
+}
+
+.profile-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.btn-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f1f1f1;             
+    color: #000000;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-toggle:hover {
+    transform: translateY(-2px);
+}
+
+.btn-toggle:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-toggle i {
+    font-size: 16px;
+}
+
+.btn-toggle.saving-mode {
+    background: #ff8aa7;   
     color: #ffffff;
-    border-color: #3dade3;
 }
-.p-btn.disabled{
-    pointer-events: none;
-    opacity: .45;
+
+.btn-toggle.saving-mode:hover {
+    transform: translateY(-2px);
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* contact */
