@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpSession;
  * @author hathuu24
  */
 
-@WebServlet(name = "trangchu", urlPatterns = {"/trangchu"})
+@WebServlet(name = "trangchu", urlPatterns = {"/","/trangchu"})
 public class HomeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -154,3 +154,4 @@ public class HomeServlet extends HttpServlet {
         return giaKm; // có thể null → JSP sẽ chỉ show giá gốc
     }
 }
+
