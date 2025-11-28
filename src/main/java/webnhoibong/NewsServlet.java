@@ -71,7 +71,6 @@ public class NewsServlet extends HttpServlet {
                     m.put("image",   nz(rs.getString("anh_dai_dien")));       // file trong /images
                     m.put("title",   nz(rs.getString("tieu_de")));
                     m.put("summary", nz(rs.getString("tom_tat")));            // dùng nếu muốn hiện tóm tắt
-                    m.put("link",    "tinchitiet.jsp?id=" + id);              // link chi tiết dùng id
                     slides.add(m);
                 }
             }
@@ -116,7 +115,7 @@ public class NewsServlet extends HttpServlet {
         try { return Integer.parseInt(v); } catch (Exception e) { return def; }
     }
 
-    /** Map 1 dòng bài viết đúng key mà JSP cần: image, title, excerpt, link */
+    /** Map 1 dòng bài viết đúng key mà JSP cần: id, image, title, excerpt */
     private static Map<String,Object> rowNewsForJsp(ResultSet rs) throws SQLException {
         Map<String,Object> m = new HashMap<>();
         int id       = rs.getInt("id");
@@ -124,10 +123,10 @@ public class NewsServlet extends HttpServlet {
         String title = rs.getString("tieu_de");
         String sum   = rs.getString("tom_tat");
 
+        m.put("id", id);  // <<< thêm dòng này
         m.put("image",   img == null || img.isBlank() ? "placeholder-news.jpg" : img);
         m.put("title",   nz(title));
         m.put("excerpt", nz(sum));
-        m.put("link",    "tinchitiet.jsp?id=" + id); 
         return m;
     }
 }
