@@ -2,6 +2,41 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ===== Popup user ở icon tài khoản =====
+    const userMenu   = document.querySelector('.user-menu');
+    const userToggle = document.querySelector('.user-toggle');
+
+    if (userMenu && userToggle) {
+        // Bật / tắt khi click icon user
+        userToggle.addEventListener('click', (e) => {
+            e.preventDefault();   // không chuyển trang
+            e.stopPropagation();  // không cho sự kiện nổi lên doc
+            userMenu.classList.toggle('open');
+        });
+    }
+
+    // ===== Click ra ngoài -> đóng dropdown & popup user =====
+    document.addEventListener('click', (e) => {
+        // đóng tất cả dropdown
+        dropdownItems.forEach(li => li.classList.remove('open'));
+
+        // đóng popup user nếu click ngoài
+        if (userMenu && !userMenu.contains(e.target)) {
+            userMenu.classList.remove('open');
+        }
+    });
+
+    // ===== Nhấn ESC -> đóng hết =====
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            dropdownItems.forEach(li => li.classList.remove('open'));
+            if (userMenu) userMenu.classList.remove('open');
+        }
+    });
+}); 
+    
 (() => {
   const root = document.querySelector('.catalog.has-filters');
   if (!root) return;

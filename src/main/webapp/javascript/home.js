@@ -3,20 +3,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-//Đóng/mở dropdown
+// Đóng/mở dropdown + popup user
 document.addEventListener('DOMContentLoaded', () => {
+    // ===== Dropdown "Sản phẩm", "Bộ sưu tập" =====
     const style = document.createElement('style');
     style.textContent = `.has-dd.open .dropdown{display:block}`;
     document.head.appendChild(style);
 
-    document.querySelectorAll('.has-dd').forEach(li => {
+    const dropdownItems = document.querySelectorAll('.has-dd');
+
+    dropdownItems.forEach(li => {
         const btn   = li.querySelector('.dd-toggle');
         const panel = li.querySelector('.dropdown');
         let hideTimer = null;
 
         const openNow = () => {
             clearTimeout(hideTimer);
-            document.querySelectorAll('.has-dd.open').forEach(x => { if (x !== li) x.classList.remove('open'); });
+            // đóng các dropdown khác
+            dropdownItems.forEach(x => {
+                if (x !== li) x.classList.remove('open');
+            });
             li.classList.add('open');
         };
 
@@ -25,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
             hideTimer = setTimeout(() => li.classList.remove('open'), 250);
         };
 
-        const closeNow = () => { clearTimeout(hideTimer); li.classList.remove('open'); };
+        const closeNow = () => {
+            clearTimeout(hideTimer);
+            li.classList.remove('open');
+        };
 
         li.addEventListener('mouseenter', openNow);
         li.addEventListener('mouseleave', closeLater);
@@ -38,9 +47,37 @@ document.addEventListener('DOMContentLoaded', () => {
             else openNow();
         });
     });
-  
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.has-dd.open').forEach(li => li.classList.remove('open'));
+
+    // ===== Popup user ở icon tài khoản =====
+    const userMenu   = document.querySelector('.user-menu');
+    const userToggle = document.querySelector('.user-toggle');
+
+    if (userMenu && userToggle) {
+        // Bật / tắt khi click icon user
+        userToggle.addEventListener('click', (e) => {
+            e.preventDefault();   // không chuyển trang
+            e.stopPropagation();  // không cho sự kiện nổi lên doc
+            userMenu.classList.toggle('open');
+        });
+    }
+
+    // ===== Click ra ngoài -> đóng dropdown & popup user =====
+    document.addEventListener('click', (e) => {
+        // đóng tất cả dropdown
+        dropdownItems.forEach(li => li.classList.remove('open'));
+
+        // đóng popup user nếu click ngoài
+        if (userMenu && !userMenu.contains(e.target)) {
+            userMenu.classList.remove('open');
+        }
+    });
+
+    // ===== Nhấn ESC -> đóng hết =====
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            dropdownItems.forEach(li => li.classList.remove('open'));
+            if (userMenu) userMenu.classList.remove('open');
+        }
     });
 });
 
@@ -63,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // ====== layout ======
   function layout() {
     slides.forEach((s, idx) => {
-      const offset = (idx - i) * 100;                 // mỗi slide lệch 100%
+      const offset = (idx - i) * 100; // mỗi slide lệch 100%
       s.style.transform = `translateX(${offset}%)`;
       s.classList.toggle('is-active', idx === i);
     });
@@ -113,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
   slider.addEventListener('mouseleave', startTimer);
 
   // ====== keyboard (← →) ======
-  slider.setAttribute('tabindex', '0'); // để nhận focus khi tab vào
+  slider.setAttribute('tabindex', '0');
   slider.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') { next(); startTimer(); }
     else if (e.key === 'ArrowLeft') { prev(); startTimer(); }
@@ -129,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
   slider.addEventListener('touchend', (e) => {
     if (touchX !== null) {
       const dx = e.changedTouches[0].clientX - touchX;
-      if (Math.abs(dx) > 40) {           // ngưỡng vuốt
+      if (Math.abs(dx) > 40) { // ngưỡng vuốt
         if (dx < 0) next(); else prev();
       }
       touchX = null;
@@ -143,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-//Tạo map
+// Tạo map
 window.addEventListener('load', function(){
     var iframe = document.querySelector('.review .loc-map iframe');
     if(!iframe) return;
