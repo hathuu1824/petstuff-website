@@ -80,6 +80,5 @@
 		</section>
 	</div>
 	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="<%=request.getContextPath()%>/js/main.js"></script>
     </body>
 </html>
