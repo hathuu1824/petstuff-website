@@ -97,7 +97,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= request.getContextPath() %>/imagesavatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
