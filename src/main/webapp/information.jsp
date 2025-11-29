@@ -78,52 +78,36 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </head>
     <body>
-        <!-- ================= HEADER ================= -->
-        <header>
+         <header>
+            <!-- Header -->
             <nav class="container">
-                <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
-
+                <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-
-                        <%-- Chỉ user thường mới có icon Giỏ hàng --%>
-                        <% if (!isAdmin) { %>
-                            <a class="icon-btn" href="<%= ctx %>/cart"
-                               aria-label="Giỏ hàng" title="Giỏ hàng">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
-                        <% } %>
-
+                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
                         <div class="user-menu">
-                            <a class="icon-btn user-toggle" href="#"
-                               aria-label="Tài khoản" title="Tài khoản">
+                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
                                 <i class="fa-solid fa-user"></i>
                             </a>
-
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= request.getContextPath() %>/images/avatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
-                                    <div class="user-popup-role-pill"><%= roleLabel %></div>
+                                    <div class="user-popup-role-pill"><%= role %></div>
                                 </div>
                                 <div class="user-popup-body">
-                                    <a href="<%= ctx %>/profile" class="user-popup-item">
+                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
                                         <i class="fa-solid fa-user"></i>
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <% if (isAdmin) { %>
-                                        <a href="<%= ctx %>/admin_donhang" class="user-popup-item">
-                                            <i class="fa-solid fa-screwdriver-wrench"></i>
-                                            <span>Quản lý hệ thống</span>
-                                        </a>
-                                    <% } else { %>
-                                        <a href="<%= ctx %>/donhang" class="user-popup-item">
-                                            <i class="fa-solid fa-box"></i>
-                                            <span>Đơn hàng của bạn</span>
-                                        </a>
-                                    <% } %>
+                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
+                                        <i class="fa-solid fa-box"></i>
+                                        <span>Đơn hàng của bạn</span>
+                                    </a>
                                 </div>
                                 <div class="user-popup-footer">
                                     <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
@@ -131,51 +115,43 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
-                        <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
-                        <a href="<%= ctx %>/register.jsp" class="home-btn">Đăng ký</a>
+                        <a href="login.jsp" class="home-btn">Đăng nhập</a>
+                        <a href="register.jsp" class="home-btn">Đăng ký</a>
                     <% } %>
                 </div>
             </nav>
-
-            <!-- Thanh menu phụ -->
+            <!-- Dropdown -->
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
-                        <li><a href="<%= ctx %>/trangchu">Trang chủ</a></li>
-
+                        <li><a href="<%= request.getContextPath() %>/trangchu">Trang chủ</a></li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button">
-                                <a href="<%= ctx %>/sanpham">Sản phẩm</a>
-                            </button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/sanpham">Sản phẩm</a></button>
                             <ul class="dropdown">
-                                <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=khac">Khác</a></li>
                             </ul>
                         </li>
-
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button">
-                                <a href="<%= ctx %>/bst">Bộ sưu tập</a>
-                            </button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/bst">Bộ sưu tập</a></button>
                             <ul class="dropdown">
-                                <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
-                                <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
-                                <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
-                                <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-
-                        <li><a href="<%= ctx %>/giamgia">Khuyến mại</a></li>
-                        <li><a href="<%= ctx %>/tintuc">Tin tức</a></li>
+                        <li><a href="<%= request.getContextPath() %>/giamgia">Khuyến mại</a></li>
+                        <li><a href="<%= request.getContextPath() %>/tintuc">Tin tức</a></li>
                     </ul>
                 </nav>
-            </div>
-        </header>
+            </div>    
+        </header> 
 
         <!-- ================= MAIN ================= -->
         <main class="main">
