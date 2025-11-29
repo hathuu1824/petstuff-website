@@ -115,13 +115,13 @@
                 }
             }
         %>
-        <header>
+         <header>
             <!-- Header -->
             <nav class="container">
-                <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
+                <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-                        <a class="icon-btn" href="<%= ctx %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <div class="user-menu">
@@ -131,7 +131,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= request.getContextPath() %>/images/avatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -155,8 +155,8 @@
                         </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
-                        <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
-                        <a href="<%= ctx %>/register.jsp" class="home-btn">Đăng ký</a>
+                        <a href="login.jsp" class="home-btn">Đăng nhập</a>
+                        <a href="register.jsp" class="home-btn">Đăng ký</a>
                     <% } %>
                 </div>
             </nav>
@@ -164,31 +164,31 @@
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
-                        <li><a href="trangchu">Trang chủ</a></li>
+                        <li><a href="<%= request.getContextPath() %>/trangchu">Trang chủ</a></li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="sanpham">Sản phẩm</a></button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/sanpham">Sản phẩm</a></button>
                             <ul class="dropdown">
-                                <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=khac">Khác</a></li>
                             </ul>
                         </li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="bst">Bộ sưu tập</a></button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/bst">Bộ sưu tập</a></button>
                             <ul class="dropdown">
-                                <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
-                                <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
-                                <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
-                                <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-                        <li><a href="giamgia">Khuyến mại</a></li>
-                        <li><a href="tintuc">Tin tức</a></li>
+                        <li><a href="<%= request.getContextPath() %>/giamgia">Khuyến mại</a></li>
+                        <li><a href="<%= request.getContextPath() %>/tintuc">Tin tức</a></li>
                     </ul>
                 </nav>
             </div>    
-        </header>
+        </header> 
                    
         <main class="main">
             <section class="news-wrapper">
