@@ -13,7 +13,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Sản phẩm</title>
-
         <link rel="stylesheet" href="<%=request.getContextPath()%>/css/product.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -82,12 +81,13 @@
             if (bstParams != null) Collections.addAll(bstSel, bstParams);
         %>
         <!-- ================= HEADER ================= -->
-        <header>
+         <header>
+            <!-- Header -->
             <nav class="container">
-                <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
+                <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-                        <a class="icon-btn" href="<%= ctx %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <div class="user-menu">
@@ -97,7 +97,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= request.getContextPath() %>/imagesavatar-default.png" alt="Avatar">
+                                        <img src="<%= request.getContextPath() %>/images/avatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -118,7 +118,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
                         <a href="login.jsp" class="home-btn">Đăng nhập</a>
@@ -126,39 +126,35 @@
                     <% } %>
                 </div>
             </nav>
-
-            <!-- Sub menu -->
+            <!-- Dropdown -->
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
-                        <li><a href="trangchu">Trang chủ</a></li>
-
+                        <li><a href="<%= request.getContextPath() %>/trangchu">Trang chủ</a></li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="sanpham">Sản phẩm</a></button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/sanpham">Sản phẩm</a></button>
                             <ul class="dropdown">
-                                <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
+                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=khac">Khác</a></li>
                             </ul>
                         </li>
-
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="bst">Bộ sưu tập</a></button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/bst">Bộ sưu tập</a></button>
                             <ul class="dropdown">
-                                <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
-                                <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
-                                <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
-                                <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-
-                        <li><a href="giamgia">Khuyến mại</a></li>
-                        <li><a href="tintuc">Tin tức</a></li>
+                        <li><a href="<%= request.getContextPath() %>/giamgia">Khuyến mại</a></li>
+                        <li><a href="<%= request.getContextPath() %>/tintuc">Tin tức</a></li>
                     </ul>
                 </nav>
-            </div>
-        </header>
+            </div>    
+        </header> 
 
         <!-- ================= MAIN ================= -->
         <main class="main">
