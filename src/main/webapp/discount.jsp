@@ -48,7 +48,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= request.getContextPath() %>/imagesavatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -217,7 +217,7 @@
                 <button class="p-nav p-next" type="button" aria-label="Next">›</button>
                 <section class="deals-wrap">
                     <a class="deals-banner" href="#">
-                      <img src="images/flashsale.jpg" alt="Săn deal siêu hot">
+                      <img src="<%= request.getContextPath() %>/images/flashsale.jpg" alt="Săn deal siêu hot">
                     </a>
                     <%
                         java.util.List<java.util.Map<String,Object>> deals =
