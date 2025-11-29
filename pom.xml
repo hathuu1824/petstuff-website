@@ -46,10 +46,21 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
-            </plugin>
-        </plugins>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-war-plugin</artifactId>
+                  <version>3.3.2</version>
+                  <configuration>
+                                    <webResources>
+                                             <resource>
+                                             <directory>src/main/webapp/WEB-INF/lib</directory>
+                                             <targetPath>WEB-INF/lib</targetPath>
+                                             <includes>
+                                                      <include>*.jar</include>
+                                             </includes>
+                                             </resource>
+                                    </webResources>
+                           </configuration>
+                  </plugin>
+         </plugins>
     </build>
 </project>
