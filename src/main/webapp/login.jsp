@@ -24,7 +24,7 @@
                     <div class="signin-content">
                         <div class="signin-image">
                             <figure>
-                                <img src="images/logo.png" alt="ảnh">
+                                <img src="<%= request.getContextPath() %>/imageslogo.png" alt="ảnh">
                             </figure>
                             <a href="register.jsp" class="signup-image-link">Chưa có tài khoản?</a>
                         </div>
