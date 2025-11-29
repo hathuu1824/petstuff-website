@@ -119,7 +119,7 @@
                 <% if (!slideUrls.isEmpty()) { %>
                     <% for (int i = 0; i < slideUrls.size(); i++) { %>
                         <div class="slide <%= (i==0 ? "is-active" : "") %>">
-                            <img src="images/<%= slideUrls.get(i) %>" alt="banner <%= i+1 %>">
+                            <img src="<%= request.getContextPath() %>/images<%= slideUrls.get(i) %>" alt="banner <%= i+1 %>">
                         </div>
                     <% } %>
                     <button class="hero-nav prev" aria-label="Trước">‹</button>
