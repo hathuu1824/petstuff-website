@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="css/login.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/css/login.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
         <title>Đăng nhập</title>
     </head>
@@ -75,7 +75,7 @@
             </section>
         </div>
         <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="javascript/login.js"></script>
+        <script src="<%=request.getContextPath()%>/javascript/login.js"></script>
     </body>
 </html>
 
