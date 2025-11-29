@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="css/bst.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bst.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <title>Bộ sưu tập</title>
@@ -365,6 +365,6 @@
                 <p>Copyright &copy; 2025</p>
             </div>
         </footer>
-        <script src="javascript/bst.js"></script>    
+        <script src="<%=request.getContextPath()%>/javascript/bst.js"></script>    
     </body>
 </html>
