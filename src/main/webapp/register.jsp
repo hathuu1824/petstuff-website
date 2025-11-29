@@ -71,7 +71,7 @@
                             </div>
                             <div class="signup-image">
                                 <figure>
-                                    <img src="images/logo.png" alt="ảnh">
+                                    <img src="<%= request.getContextPath() %>/imageslogo.png" alt="ảnh">
                                 </figure>
                                 <a href="login.jsp" class="signup-image-link">Đã có tài khoản</a>
                             </div>
