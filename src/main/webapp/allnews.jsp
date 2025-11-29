@@ -209,6 +209,6 @@
                 <p>Copyright &copy; 2025</p>
             </div>
         </footer>
-        <script src="javascript/news.js"></script>
+        <script src="<%=request.getContextPath()%>/javascript/news.js"></script>
     </body>
 </html>
