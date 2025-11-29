@@ -74,8 +74,8 @@
                         </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
-                        <a href="login.jsp" class="home-btn">Đăng nhập</a>
-                        <a href="register.jsp" class="home-btn">Đăng ký</a>
+                        <a href="<%= request.getContextPath() %>/login.jsp" class="home-btn">Đăng nhập</a>
+                        <a href="<%= request.getContextPath() %>/register.jsp" class="home-btn">Đăng ký</a>
                     <% } %>
                 </div>
             </nav>
@@ -107,7 +107,7 @@
                     </ul>
                 </nav>
             </div>    
-        </header> 
+        </header>  
                             
         <main class="main">
             <!-- ===== Tin nổi bật ===== -->
