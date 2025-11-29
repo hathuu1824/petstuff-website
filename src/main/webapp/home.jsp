@@ -49,7 +49,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= request.getContextPath() %>/images/avatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -131,7 +131,7 @@
                     </div>
                 <% } else { %>
                     <div class="slide is-active">
-                        <img src="images/placeholder-hero.jpg" alt="placeholder">
+                        <img src="<%= request.getContextPath() %>/images/placeholder-hero.jpg" alt="placeholder">
                     </div>
                 <% } %>
                 </div>              
@@ -142,7 +142,7 @@
                 <div class="about-us">
                     <div class="about-container">
                         <div class="about-image">
-                            <img src="images/fluffy-toy-texture-close-up_23-2149686894.avif" width="500px">
+                            <img src="<%= request.getContextPath() %>/images/fluffy-toy-texture-close-up_23-2149686894.avif" width="500px">
                         </div>
                         <div class="about-content">
                             <h3>Chào mừng bạn đến với PetStuff – Thế giới nhồi bông đáng yêu dành cho mọi lứa tuổi!</h3>
@@ -162,28 +162,28 @@
             <!-- Mô tả -->
             <section class="icons-container">
                 <div class="icons">
-                    <img src="images/basket-regular-60.png">
+                    <img src="<%= request.getContextPath() %>/images/basket-regular-60.png">
                     <div class="info">
                         <h3>Đặt Hàng</h3>
                         <span>Đặt mua các sản phẩm thú nhồi bông có mặt tại trang web</span>
                     </div>
                 </div>
                 <div class="icons">
-                    <img src="images/message-rounded-dots-regular-60.png">
+                    <img src="<%= request.getContextPath() %>/images/message-rounded-dots-regular-60.png">
                     <div class="info">
                         <h3>Hỗ Trợ</h3>
                         <span>Chatbot hỗ trợ và tư vấn tùy theo nhu cầu của khách hàng</span>
                     </div>
                 </div>
                 <div class="icons">
-                    <img src="images/message-rounded-dots-regular-60.png">
+                    <img src="<%= request.getContextPath() %>/images/message-rounded-dots-regular-60.png">
                     <div class="info">
                         <h3>Quà Tặng</h3>
                         <span>Thông tin về khuyến mại và các set quà tặng tùy theo đợt</span>
                     </div>
                 </div>
                 <div class="icons">
-                    <img src="images/line-chart-regular-60.png">
+                    <img src="<%= request.getContextPath() %>/images/line-chart-regular-60.png">
                     <div class="info">
                         <h3>Tin tức</h3>
                         <span>Liên tục cập nhật thông tin về các sản phẩm nhồi bông mới nhất</span>
@@ -202,7 +202,7 @@
                     for (Map<String,Object> p : featured) {
             %>
                 <div class="card">
-                    <img src="images/<%= p.get("anhsp") %>" height="250px" alt="<%= p.get("tensp") %>">
+                    <img src="<%= request.getContextPath() %>/images/<%= p.get("anhsp") %>" height="250px" alt="<%= p.get("tensp") %>">
                     <div class="card-content">
                         <%
                             java.math.BigDecimal giaGocBD = (java.math.BigDecimal) p.get("giatien");
