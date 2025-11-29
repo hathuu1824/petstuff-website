@@ -104,10 +104,17 @@
                                         <i class="fa-solid fa-user"></i>
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
-                                        <i class="fa-solid fa-box"></i>
-                                        <span>Đơn hàng của bạn</span>
-                                    </a>
+                                    <% if (isAdmin) { %>
+                                        <a href="<%= ctx %>/admin_donhang" class="user-popup-item">
+                                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                                            <span>Quản lý hệ thống</span>
+                                        </a>
+                                    <% } else { %>
+                                        <a href="<%= ctx %>/donhang" class="user-popup-item">
+                                            <i class="fa-solid fa-box"></i>
+                                            <span>Đơn hàng của bạn</span>
+                                        </a>
+                                    <% } %>
                                 </div>
                                 <div class="user-popup-footer">
                                     <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
