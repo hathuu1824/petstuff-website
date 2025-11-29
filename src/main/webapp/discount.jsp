@@ -32,7 +32,7 @@
                 }
             }
         %>
-        <header>
+         <header>
             <!-- Header -->
             <nav class="container">
                 <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
@@ -48,7 +48,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= request.getContextPath() %>/imagesavatar-default.png" alt="Avatar">
+                                        <img src="<%= request.getContextPath() %>/images/avatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -81,9 +81,9 @@
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
-                        <li><a href="trangchu">Trang chủ</a></li>
+                        <li><a href="<%= request.getContextPath() %>/trangchu">Trang chủ</a></li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="sanpham">Sản phẩm</a></button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/sanpham">Sản phẩm</a></button>
                             <ul class="dropdown">
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
                                 <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
@@ -92,7 +92,7 @@
                             </ul>
                         </li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="bst">Bộ sưu tập</a></button>
+                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/bst">Bộ sưu tập</a></button>
                             <ul class="dropdown">
                                 <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
                                 <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
@@ -100,8 +100,8 @@
                                 <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-                        <li><a href="giamgia">Khuyến mại</a></li>
-                        <li><a href="tintuc">Tin tức</a></li>
+                        <li><a href="<%= request.getContextPath() %>/giamgia">Khuyến mại</a></li>
+                        <li><a href="<%= request.getContextPath() %>/tintuc">Tin tức</a></li>
                     </ul>
                 </nav>
             </div>    
