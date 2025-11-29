@@ -14,7 +14,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Sản phẩm</title>
 
-        <link rel="stylesheet" href="css/product.css">
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/css/product.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </head>
@@ -335,6 +335,6 @@
                 <p>Copyright &copy; 2025</p>
             </div>
         </footer>
-        <script src="javascript/product.js"></script>
+        <script src="<%=request.getContextPath()%>/javascript/product.js"></script>
     </body>
 </html>
