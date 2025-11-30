@@ -151,7 +151,7 @@
 
                         <% for (int i = 0; i < slideUrls.size(); i++) { %>
                             <div class="slide <%= (i == 0 ? "is-active" : "") %>">
-                                <img src="<%= ctx %>/images<%= slideUrls.get(i) %>"
+                                <img src="<%= ctx %>/images/<%= slideUrls.get(i) %>"
                                      alt="banner <%= i + 1 %>">
                             </div>
                         <% } %>
