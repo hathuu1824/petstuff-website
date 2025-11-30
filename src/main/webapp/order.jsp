@@ -74,88 +74,113 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
         <title>Đơn hàng</title>
         <link rel="stylesheet" href="<%= ctx %>/css/order.css">
-        <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+        <!-- Boxicons không dùng nên bỏ -->
+        <!-- <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"> -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </head>
+
     <body>
         <!-- ========== HEADER ========== -->
         <header>
-            <!-- Header -->
             <nav class="container">
-                <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
+                <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
+
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+
+                        <a class="icon-btn"
+                           href="<%= ctx %>/cart"
+                           aria-label="Giỏ hàng"
+                           title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
+
                         <div class="user-menu">
-                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
+                            <a class="icon-btn user-toggle"
+                               href="#"
+                               aria-label="Tài khoản"
+                               title="Tài khoản">
                                 <i class="fa-solid fa-user"></i>
                             </a>
+
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= request.getContextPath() %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
                                 </div>
+
                                 <div class="user-popup-body">
-                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
+                                    <a href="<%= ctx %>/profile" class="user-popup-item">
                                         <i class="fa-solid fa-user"></i>
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
+                                    <a href="<%= ctx %>/donhang" class="user-popup-item">
                                         <i class="fa-solid fa-box"></i>
                                         <span>Đơn hàng của bạn</span>
                                     </a>
                                 </div>
+
                                 <div class="user-popup-footer">
-                                    <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
+                                    <a href="<%= ctx %>/dangxuat" class="home-btn logout-btn">
                                         <span>Đăng xuất</span>
                                     </a>
                                 </div>
                             </div>
-                        </div>    
+                        </div>
+
                         <span class="home">Xin chào, <%= username %>!</span>
+
                     <% } else { %>
-                        <a href="<%= request.getContextPath() %>/login.jsp" class="home-btn">Đăng nhập</a>
-                        <a href="<%= request.getContextPath() %>/register.jsp" class="home-btn">Đăng ký</a>
+
+                        <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
+                        <a href="<%= ctx %>/register.jsp" class="home-btn">Đăng ký</a>
+
                     <% } %>
                 </div>
             </nav>
+
             <!-- Dropdown -->
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
-                        <li><a href="<%= request.getContextPath() %>/trangchu">Trang chủ</a></li>
+                        <li><a href="<%= ctx %>/trangchu">Trang chủ</a></li>
+
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/sanpham">Sản phẩm</a></button>
+                            <button class="dd-toggle" type="button">
+                                <a href="<%= ctx %>/sanpham">Sản phẩm</a>
+                            </button>
                             <ul class="dropdown">
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=khac">Khác</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
                             </ul>
                         </li>
+
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="<%= request.getContextPath() %>/bst">Bộ sưu tập</a></button>
+                            <button class="dd-toggle" type="button">
+                                <a href="<%= ctx %>/bst">Bộ sưu tập</a>
+                            </button>
                             <ul class="dropdown">
-                                <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
-                                <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
-                                <li><a href="<%= request.getContextPath() %>/bst#doraemon">Doraemon</a></li>
-                                <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
+                                <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-                        <li><a href="<%= request.getContextPath() %>/giamgia">Khuyến mại</a></li>
-                        <li><a href="<%= request.getContextPath() %>/tintuc">Tin tức</a></li>
+
+                        <li><a href="<%= ctx %>/giamgia">Khuyến mại</a></li>
+                        <li><a href="<%= ctx %>/tintuc">Tin tức</a></li>
                     </ul>
                 </nav>
-            </div>    
-        </header>  
+            </div>
+        </header>
 
         <!-- ========== MAIN ========== -->
         <main class="orders-main">
@@ -193,6 +218,7 @@
                                 <%= status %>
                             </span>
                         </div>
+
                         <div class="order-card-body">
                             <div class="order-row">
                                 <span>Tổng tiền</span>
@@ -207,8 +233,8 @@
                                 </span>
                             </div>
                         </div>
+
                         <div class="order-card-footer">
-                            <!-- GỌI TRỰC TIẾP HÀM JS GLOBAL -->
                             <button type="button"
                                     class="btn-detail"
                                     onclick="showOrderDetail(<%= madon %>)">
@@ -256,29 +282,45 @@
                 <div class="footer-infor">
                     <h4>PetStuff</h4>
                     <p>Địa chỉ: 68 Nguyễn Chí Thanh, Láng Thượng, Đống Đa, Hà Nội</p>
-                    <p>Điện thoại: +84 23 4597 6688</p> 
+                    <p>Điện thoại: +84 23 4597 6688</p>
                     <p>Email: petstuff6688@hotmail.com</p>
                 </div>
+
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
                     <p><a href="#">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
+
                 <div class="footer-contact">
                     <h4>Hỗ trợ</h4>
-                    <p><a href="contact.jsp">Liên hệ</a></p>
-                    <p><a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">Chatbot tư vấn</a></p>
+                    <p><a href="<%= ctx %>/contact.jsp">Liên hệ</a></p>
+                    <p>
+                        <a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">
+                            Chatbot tư vấn
+                        </a>
+                    </p>
                 </div>
+
                 <div class="footer-social">
                     <h4>Theo dõi</h4>
                     <div class="social">
-                        <a href="https://www.facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.tiktok.com" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://www.instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.twitter.com" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.tiktok.com" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        <a href="https://www.instagram.com" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.twitter.com" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
                     </div>
                 </div>
             </div>
+
             <div class="footer-bottom">
                 <p>Copyright &copy; 2025</p>
             </div>
@@ -288,8 +330,12 @@
         <div id="orderDetailModal" class="modal">
             <div class="modal-dialog">
                 <div class="modal-header">
-                    <h3><i class="fas fa-eye"></i> Chi tiết đơn hàng</h3>
-                    <button type="button" class="modal-close-btn" onclick="closeOrderModal()">
+                    <h3>
+                        <i class="fas fa-eye"></i> Chi tiết đơn hàng
+                    </h3>
+                    <button type="button"
+                            class="modal-close-btn"
+                            onclick="closeOrderModal()">
                         &times;
                     </button>
                 </div>
@@ -321,7 +367,7 @@
 
                     <hr class="modal-divider">
 
-                    <!-- Sản phẩm (giữ giống hình 1) -->
+                    <!-- Sản phẩm -->
                     <h4 class="modal-section-title">Sản phẩm</h4>
                     <div id="view-order-items" class="order-items-box">
                         <!-- JS append .order-item vào đây -->
@@ -341,7 +387,9 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn-close-modal" onclick="closeOrderModal()">
+                    <button type="button"
+                            class="btn-close-modal"
+                            onclick="closeOrderModal()">
                         Đóng
                     </button>
                 </div>
@@ -350,14 +398,11 @@
 
         <!-- ========== SCRIPTS ========== -->
         <script>
-            // Dùng lại context path trong JS
+            // Context path cho JS
             var CTX = "<%= ctx %>";
 
-            /* ========= HÀM GLOBAL: DÙNG CHO onclick() ========= */
-
+            // Gọi từ onclick trong HTML
             function showOrderDetail(id) {
-                console.log("showOrderDetail:", id);
-
                 fetch(CTX + "/donhang?action=detail&id=" + encodeURIComponent(id))
                     .then(function (res) {
                         if (!res.ok) {
@@ -430,11 +475,9 @@
                 if (modal) modal.style.display = "none";
             }
 
-            /* ========= CÁC SETUP CHẠY SAU KHI DOM READY ========= */
-
             document.addEventListener("DOMContentLoaded", function () {
 
-                // --- POPUP USER ---
+                // Popup user
                 (function setupUserPopup() {
                     var userMenu   = document.querySelector(".user-menu");
                     var userToggle = document.querySelector(".user-toggle");
@@ -462,7 +505,7 @@
                     });
                 })();
 
-                // --- TABS LỌC ĐƠN ---
+                // Tabs lọc đơn
                 (function setupTabs() {
                     var tabs  = document.querySelectorAll(".tab-btn");
                     var cards = document.querySelectorAll(".order-card");
@@ -492,7 +535,7 @@
                     applyFilter("all");
                 })();
 
-                // --- CLICK NỀN ĐÓNG MODAL ---
+                // Click nền để đóng modal
                 (function setupModalClose() {
                     var modal = document.getElementById("orderDetailModal");
                     if (!modal) return;
