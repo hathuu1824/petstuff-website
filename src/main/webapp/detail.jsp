@@ -128,13 +128,10 @@
     <head>
         <meta charset="UTF-8">
         <title><%= (productName != null ? productName : "Chi tiết sản phẩm") %></title>
-
         <link rel="stylesheet" href="<%= ctx %>/css/detail.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </head>
-
     <body
         data-logged-in="<%= isLoggedIn %>"
         data-ctx="<%= ctx %>"
@@ -142,7 +139,6 @@
         data-bank-account="0353086897"
         data-account-name="KIEU HA THU"
         data-qr-template="compact">
-
         <header>
             <nav class="container">
                 <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
@@ -155,7 +151,6 @@
                            title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
-
                         <div class="user-menu">
                             <a class="icon-btn user-toggle"
                                href="#"
@@ -163,7 +158,6 @@
                                title="Tài khoản">
                                 <i class="fa-solid fa-user"></i>
                             </a>
-
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
@@ -172,26 +166,23 @@
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
                                 </div>
-
                                 <div class="user-popup-body">
-                                    <a href="<%= ctx %>/profile" class="user-popup-item">
+                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
                                         <i class="fa-solid fa-user"></i>
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="<%= ctx %>/donhang" class="user-popup-item">
+                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
                                         <i class="fa-solid fa-box"></i>
                                         <span>Đơn hàng của bạn</span>
                                     </a>
                                 </div>
-
                                 <div class="user-popup-footer">
-                                    <a href="<%= ctx %>/dangxuat" class="home-btn logout-btn">
+                                    <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
                                         <span>Đăng xuất</span>
                                     </a>
                                 </div>
                             </div>
                         </div>
-
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
                         <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
@@ -261,9 +252,7 @@
                      data-product-id="<%= productIdInt %>"
                      data-product-name="<%= productName != null ? productName : "" %>"
                      data-order-url="<%= ctx %>/order">
-
                     <h1><%= productName %></h1>
-
                     <div class="price"
                          id="priceBlock"
                          data-base-price="<%= defaultSalePrice.longValue() %>"
@@ -277,7 +266,6 @@
                             </span>
                         <% } %>
                     </div>
-
                     <div class="product-shipping">
                         <h2>Vận chuyển:</h2>
                         <p>Nhận hàng trong 7–10 ngày, phí giao 0₫</p>
@@ -290,7 +278,7 @@
                                    Map<String,Object> opt = optionMapList.get(i);
                                    String optName = (String) opt.get("ten_loai");
                                    if (optName == null || optName.isEmpty()) optName = "Mặc định";
-                                   Integer    optId      = (Integer) opt.get("id");
+                                   Integer optId  = (Integer) opt.get("id");
                                    BigDecimal giaSaleBtn = (BigDecimal) opt.get("giaSale");
                                    if (giaSaleBtn == null) giaSaleBtn = defaultSalePrice;
                         %>
@@ -337,7 +325,6 @@
                     <div id="buyModal" class="modal">
                         <div class="modal-content">
                             <span class="close-btn">&times;</span>
-
                             <div class="payment-info">
                                 <h2>Thông tin thanh toán</h2>
                                 <p>
@@ -364,7 +351,6 @@
                                     <strong>Thành tiền:</strong>
                                     <span id="modalTotalPrice"></span>
                                 </p>
-
                                 <div class="form-group horizontal">
                                     <label for="paymentMethod">Phương thức thanh toán:</label>
                                     <select id="paymentMethod" class="form-control">
@@ -373,9 +359,7 @@
                                     </select>
                                 </div>
 
-                                <div id="bankTransferBox"
-                                     class="bank-transfer"
-                                     style="display:none;">
+                                <div id="bankTransferBox" class="bank-transfer" style="display:none;">
                                     <h3>Quét mã QR để thanh toán</h3>
                                     <div class="qr">
                                         <div class="qr-wrap">
@@ -426,7 +410,6 @@
                             </div>
                         </dl>
                     </div>
-
                     <div class="info-card">
                         <h3 class="card-title">MÔ TẢ SẢN PHẨM</h3>
                         <div class="desc">
@@ -487,13 +470,11 @@
                     <p>Điện thoại: +84 23 4597 6688</p>
                     <p>Email: petstuff6688@hotmail.com</p>
                 </div>
-
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
                     <p><a href="#">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
-
                 <div class="footer-contact">
                     <h4>Hỗ trợ</h4>
                     <p><a href="<%= ctx %>/contact.jsp">Liên hệ</a></p>
@@ -503,18 +484,16 @@
                         </a>
                     </p>
                 </div>
-
                 <div class="footer-social">
                     <h4>Theo dõi</h4>
                     <div class="social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.tiktok.com" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.twitter.com" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                     </div>
                 </div>
             </div>
-
             <div class="footer-bottom">
                 <p>Copyright &copy; 2025</p>
             </div>
