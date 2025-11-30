@@ -4,6 +4,7 @@
     Author     : hathuu24
 --%>
 <%@ page import="java.util.*" %>
+<%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
@@ -48,7 +49,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="<%= ctx %>/css/cart.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <title>Giỏ hàng</title>
     </head>
     <body
@@ -114,6 +116,7 @@
                 <nav class="subnav">
                     <ul class="subnav-list">
                         <li><a href="<%= ctx %>/trangchu">Trang chủ</a></li>
+
                         <li class="has-dd">
                             <button class="dd-toggle" type="button">
                                 <a href="<%= ctx %>/sanpham">Sản phẩm</a>
@@ -125,6 +128,7 @@
                                 <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
                             </ul>
                         </li>
+
                         <li class="has-dd">
                             <button class="dd-toggle" type="button">
                                 <a href="<%= ctx %>/bst">Bộ sưu tập</a>
@@ -136,6 +140,7 @@
                                 <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
+
                         <li><a href="<%= ctx %>/giamgia">Khuyến mại</a></li>
                         <li><a href="<%= ctx %>/tintuc">Tin tức</a></li>
                     </ul>
@@ -151,6 +156,7 @@
                     </button>
                     <h1>Giỏ hàng</h1>
                 </div>
+
                 <div class="cart-layout">
                     <div class="cart-box">
                         <div class="cart-header-row">
@@ -164,6 +170,7 @@
                             <div class="col-qty">Số lượng</div>
                             <div class="col-action">Thao tác</div>
                         </div>
+
                         <% if (cartItems.isEmpty()) { %>
                             <div class="cart-empty">
                                 <div class="cart-empty-illustration">
@@ -206,13 +213,16 @@
                                                   method="post">
                                                 <input type="hidden" name="action" value="updateQty">
                                                 <input type="hidden" name="id" value="<%= item.get("cartId") %>">
+
                                                 <button type="submit"
                                                         name="op"
                                                         value="minus"
                                                         class="qty-btn minus">−</button>
+
                                                 <span class="qty-value">
                                                     <%= item.get("soLuong") %>
                                                 </span>
+
                                                 <button type="submit"
                                                         name="op"
                                                         value="plus"
@@ -229,8 +239,10 @@
                             </div>
                         <% } %>
                     </div>
+
                     <aside class="summary-box">
                         <div class="summary-title">Tóm tắt đơn hàng</div>
+
                         <div class="summary-line">
                             <span>Tạm tính:</span>
                             <span><strong><%= subtotal %>đ</strong></span>
@@ -247,11 +259,14 @@
                             <span>Tiết kiệm được:</span>
                             <span><strong><%= saved %>đ</strong></span>
                         </div>
+
                         <div class="summary-divider"></div>
+
                         <div class="summary-total">
                             <span>Tổng tiền:</span>
                             <span><%= total %>đ</span>
                         </div>
+
                         <button class="summary-buy-btn">MUA HÀNG</button>
                     </aside>
                 </div>
@@ -261,8 +276,10 @@
             <div id="cartCheckoutModal" class="modal">
                 <div class="modal-content">
                     <span class="close-btn" id="cartModalClose">&times;</span>
+
                     <div class="payment-info">
                         <h2>Thông tin thanh toán</h2>
+
                         <p>
                             Tổng số sản phẩm:
                             <span id="cartModalItemCount">0</span>
@@ -283,6 +300,7 @@
                             <strong>Thành tiền:</strong>
                             <span id="cartModalTotal">0đ</span>
                         </p>
+
                         <div class="form-group horizontal">
                             <label for="cartPaymentMethod">Phương thức thanh toán:</label>
                             <select id="cartPaymentMethod" class="form-control">
@@ -290,7 +308,10 @@
                                 <option value="BANK">Chuyển khoản ngân hàng</option>
                             </select>
                         </div>
-                        <div id="cartBankTransferBox" class="bank-transfer" style="display:none;">
+
+                        <div id="cartBankTransferBox"
+                             class="bank-transfer"
+                             style="display:none;">
                             <h3>Quét mã QR để thanh toán</h3>
                             <div class="qr">
                                 <div class="qr-wrap">
@@ -307,6 +328,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-actions">
                         <button id="cartConfirmBtn" class="btn btn-primary">Xác nhận</button>
                         <button id="cartModalCloseBtn" class="btn btn-secondary">Đóng</button>
@@ -342,30 +364,47 @@
                     <p>Điện thoại: +84 23 4597 6688</p> 
                     <p>Email: petstuff6688@hotmail.com</p>
                 </div>
+
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
                     <p><a href="#">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
+
                 <div class="footer-contact">
                     <h4>Hỗ trợ</h4>
-                    <p><a href="<%= ctx %>contact.jsp">Liên hệ</a></p>
-                    <p><a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">Chatbot tư vấn</a></p>
+                    <p><a href="<%= ctx %>/contact.jsp">Liên hệ</a></p>
+                    <p>
+                        <a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">
+                            Chatbot tư vấn
+                        </a>
+                    </p>
                 </div>
+
                 <div class="footer-social">
                     <h4>Theo dõi</h4>
                     <div class="social">
-                        <a href="https://www.facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.tiktok.com" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                        <a href="https://www.instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.twitter.com" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.tiktok.com" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        <a href="https://www.instagram.com" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.twitter.com" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
                     </div>
                 </div>
             </div>
+
             <div class="footer-bottom">
                 <p>Copyright &copy; 2025</p>
             </div>
         </footer>
+
         <script src="<%= ctx %>/javascript/cart.js"></script>
     </body>
 </html>
