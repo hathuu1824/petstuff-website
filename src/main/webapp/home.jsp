@@ -187,7 +187,13 @@
 
                         <div class="about-content">
                             <h3>Chào mừng bạn đến với PetStuff – Thế giới nhồi bông đáng yêu dành cho mọi lứa tuổi!</h3>
-                            <p>Chúng tôi chuyên cung cấp các sản phẩm nhồi bông cao cấp…</p>
+                            <p>Chúng tôi chuyên cung cấp các sản phẩm nhồi bông cao cấp với đa dạng kích thước, mẫu mã và chất liệu mềm mịn, an toàn cho sức khỏe.</p>
+                            <p>Cam kết của chúng tôi:</p> 
+                            <p>- Chất lượng cao, bông êm ái, an toàn tuyệt đối.</p>
+                            <p>- Mẫu mã đa dạng, cập nhật xu hướng mới nhất.</p>
+                            <p>- Giá cả hợp lý, dịch vụ tận tâm.</p>   
+                            <p>Hãy để những người bạn bông mềm mại mang đến niềm vui và sự ấm áp cho bạn!</p> 
+                            <p>Mua sắm ngay hôm nay và nhận nhiều ưu đãi hấp dẫn!</p>
                             <a href="<%= ctx %>/sanpham" class="btn">Mua ngay</a>
                         </div>
                     </div>
