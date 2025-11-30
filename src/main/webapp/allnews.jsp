@@ -1,11 +1,9 @@
 <%-- 
     Document   : allnews
-    Created on : 10 Nov 2025, 10:26:27 am
+    Created on : 10 Nov 2025, 10:26:27 am
     Author     : hathuu24
 --%>
-<%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
-<%@ page import="webnhoibong.DatabaseConnection" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -39,36 +37,42 @@
         <header>
             <!-- Header -->
             <nav class="container">
-                <a href="<%= request.getContextPath() %>/trangchu" id="logo">PetStuff</a>
+                <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                        <a class="icon-btn"
+                           href="<%= ctx %>/cart"
+                           aria-label="Giỏ hàng"
+                           title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <div class="user-menu">
-                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
+                            <a class="icon-btn user-toggle"
+                               href="#"
+                               aria-label="Tài khoản"
+                               title="Tài khoản">
                                 <i class="fa-solid fa-user"></i>
                             </a>
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= request.getContextPath() %>/imagesavatar-default.png" alt="Avatar">
+                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
                                 </div>
                                 <div class="user-popup-body">
-                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
+                                    <a href="<%= ctx %>/profile" class="user-popup-item">
                                         <i class="fa-solid fa-user"></i>
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
+                                    <a href="<%= ctx %>/donhang" class="user-popup-item">
                                         <i class="fa-solid fa-box"></i>
                                         <span>Đơn hàng của bạn</span>
                                     </a>
                                 </div>
                                 <div class="user-popup-footer">
-                                    <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
+                                    <a href="<%= ctx %>/dangxuat" class="home-btn logout-btn">
                                         <span>Đăng xuất</span>
                                     </a>
                                 </div>
@@ -76,8 +80,8 @@
                         </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
-                        <a href="login.jsp" class="home-btn">Đăng nhập</a>
-                        <a href="register.jsp" class="home-btn">Đăng ký</a>
+                        <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
+                        <a href="<%= ctx %>/register.jsp" class="home-btn">Đăng ký</a>
                     <% } %>
                 </div>
             </nav>
@@ -85,27 +89,31 @@
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
-                        <li><a href="trangchu">Trang chủ</a></li>
+                        <li><a href="<%= ctx %>/trangchu">Trang chủ</a></li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="sanpham">Sản phẩm</a></button>
+                            <button class="dd-toggle" type="button">
+                                <a href="<%= ctx %>/sanpham">Sản phẩm</a>
+                            </button>
                             <ul class="dropdown">
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=mockhoa">Móc khóa</a></li>
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
-                                <li><a href="<%= request.getContextPath() %>/sanpham?loai=khac">Khác</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
+                                <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
                             </ul>
                         </li>
                         <li class="has-dd">
-                            <button class="dd-toggle" type="button"><a href="bst">Bộ sưu tập</a></button>
+                            <button class="dd-toggle" type="button">
+                                <a href="<%= ctx %>/bst">Bộ sưu tập</a>
+                            </button>
                             <ul class="dropdown">
-                                <li><a href="<%= request.getContextPath() %>/bst#babythree">Baby Three</a></li>
-                                <li><a href="<%= request.getContextPath() %>/bst#capybara">Capybara</a></li>
-                                <li><a href="<%= request.getContextPath() %>/bst#doraemon">Doraemon</a></li>
-                                <li><a href="<%= request.getContextPath() %>/bst#sanrio">Sanrio</a></li>
+                                <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
+                                <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
+                                <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
+                                <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
                             </ul>
                         </li>
-                        <li><a href="giamgia">Khuyến mại</a></li>
-                        <li><a href="tintuc">Tin tức</a></li>
+                        <li><a href="<%= ctx %>/giamgia">Khuyến mại</a></li>
+                        <li><a href="<%= ctx %>/tintuc">Tin tức</a></li>
                     </ul>
                 </nav>
             </div>    
@@ -118,20 +126,26 @@
                     List<Map<String,Object>> newsList =
                         (List<Map<String,Object>>) request.getAttribute("newsList");
                     if (newsList != null && !newsList.isEmpty()) {
-                      for (Map<String,Object> n : newsList) {
-                        String img = String.valueOf(n.getOrDefault("image", "placeholder-news.jpg"));
-                        String title = String.valueOf(n.getOrDefault("title", "Tiêu đề tin tức"));
-                        String excerpt = String.valueOf(n.getOrDefault("excerpt", "Tóm tắt ngắn..."));
-                        String link = String.valueOf(n.getOrDefault("link", "#"));
+                        for (Map<String,Object> n : newsList) {
+                            String img     = String.valueOf(n.getOrDefault("image", "placeholder-news.jpg"));
+                            String title   = String.valueOf(n.getOrDefault("title", "Tiêu đề tin tức"));
+                            String excerpt = String.valueOf(n.getOrDefault("excerpt", "Tóm tắt ngắn..."));
+                            Number idNum   = (Number) n.get("id");
+                            int id         = (idNum != null ? idNum.intValue() : 0);
+                            String link    = ctx + "/newsdetail?id=" + id;
                 %>
                     <article class="news-card">
                         <a href="<%= link %>" class="news-thumb">
-                            <img src="<%= request.getContextPath() %>/images/<%= img %>" alt="<%= title %>">
+                            <img src="<%= ctx %>/images/<%= img %>" alt="<%= title %>">
                         </a>
                         <div class="news-body">
-                            <h3 class="news-title"><a href="<%= link %>"><%= title %></a></h3>
+                            <h3 class="news-title">
+                                <a href="<%= link %>"><%= title %></a>
+                            </h3>
                             <p class="news-excerpt"><%= excerpt %></p>
-                            <a href="<%= link %>" class="read-more">Đọc tiếp <i class="fa-solid fa-arrow-right"></i></a>
+                            <a href="<%= link %>" class="read-more">
+                                Đọc tiếp <i class="fa-solid fa-arrow-right"></i>
+                            </a>
                         </div>
                     </article>
                 <%
@@ -140,17 +154,19 @@
                 %>
                     <div class="news-empty">Hiện chưa có bài viết nào được đăng tải</div>
                 <%
-                  }
+                    }
                 %>
+
                 <%
                     int pg  = (request.getAttribute("page")       != null) ? (Integer) request.getAttribute("page")       : 1;
                     int sz  = (request.getAttribute("size")       != null) ? (Integer) request.getAttribute("size")       : 12;
                     int tp  = (request.getAttribute("totalPages") != null) ? (Integer) request.getAttribute("totalPages") : 1;
-                    String base = request.getContextPath() + "/all?size=" + sz + "&page=";
+                    String base = ctx + "/all?size=" + sz + "&page=";
                 %>
                 <% if (tp >= 1) { %>
                     <div class="pager">
-                        <a class="p-btn <%= (pg <= 1) ? "disabled" : "" %>" href="<%= (pg <= 1) ? "#" : base + (pg - 1) %>">‹</a>
+                        <a class="p-btn <%= (pg <= 1) ? "disabled" : "" %>"
+                           href="<%= (pg <= 1) ? "#" : base + (pg - 1) %>">‹</a>
                         <%
                           int window = 5;
                           int start = Math.max(1, pg - 2);
@@ -158,20 +174,30 @@
                           start     = Math.max(1, end - window + 1);
                           for (int p = start; p <= end; p++) {
                         %>
-                          <a class="p-btn <%= (p == pg) ? "active" : "" %>" href="<%= base + p %>"><%= p %></a>
+                          <a class="p-btn <%= (p == pg) ? "active" : "" %>"
+                             href="<%= base + p %>"><%= p %></a>
                         <% } %>
-                        <a class="p-btn <%= (pg >= tp) ? "disabled" : "" %>" href="<%= (pg >= tp) ? "#" : base + (pg + 1) %>">›</a>
+                        <a class="p-btn <%= (pg >= tp) ? "disabled" : "" %>"
+                           href="<%= (pg >= tp) ? "#" : base + (pg + 1) %>">›</a>
                     </div>
                 <% } %>
             </div>
         </main>
             
-            <!-- Liên hệ -->      
+        <!-- Liên hệ -->      
         <div class="floating-actions" aria-label="Quick actions">
-            <a class="fa-btn contact" href="<%= ctx %>/contact.jsp" title="Liên hệ" aria-label="Liên hệ">
+            <a class="fa-btn contact"
+               href="<%= ctx %>/contact.jsp"
+               title="Liên hệ"
+               aria-label="Liên hệ">
                 <i class="fa-solid fa-phone"></i>
             </a>
-            <a class="fa-btn chat" href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff" target="_blank" rel="noopener" title="Chatbot" aria-label="Chatbot">
+            <a class="fa-btn chat"
+               href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff"
+               target="_blank"
+               rel="noopener"
+               title="Chatbot"
+               aria-label="Chatbot">
                 <i class="fa-regular fa-comments"></i>
             </a>
         </div>
@@ -192,8 +218,12 @@
                 </div>
                 <div class="footer-contact">
                     <h4>Hỗ trợ</h4>
-                    <p><a href="contact.jsp">Liên hệ</a></p>
-                    <p><a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">Chatbot tư vấn</a></p>
+                    <p><a href="<%= ctx %>/contact.jsp">Liên hệ</a></p>
+                    <p>
+                        <a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">
+                            Chatbot tư vấn
+                        </a>
+                    </p>
                 </div>
                 <div class="footer-social">
                     <h4>Theo dõi</h4>
@@ -209,6 +239,6 @@
                 <p>Copyright &copy; 2025</p>
             </div>
         </footer>
-        <script src="<%=request.getContextPath()%>/javascript/news.js"></script>
+        <script src="<%= ctx %>/javascript/news.js"></script>
     </body>
 </html>
