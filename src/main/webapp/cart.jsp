@@ -349,7 +349,7 @@
                 </div>
                 <div class="footer-contact">
                     <h4>Hỗ trợ</h4>
-                    <p><a href="contact.jsp">Liên hệ</a></p>
+                    <p><a href="<%= ctx %>contact.jsp">Liên hệ</a></p>
                     <p><a href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff">Chatbot tư vấn</a></p>
                 </div>
                 <div class="footer-social">
