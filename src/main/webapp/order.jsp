@@ -225,6 +225,11 @@
                                     onclick="showOrderDetail(<%= madon %>)">
                                 Xem chi tiết
                             </button>
+                            <% if ("DELIVERED".equals(trangthai)) { %>
+                                <button type="button" class="return-btn" onclick="openReturnModal(<%= madon %>)">
+                                    Hoàn hàng
+                                </button>
+                            <% } %>
                         </div>
                     </article>
                     <%
@@ -295,7 +300,7 @@
             </div>
         </footer>
 
-        <!-- ========== MODAL CHI TIẾT ĐƠN (USER) ========== -->
+        <!-- ========== MODAL ========== -->
         <div id="orderDetailModal" class="modal">
             <div class="modal-dialog">
                 <div class="modal-header">
@@ -355,6 +360,22 @@
                     <button type="button" class="btn-close-modal" onclick="closeOrderModal()">
                         Đóng
                     </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="returnModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h2>Yêu cầu hoàn hàng</h2>
+
+                <input type="hidden" id="returnOrderId">
+
+                <label>Lý do hoàn hàng:</label>
+                <textarea id="returnReason" placeholder="Nhập lý do..." required></textarea>
+
+                <div class="modal-footer">
+                    <button class="btn cancel" onclick="closeReturnModal()">Hủy</button>
+                    <button class="btn submit" onclick="submitReturn()">Gửi yêu cầu</button>
                 </div>
             </div>
         </div>
@@ -593,6 +614,24 @@
 
                 // Render lần đầu
                 render();
+            }
+            
+            function openReturnModal(orderId) {
+                const reason = prompt("Nhập lý do hoàn hàng:");
+                if (!reason || reason.trim() === "") {
+                    alert("Bạn phải nhập lý do!");
+                    return;
+                }
+
+                fetch("order?action=return&id=" + orderId + "&reason=" + encodeURIComponent(reason), {
+                    method: "GET"
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) location.reload();
+                })
+                .catch(err => alert("Lỗi: " + err));
             }
 
             /* ========== CHẠY SAU KHI DOM SẴN SÀNG ========== */
