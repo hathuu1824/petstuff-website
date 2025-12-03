@@ -10,6 +10,13 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Quản trị đơn hàng:
+ *  - GET  /admin_donhang?action=detail&id=...  -> JSON chi tiết 1 đơn (cho modal)
+ *  - GET  /admin_donhang                        -> Load danh sách đơn, tách theo trạng thái, forward JSP
+ *  - POST /admin_donhang?action=confirm&id=&next=WAIT_PACK|WAIT_SHIP|DELIVERED
+ *  - POST /admin_donhang?action=cancel&id=     -> Hủy đơn, chuyển CANCELED + ghi lý do hủy
+ */
 @WebServlet(name = "AdminOrderServlet", urlPatterns = {"/admin_donhang"})
 public class AdminOrderServlet extends HttpServlet {
 
@@ -45,36 +52,21 @@ public class AdminOrderServlet extends HttpServlet {
         if ("confirm".equalsIgnoreCase(action)) {
             // Xác nhận / đổi trạng thái đơn (PENDING -> WAIT_PACK -> WAIT_SHIP -> DELIVERED)
             handleConfirm(request, response);
+        } else if ("cancel".equalsIgnoreCase(action)) {
+            // Hủy đơn hàng
+            handleCancel(request, response);
         } else {
-            // Hiện tại không dùng update/delete nữa, redirect về danh sách
+            // Các action khác: quay lại danh sách
             response.sendRedirect(request.getContextPath() + "/admin_donhang");
         }
     }
 
-    // ====================== GET: LIST & DETAIL ======================
+    // ====================== GET: DETAIL ======================
 
-    /**
-     * Trả JSON chi tiết 1 đơn hàng:
-     * {
-     *   madon: 1,
-     *   tennguoinhan: "...",
-     *   sdt: "...",
-     *   diachi: "...",
-     *   tongtien: 177500,
-     *   phuongthuc: "COD",
-     *   phuongthucLabel: "Thanh toán khi nhận hàng",
-     *   trangthai: "PENDING",
-     *   items: [
-     *     { productId: 1, tensanpham: "...", soluong: 2, gia: 120000 },
-     *     ...
-     *   ]
-     * }
-     */
     private void handleDetail(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
         String idStr = request.getParameter("id");
-
         response.setCharacterEncoding("UTF-8");
 
         if (idStr == null) {
@@ -131,10 +123,6 @@ public class AdminOrderServlet extends HttpServlet {
             }
 
             // 2) Lấy danh sách sản phẩm trong đơn từ bảng donhang_ct
-            //
-            // Cấu trúc bảng donhang_ct:
-            // id, donhang_id, masp, soluong, gia, thanhtien, loai, tensp
-            //
             String sqlItems =
                     "SELECT masp, tensp, soluong, gia " +
                     "FROM donhang_ct " +
@@ -193,6 +181,8 @@ public class AdminOrderServlet extends HttpServlet {
         }
     }
 
+    // ====================== GET: LIST ======================
+
     private void loadAndForwardList(HttpServletRequest request, HttpServletResponse response,
                                     String errorMessage)
             throws ServletException, IOException {
@@ -212,19 +202,55 @@ public class AdminOrderServlet extends HttpServlet {
                                     String errorMessage, Connection conn)
             throws ServletException, IOException {
 
-        List<Map<String, Object>> orders = new ArrayList<>();
+        List<Map<String, Object>> allOrders       = new ArrayList<>();
+        List<Map<String, Object>> pendingOrders   = new ArrayList<>(); // PENDING
+        List<Map<String, Object>> packOrders      = new ArrayList<>(); // WAIT_PACK
+        List<Map<String, Object>> shippingOrders  = new ArrayList<>(); // WAIT_SHIP
+        List<Map<String, Object>> deliveredOrders = new ArrayList<>(); // DELIVERED
+        List<Map<String, Object>> returnedOrders  = new ArrayList<>(); // RETURNED
+        List<Map<String, Object>> canceledOrders  = new ArrayList<>(); // CANCELED
+        List<Map<String, Object>> otherOrders     = new ArrayList<>(); // khác
 
         // Mặc định: đơn mới nhất hiển thị trên đầu
-        String sql = "SELECT madon, taikhoan_id, tennguoinhan, sdt, diachi, " +
-                     "soluong, phisp, phiship, tongtien, phuongthuc, trangthai, " +
-                     "thoigianthanhtoan, thoigianhuy, ngaytao, ngaycapnhat " +
-                     "FROM donhang ORDER BY ngaytao DESC";
+        String sql = "SELECT madon, taikhoan_id, tennguoinhan, sdt, diachi, "
+                   + "soluong, phisp, phiship, tongtien, phuongthuc, trangthai, "
+                   + "thoigianthanhtoan, thoigianhuy, ngaytao, ngaycapnhat, "
+                   + "lydo_huy, lydo_hoan "
+                   + "FROM donhang ORDER BY ngaytao DESC";
 
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                orders.add(mapOrderRow(rs));
+                Map<String, Object> m = mapOrderRow(rs);
+                allOrders.add(m);
+
+                String st = (String) m.get("trangthai");
+                if (st == null) st = "";
+
+                switch (st) {
+                    case "PENDING":
+                        pendingOrders.add(m);
+                        break;
+                    case "WAIT_PACK":
+                        packOrders.add(m);
+                        break;
+                    case "WAIT_SHIP":
+                        shippingOrders.add(m);
+                        break;
+                    case "DELIVERED":
+                        deliveredOrders.add(m);
+                        break;
+                    case "RETURNED":
+                        returnedOrders.add(m);
+                        break;
+                    case "CANCELED":
+                        canceledOrders.add(m);
+                        break;
+                    default:
+                        otherOrders.add(m);
+                        break;
+                }
             }
 
         } catch (SQLException ex) {
@@ -235,7 +261,16 @@ public class AdminOrderServlet extends HttpServlet {
         if (errorMessage != null) {
             request.setAttribute("loadError", errorMessage);
         }
-        request.setAttribute("orders", orders);
+
+        // Gửi sang JSP
+        request.setAttribute("orders",          allOrders);
+        request.setAttribute("pendingOrders",   pendingOrders);
+        request.setAttribute("packOrders",      packOrders);
+        request.setAttribute("shippingOrders",  shippingOrders);
+        request.setAttribute("deliveredOrders", deliveredOrders);
+        request.setAttribute("returnedOrders",  returnedOrders);
+        request.setAttribute("canceledOrders",  canceledOrders);
+        request.setAttribute("otherOrders",     otherOrders);
 
         request.getRequestDispatcher("/admin/order.jsp").forward(request, response);
     }
@@ -258,6 +293,8 @@ public class AdminOrderServlet extends HttpServlet {
         m.put("thoigianhuy", rs.getTimestamp("thoigianhuy"));
         m.put("ngaytao", rs.getTimestamp("ngaytao"));
         m.put("ngaycapnhat", rs.getTimestamp("ngaycapnhat"));
+        m.put("lydo_huy", rs.getString("lydo_huy"));
+        m.put("lydo_hoan", rs.getString("lydo_hoan"));
         return m;
     }
 
@@ -267,6 +304,10 @@ public class AdminOrderServlet extends HttpServlet {
      * Xác nhận / cập nhật trạng thái đơn:
      *  - JS gửi: action=confirm&id=...&next=WAIT_PACK / WAIT_SHIP / DELIVERED
      *  - Trả về "OK" nếu thành công (status 200)
+     *
+     *  Quy ước thời điểm ghi thoigianthanhtoan:
+     *   - Nếu phuongthuc = BANK  và duyệt PENDING  -> WAIT_PACK   => set thoigianthanhtoan = NOW()
+     *   - Nếu phuongthuc = COD   và duyệt WAIT_SHIP -> DELIVERED  => set thoigianthanhtoan = NOW()
      */
     private void handleConfirm(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -302,21 +343,177 @@ public class AdminOrderServlet extends HttpServlet {
             return;
         }
 
-        String sql = "UPDATE donhang SET trangthai = ?, ngaycapnhat = NOW() WHERE madon = ?";
+        try (Connection conn = DatabaseConnection.getConnection()) {
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+            // 1) Lấy phuongthuc, trangthai hiện tại và thoigianthanhtoan
+            String phuongThuc = null;
+            String currentStatus = null;
+            Timestamp payTime = null;
 
-            ps.setString(1, nextSt);
-            ps.setLong(2, madon);
-            int updated = ps.executeUpdate();
+            String sqlSelect = "SELECT phuongthuc, trangthai, thoigianthanhtoan " +
+                               "FROM donhang WHERE madon = ?";
+            try (PreparedStatement ps = conn.prepareStatement(sqlSelect)) {
+                ps.setLong(1, madon);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        phuongThuc    = rs.getString("phuongthuc");
+                        currentStatus = rs.getString("trangthai");
+                        payTime       = rs.getTimestamp("thoigianthanhtoan");
+                    }
+                }
+            }
 
-            if (updated == 0) {
+            if (currentStatus == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write("Order not found");
+                return;
+            }
+
+            // 2) Quyết định có set thoigianthanhtoan hay không
+            boolean setPayTime = false;
+
+            if ("BANK".equals(phuongThuc)
+                    && "PENDING".equals(currentStatus)
+                    && "WAIT_PACK".equals(nextSt)
+                    && payTime == null) {
+                // Thanh toán chuyển khoản: xác nhận ở bảng Chờ xác nhận
+                setPayTime = true;
+            } else if ("COD".equals(phuongThuc)
+                    && "WAIT_SHIP".equals(currentStatus)
+                    && "DELIVERED".equals(nextSt)
+                    && payTime == null) {
+                // Thanh toán khi nhận hàng: xác nhận ở bảng Chờ giao
+                setPayTime = true;
+            }
+
+            // 3) Cập nhật trạng thái (+ thời gian thanh toán nếu cần)
+            String sqlUpdate;
+            if (setPayTime) {
+                sqlUpdate = "UPDATE donhang " +
+                            "SET trangthai = ?, " +
+                            "    thoigianthanhtoan = NOW(), " +
+                            "    ngaycapnhat = NOW() " +
+                            "WHERE madon = ?";
             } else {
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("OK");
+                sqlUpdate = "UPDATE donhang " +
+                            "SET trangthai = ?, " +
+                            "    ngaycapnhat = NOW() " +
+                            "WHERE madon = ?";
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(sqlUpdate)) {
+                ps.setString(1, nextSt);
+                ps.setLong(2, madon);
+                int updated = ps.executeUpdate();
+
+                if (updated == 0) {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    response.getWriter().write("Order not found");
+                } else {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().write("OK");
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("DB error: " + ex.getMessage());
+        }
+    }
+
+    // ====================== POST: CANCEL ======================
+
+    /**
+     * Hủy đơn hàng:
+     *  - JS gửi: action=cancel&id=...
+     *  - Đơn được chuyển sang trạng thái CANCELED,
+     *    cập nhật thoigianhuy = NOW(), ngaycapnhat = NOW(),
+     *    lydo_huy tùy theo trạng thái hiện tại:
+     *      PENDING   -> Đơn hàng không được xác nhận
+     *      WAIT_PACK -> Không thể đóng gói đơn hàng
+     *      WAIT_SHIP -> Giao hàng không thành công
+     */
+    private void handleCancel(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        String idStr = request.getParameter("id");
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain; charset=UTF-8");
+
+        if (idStr == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Missing id");
+            return;
+        }
+
+        long madon;
+        try {
+            madon = Long.parseLong(idStr);
+        } catch (NumberFormatException ex) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Invalid id");
+            return;
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+
+            // 1) Lấy trạng thái hiện tại
+            String currentStatus = null;
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT trangthai FROM donhang WHERE madon = ?")) {
+                ps.setLong(1, madon);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        currentStatus = rs.getString("trangthai");
+                    }
+                }
+            }
+
+            if (currentStatus == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write("Order not found");
+                return;
+            }
+
+            // 2) Map trạng thái -> lý do hủy
+            String lydoHuy;
+            switch (currentStatus) {
+                case "PENDING":
+                    lydoHuy = "Đơn hàng không được xác nhận";
+                    break;
+                case "WAIT_PACK":
+                    lydoHuy = "Không thể đóng gói đơn hàng";
+                    break;
+                case "WAIT_SHIP":
+                    lydoHuy = "Giao hàng không thành công";
+                    break;
+                default:
+                    lydoHuy = "Đơn hàng bị huỷ";
+            }
+
+            // 3) Update sang CANCELED + ghi lý do
+            String sql =
+                    "UPDATE donhang " +
+                    "SET trangthai = 'CANCELED', " +
+                    "    lydo_huy = ?, " +
+                    "    thoigianhuy = NOW(), " +
+                    "    ngaycapnhat = NOW() " +
+                    "WHERE madon = ?";
+
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, lydoHuy);
+                ps.setLong(2, madon);
+                int updated = ps.executeUpdate();
+
+                if (updated == 0) {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    response.getWriter().write("Order not found");
+                } else {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().write("OK");
+                }
             }
 
         } catch (SQLException ex) {
@@ -328,7 +525,6 @@ public class AdminOrderServlet extends HttpServlet {
 
     // ====================== Utils ======================
 
-    // Dùng lại logic hiển thị phương thức thanh toán
     private String fmtPayment(String m) {
         if (m == null) return "";
         switch (m) {
@@ -338,7 +534,6 @@ public class AdminOrderServlet extends HttpServlet {
         }
     }
 
-    // Escape chuỗi cho JSON
     private String jsonEscape(String s) {
         if (s == null) return "";
         return s

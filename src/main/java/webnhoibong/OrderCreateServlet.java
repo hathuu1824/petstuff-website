@@ -12,15 +12,14 @@ import java.util.List;
 
 import model.PaymentStatusStore;
 
-@WebServlet(name = "OrderCreateServlet",
-        urlPatterns = {"/OrderCreateServlet", "/order"})
+@WebServlet(
+        name = "OrderCreateServlet",
+        urlPatterns = {"/OrderCreateServlet", "/order"}
+)
 public class OrderCreateServlet extends HttpServlet {
 
     private static final int DEFAULT_SHIP     = 30000;
     private static final int DEFAULT_DISCOUNT = 0;
-    private static final String BANK_CODE     = "VCB";
-    private static final String BANK_ACCOUNT  = "0123456789";
-    private static final String ACCOUNT_NAME  = "CONG TY PETSTUFF";
 
     // Dùng cho chi tiết đơn hàng
     private static class CartItem {
@@ -79,7 +78,7 @@ public class OrderCreateServlet extends HttpServlet {
 
         if (phuongthuc == null) phuongthuc = "COD";
         phuongthuc = phuongthuc.toUpperCase();
-        if (!phuongthuc.equals("BANK") && !phuongthuc.equals("COD")) {
+        if (!"BANK".equals(phuongthuc) && !"COD".equals(phuongthuc)) {
             phuongthuc = "COD";
         }
 
@@ -117,48 +116,153 @@ public class OrderCreateServlet extends HttpServlet {
             if (sdt == null)          sdt          = "";
             if (diachi == null)       diachi       = "";
 
-            // ===== 4. Lấy danh sách sản phẩm trong GIỎ HÀNG =====
-            String sqlCart =
-                    "SELECT g.sanpham_id        AS masp, " +
-                    "       g.soluong           AS so_luong, " +
-                    "       g.gia               AS gia_san_pham, " +
-                    "       s.tensp             AS ten_san_pham, " +
-                    "       l.ten_loai          AS ten_loai " +
-                    "FROM giohang g " +
-                    "JOIN sanpham s      ON g.sanpham_id = s.masp " +
-                    "LEFT JOIN sanpham_loai l ON g.loai_id = l.id " +
-                    "WHERE g.user_id = ?";
+            // ===== 4. Xác định nguồn tạo đơn: từ giỏ hay từ trang chi tiết =====
+            String sourceRaw = firstNonEmpty(
+                    req.getParameter("source"),
+                    req.getParameter("from")
+            );
+            boolean fromDetail = (sourceRaw != null
+                    && "detail".equalsIgnoreCase(sourceRaw));
+
+            // Nếu không set source nhưng có masp/sanpham_id/productId => coi là từ chi tiết
+            if (!fromDetail) {
+                if (req.getParameter("masp") != null
+                        || req.getParameter("sanpham_id") != null
+                        || req.getParameter("productId") != null) {
+                    fromDetail = true;
+                }
+            }
 
             List<CartItem> items = new ArrayList<>();
             int tongSoLuong = 0;
-            int tamTinh = 0; // tổng tiền hàng (chưa ship, chưa giảm giá)
+            int tamTinh     = 0; // tổng tiền hàng (chưa ship, chưa giảm giá)
 
-            try (PreparedStatement psCart = c.prepareStatement(sqlCart)) {
-                psCart.setInt(1, taikhoanId);
-                try (ResultSet rs = psCart.executeQuery()) {
-                    while (rs.next()) {
-                        CartItem it = new CartItem();
-                        it.masp     = rs.getInt("masp");
-                        it.soluong  = rs.getInt("so_luong");
-                        it.gia      = rs.getInt("gia_san_pham");
-                        it.tensp    = rs.getString("ten_san_pham");
-                        it.loai     = rs.getString("ten_loai");
+            if (fromDetail) {
+                // ===== 4A. Tạo đơn từ TRANG CHI TIẾT SẢN PHẨM (Mua ngay) =====
+                String maspStr = firstNonEmpty(
+                        req.getParameter("masp"),
+                        req.getParameter("sanpham_id"),
+                        req.getParameter("productId")
+                );
+                String slStr = firstNonEmpty(
+                        req.getParameter("soluong"),
+                        req.getParameter("quantity"),
+                        req.getParameter("qty")
+                );
+                String giaStr = firstNonEmpty(
+                        req.getParameter("gia"),
+                        req.getParameter("gia_san_pham"),
+                        req.getParameter("price"),
+                        req.getParameter("dongia")
+                );
 
-                        if (it.loai == null) it.loai = "";
+                int masp    = parseIntLoose(maspStr, 0);
+                int soluong = parseIntLoose(slStr, 1);
+                int gia     = parseIntLoose(giaStr, 0);
 
-                        items.add(it);
+                // Bắt buộc có masp + số lượng; giá có thể lấy từ DB
+                if (masp <= 0 || soluong <= 0) {
+                    resp.setStatus(400);
+                    out.print("{\"status\":\"error\",\"success\":false,"
+                            + "\"message\":\"Không có sản phẩm hợp lệ để tạo đơn\"}");
+                    c.rollback();
+                    return;
+                }
 
-                        tongSoLuong += it.soluong;
-                        tamTinh     += it.gia * it.soluong;
+                String tensp = "";
+                String loai  = "";
+                int giaHienTai = 0;
+
+                String sqlOne =
+                        "SELECT s.tensp, " +
+                        "       COALESCE(l.ten_loai, '') AS ten_loai, " +
+                        "       COALESCE(l.gia, " +
+                        "                CASE WHEN s.giakm IS NOT NULL AND s.giakm > 0 " +
+                        "                     THEN s.giakm " +
+                        "                     ELSE s.giatien END) AS gia_hien_tai " +
+                        "FROM sanpham s " +
+                        "LEFT JOIN sanpham_loai l " +
+                        "       ON l.sanpham_id = s.masp AND l.is_default = 1 " +
+                        "WHERE s.masp = ?";
+
+                try (PreparedStatement psOne = c.prepareStatement(sqlOne)) {
+                    psOne.setInt(1, masp);
+                    try (ResultSet rsOne = psOne.executeQuery()) {
+                        if (rsOne.next()) {
+                            tensp      = rsOne.getString("tensp");
+                            loai       = rsOne.getString("ten_loai");
+                            giaHienTai = rsOne.getInt("gia_hien_tai");
+                        }
+                    }
+                }
+
+                if (tensp == null) tensp = "";
+                if (loai == null)  loai  = "";
+
+                // Nếu client không gửi giá hoặc gửi sai, dùng giá trong DB
+                if (gia <= 0) gia = giaHienTai;
+
+                if (gia <= 0) {
+                    resp.setStatus(400);
+                    out.print("{\"status\":\"error\",\"success\":false,"
+                            + "\"message\":\"Không xác định được giá sản phẩm\"}");
+                    c.rollback();
+                    return;
+                }
+
+                CartItem it = new CartItem();
+                it.masp    = masp;
+                it.soluong = soluong;
+                it.gia     = gia;
+                it.tensp   = tensp;
+                it.loai    = loai;
+
+                items.add(it);
+                tongSoLuong = soluong;
+                tamTinh     = gia * soluong;
+
+            } else {
+                // ===== 4B. Tạo đơn từ GIỎ HÀNG =====
+                String sqlCart =
+                        "SELECT g.sanpham_id        AS masp, " +
+                        "       g.soluong           AS so_luong, " +
+                        "       g.gia               AS gia_san_pham, " +
+                        "       s.tensp             AS ten_san_pham, " +
+                        "       l.ten_loai          AS ten_loai " +
+                        "FROM giohang g " +
+                        "JOIN sanpham s         ON g.sanpham_id = s.masp " +
+                        "LEFT JOIN sanpham_loai l ON g.loai_id = l.id " +
+                        "WHERE g.user_id = ?";
+
+                try (PreparedStatement psCart = c.prepareStatement(sqlCart)) {
+                    psCart.setInt(1, taikhoanId);
+                    try (ResultSet rs = psCart.executeQuery()) {
+                        while (rs.next()) {
+                            CartItem it = new CartItem();
+                            it.masp     = rs.getInt("masp");
+                            it.soluong  = rs.getInt("so_luong");
+                            it.gia      = rs.getInt("gia_san_pham");
+                            it.tensp    = rs.getString("ten_san_pham");
+                            it.loai     = rs.getString("ten_loai");
+
+                            if (it.loai == null) it.loai = "";
+
+                            items.add(it);
+
+                            tongSoLuong += it.soluong;
+                            tamTinh     += it.gia * it.soluong;
+                        }
                     }
                 }
             }
 
             if (items.isEmpty()) {
-                // Không có gì trong giỏ
                 resp.setStatus(400);
-                out.print("{\"status\":\"error\",\"success\":false," +
-                          "\"message\":\"Giỏ hàng trống, không thể tạo đơn\"}");
+                String msg = fromDetail
+                        ? "Không có sản phẩm trong đơn hàng"
+                        : "Giỏ hàng trống, không thể tạo đơn";
+                out.print("{\"status\":\"error\",\"success\":false,"
+                        + "\"message\":\"" + escape(msg) + "\"}");
                 c.rollback();
                 return;
             }
@@ -194,11 +298,13 @@ public class OrderCreateServlet extends HttpServlet {
             CartItem first = items.get(0);
 
             // ===== 7. INSERT donhang (tổng quan) =====
+            int tongTienHang = tamTinh; // phisp = tổng tiền hàng
+
             String sqlDonhang = "INSERT INTO donhang ("
                     + " madon, taikhoan_id, masp, tennguoinhan, sdt, diachi, "
                     + " soluong, phisp, phiship, giamgia, tongtien, tiendoisoat, "
-                    + " phuongthuc, trangthai, manh, stk, tenctk, ngaytao"
-                    + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, NOW())";
+                    + " phuongthuc, trangthai, ngaytao, ngaycapnhat, lydo_huy, lydo_hoan"
+                    + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),NOW(),?,?)";
 
             long donhangId;
             try (PreparedStatement ps = c.prepareStatement(
@@ -207,23 +313,24 @@ public class OrderCreateServlet extends HttpServlet {
                 int i = 1;
                 ps.setLong(i++, madon);
                 ps.setInt(i++, taikhoanId);
-                ps.setInt(i++, first.masp);          // mã sp đại diện
+                ps.setInt(i++, first.masp);
                 ps.setString(i++, tenNguoiNhan);
                 ps.setString(i++, sdt);
                 ps.setString(i++, diachi);
 
-                ps.setInt(i++, tongSoLuong);        // tổng số lượng trong đơn
-                ps.setInt(i++, first.gia);          // giá đại diện
+                ps.setInt(i++, tongSoLuong);
+                ps.setInt(i++, tongTienHang);
                 ps.setInt(i++, phiship);
                 ps.setInt(i++, giamgia);
                 ps.setInt(i++, tongtien);
                 ps.setInt(i++, tiendoisoat);
 
                 ps.setString(i++, phuongthuc);
-                ps.setString(i++, "PENDING");
-                ps.setString(i++, BANK_CODE);
-                ps.setString(i++, BANK_ACCOUNT);
-                ps.setString(i++, ACCOUNT_NAME);
+                ps.setString(i++, "PENDING");          // trạng thái khởi tạo
+
+                // lydo_huy, lydo_hoan: NULL khi mới tạo đơn
+                ps.setNull(i++, Types.VARCHAR);
+                ps.setNull(i++, Types.VARCHAR);
 
                 ps.executeUpdate();
 
@@ -258,32 +365,46 @@ public class OrderCreateServlet extends HttpServlet {
                 psCt.executeBatch();
             }
 
-            // ===== 9. Xóa giỏ hàng sau khi tạo đơn =====
-            try (PreparedStatement psDel = c.prepareStatement(
-                    "DELETE FROM giohang WHERE user_id = ?")) {
-                psDel.setInt(1, taikhoanId);
-                psDel.executeUpdate();
+            // ===== 9. Xóa giỏ hàng sau khi tạo đơn (chỉ khi đặt từ giỏ) =====
+            if (!fromDetail) {
+                try (PreparedStatement psDel = c.prepareStatement(
+                        "DELETE FROM giohang WHERE user_id = ?")) {
+                    psDel.setInt(1, taikhoanId);
+                    psDel.executeUpdate();
+                }
             }
 
             // ===== 10. Commit =====
             c.commit();
 
             // Lưu trạng thái tạm cho QR / theo dõi thanh toán theo mã đơn (madon)
-            PaymentStatusStore.get().createPending(String.valueOf(madon));
+            if ("BANK".equals(phuongthuc)) {
+                PaymentStatusStore.get().createPending(String.valueOf(madon));
+            }
 
-            // ===== 11. Trả JSON cho client =====
+            // ===== 11. Chuẩn bị message & paymentStatus cho client =====
+            String paymentStatus;
+            String message;
+
+            if ("COD".equals(phuongthuc)) {
+                paymentStatus = "COD";
+                message = "Tạo đơn hàng thành công";
+            } else {
+                paymentStatus = "PENDING";
+                message = "Tạo đơn thành công, vui lòng thanh toán và đợi hệ thống duyệt đơn";
+            }
+
+            // ===== 12. Trả JSON cho client =====
             StringBuilder sb = new StringBuilder();
             sb.append("{");
             sb.append("\"status\":\"success\",");
             sb.append("\"success\":true,");
-            sb.append("\"paymentStatus\":\"PENDING\",");
+            sb.append("\"paymentStatus\":\"").append(paymentStatus).append("\",");
+            sb.append("\"message\":\"").append(escape(message)).append("\",");
             sb.append("\"orderId\":").append(madon).append(",");
             sb.append("\"tongSoLuong\":").append(tongSoLuong).append(",");
             sb.append("\"tongtien\":").append(tongtien).append(",");
-            sb.append("\"tiendoisoat\":").append(tiendoisoat).append(",");
-            sb.append("\"manh\":\"").append(BANK_CODE).append("\",");
-            sb.append("\"stk\":\"").append(BANK_ACCOUNT).append("\",");
-            sb.append("\"tenctk\":\"").append(ACCOUNT_NAME).append("\"");
+            sb.append("\"tiendoisoat\":").append(tiendoisoat);
             sb.append("}");
 
             out.print(sb.toString());
@@ -309,19 +430,28 @@ public class OrderCreateServlet extends HttpServlet {
         return null;
     }
 
-    private static int parseInt(String s, int def) {
+    // parseInt "mềm" cho số có dấu . , đ ...
+    private static int parseIntLoose(String s, int def) {
         if (s == null) return def;
         try {
-            return Integer.parseInt(s.trim());
+            String cleaned = s.replaceAll("[^0-9-]", "");
+            if (cleaned.isEmpty() || cleaned.equals("-")) return def;
+            return Integer.parseInt(cleaned);
         } catch (Exception e) {
             return def;
         }
     }
 
+    private static int parseInt(String s, int def) {
+        return parseIntLoose(s, def);
+    }
+
     private static Integer parseInt(String s, Integer def) {
         if (s == null) return def;
         try {
-            return Integer.valueOf(s.trim());
+            String cleaned = s.replaceAll("[^0-9-]", "");
+            if (cleaned.isEmpty() || cleaned.equals("-")) return def;
+            return Integer.valueOf(cleaned);
         } catch (Exception e) {
             return def;
         }
