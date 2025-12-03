@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package webnhoibong;
 
 import jakarta.servlet.ServletException;
@@ -20,16 +16,19 @@ public class LoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // Lấy đầy đủ thông tin tài khoản
+    // Lấy đầy đủ thông tin tài khoản + avatar từ tt_user
     private static final String SQL_FIND_USER =
-        "SELECT id, tendangnhap, matkhau, vaitro " +
-        "FROM taikhoan WHERE tendangnhap = ? LIMIT 1";
+        "SELECT tk.id, tk.tendangnhap, tk.matkhau, tk.vaitro, " +
+        "       u.anh AS avatar " +
+        "FROM taikhoan tk " +
+        "LEFT JOIN tt_user u ON u.taikhoan_id = tk.id " +
+        "WHERE tk.tendangnhap = ? " +
+        "LIMIT 1";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Nếu đã đăng nhập rồi thì không cho vào lại trang login nữa
         HttpSession ss = req.getSession(false);
         if (ss != null && ss.getAttribute("userId") != null) {
             resp.sendRedirect(req.getContextPath() + "/trangchu");
@@ -46,11 +45,9 @@ public class LoginServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
 
-        // tên input trong form: name="username" và name="password"
         String username = trim(req.getParameter("username"));
         String password = trim(req.getParameter("password"));
 
-        // Validate đơn giản
         if (username.isEmpty() || password.isEmpty()) {
             req.setAttribute("loginError", "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
             req.setAttribute("enteredUser", username);
@@ -66,21 +63,27 @@ public class LoginServlet extends HttpServlet {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int    userId = rs.getInt("id");
-                    String dbUser = rs.getString("tendangnhap");  // tên đăng nhập trong DB
-                    String dbPass = rs.getString("matkhau");      // mật khẩu trong DB
-                    String dbRole = rs.getString("vaitro");       // vai trò trong DB
+                    String dbUser = rs.getString("tendangnhap");
+                    String dbPass = rs.getString("matkhau");
+                    String dbRole = rs.getString("vaitro");
+                    String avatar = rs.getString("avatar");  // cột u.anh
 
-                    // TODO: Nếu sau này mã hoá mật khẩu thì thay bằng hàm verify hash
                     if (password.equals(dbPass)) {
-                        // Đăng nhập thành công → lưu vào session
                         HttpSession session = req.getSession(true);
                         session.setAttribute("userId", userId);
-                        session.setAttribute("username", dbUser);                       // tên đăng nhập
-                        session.setAttribute("role", (dbRole != null) ? dbRole : "user"); // vai trò
+                        session.setAttribute("username", dbUser);
+                        session.setAttribute("role", (dbRole != null) ? dbRole : "user");
                         session.setAttribute("isLoggedIn", Boolean.TRUE);
+
+                        // Lưu tên file avatar (nếu null thì để trống, JSP tự fallback)
+                        if (avatar != null && !avatar.trim().isEmpty()) {
+                            session.setAttribute("avatarPath", avatar.trim());
+                        } else {
+                            session.setAttribute("avatarPath", null);
+                        }
+
                         session.setMaxInactiveInterval(30 * 60); // 30 phút
 
-                        // Điều hướng theo vai trò
                         if ("admin".equalsIgnoreCase(dbRole)) {
                             resp.sendRedirect(req.getContextPath() + "/admin");
                         } else {
@@ -95,7 +98,6 @@ public class LoginServlet extends HttpServlet {
             throw new ServletException("Lỗi đăng nhập", e);
         }
 
-        // Sai tài khoản hoặc mật khẩu
         req.setAttribute("loginError", "Tên đăng nhập hoặc mật khẩu không đúng.");
         req.setAttribute("enteredUser", username);
         req.getRequestDispatcher("/login.jsp").forward(req, resp);
