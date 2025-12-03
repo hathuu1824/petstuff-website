@@ -26,7 +26,7 @@ body {
     font-size: 13px;
     line-height: 1.8;
     color: #222222;
-    background: #f8f8f8 url("/2274820004_KieuHaThu/images/1323678.png") center / cover fixed no-repeat;
+    background: #f8f8f8 url("../images/1323678.png") center / cover fixed no-repeat;
     font-weight: 400;
     font-family: var(--font-sans);
 }
