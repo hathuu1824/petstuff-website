@@ -74,16 +74,6 @@
 <%
     String ctx = request.getContextPath();
 
-    HttpSession ss = request.getSession(false);
-    String username = null;
-    String role     = null;
-
-    if (ss != null) {
-        username = (String) ss.getAttribute("username");
-        role     = (String) ss.getAttribute("role");
-    }
-    boolean isLoggedIn = (username != null);
-
     List<Map<String,Object>> orders =
         (List<Map<String,Object>>) request.getAttribute("orders");
     String loadError = (String) request.getAttribute("loadError");
@@ -134,9 +124,34 @@
     </head>
     <body>
         <!-- Header -->
+        <%
+            HttpSession ss = request.getSession(false);
+
+            Integer userId    = null;
+            String username   = null;
+            String role       = null;
+            String avatarFile = null; 
+
+            if (ss != null) {
+                userId     = (Integer) ss.getAttribute("userId");
+                username   = (String) ss.getAttribute("username");  
+                role       = (String) ss.getAttribute("role");  
+                avatarFile = (String) ss.getAttribute("avatarPath"); 
+            }
+
+            boolean isLoggedIn = (username != null);
+            if (userId != null) isLoggedIn = true;
+
+            String avatarUrl;
+            if (avatarFile == null || avatarFile.trim().isEmpty()) {
+                avatarUrl = ctx + "/images/avatar-default.png";
+            } else {
+                avatarUrl = ctx + "/images/" + avatarFile;
+            }
+        %>
         <header>
             <nav class="container">
-                <a href="<%= ctx %>/admin_sanpham" id="logo">PetStuff</a>
+                <a href="<%= ctx %>/admin" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
                         <div class="user-menu">
@@ -146,13 +161,13 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
                                 </div>
                                 <div class="user-popup-body">
-                                    <a href="<%= ctx %>/profile" class="user-popup-item">
+                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
                                         <i class="fa-solid fa-user"></i>
                                         <span>Thông tin cá nhân</span>
                                     </a>
@@ -176,7 +191,7 @@
                 </div>
             </nav>
         </header>
-
+                
         <main class="main">
             <!-- Sidebar -->
             <div class="dashboard-sidebar">
@@ -298,7 +313,11 @@
                                         </button>
                                         <button type="button" class="btn-confirm"
                                                 onclick="xacNhanDonHang(<%= madon %>, 'WAIT_PACK')">
-                                            <i class="fas fa-check"></i> Xác nhận
+                                            <i class="fas fa-check"></i> Duyệt
+                                        </button>
+                                            <button type="button" class="btn-cancel"
+                                                onclick="huyDonHang(<%= madon %>)">
+                                            <i class="fas fa-times"></i> Hủy
                                         </button>
                                     </td>
                                 </tr>
@@ -372,7 +391,11 @@
                                         </button>
                                         <button type="button" class="btn-confirm"
                                                 onclick="xacNhanDonHang(<%= madon %>, 'WAIT_SHIP')">
-                                            <i class="fas fa-check"></i> Xác nhận
+                                            <i class="fas fa-check"></i> Duyệt
+                                        </button>
+                                        <button type="button" class="btn-cancel"
+                                                onclick="huyDonHang(<%= madon %>)">
+                                            <i class="fas fa-times"></i> Hủy
                                         </button>
                                     </td>
                                 </tr>
@@ -444,9 +467,15 @@
                                                 onclick="showOrderDetail(<%= madon %>, 'DELIVERED')">
                                             <i class="fas fa-eye"></i> Xem
                                         </button>
+
                                         <button type="button" class="btn-confirm"
                                                 onclick="xacNhanDonHang(<%= madon %>, 'DELIVERED')">
-                                            <i class="fas fa-check"></i> Xác nhận
+                                            <i class="fas fa-check"></i> Duyệt
+                                        </button>
+
+                                        <button type="button" class="btn-cancel"
+                                                onclick="huyDonHang(<%= madon %>)">
+                                            <i class="fas fa-times"></i> Hủy
                                         </button>
                                     </td>
                                 </tr>
@@ -526,7 +555,7 @@
                                 <th>SĐT</th>
                                 <th>SL</th>
                                 <th>Tổng tiền</th>
-                                <th>Trạng thái</th>
+                                <th>Lý do hoàn trả</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -546,6 +575,7 @@
                                         String     sdt      = (String)     row.get("sdt");
                                         Integer    soluong  = (Integer)    row.get("soluong");
                                         BigDecimal tongtien = (BigDecimal) row.get("tongtien");
+                                        String     lydoHoan = (String)     row.get("lydo_hoan");
                             %>
                                 <tr>
                                     <td><strong>#<%= madon %></strong></td>
@@ -553,7 +583,7 @@
                                     <td><%= sdt %></td>
                                     <td><%= (soluong != null ? soluong : 0) %></td>
                                     <td><%= fmtMoney(tongtien) %></td>
-                                    <td><span class="badge badge-dark">Trả hàng</span></td>
+                                    <td><%= (lydoHoan != null ? lydoHoan : "") %></td>
                                 </tr>
                             <%
                                     }
@@ -577,7 +607,7 @@
                                 <th>SĐT</th>
                                 <th>SL</th>
                                 <th>Tổng tiền</th>
-                                <th>Trạng thái</th>
+                                <th>Lý do hủy</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -597,6 +627,7 @@
                                         String     sdt      = (String)     row.get("sdt");
                                         Integer    soluong  = (Integer)    row.get("soluong");
                                         BigDecimal tongtien = (BigDecimal) row.get("tongtien");
+                                        String     lydoHuy  = (String)     row.get("lydo_huy");
                             %>
                                 <tr>
                                     <td><strong>#<%= madon %></strong></td>
@@ -604,7 +635,7 @@
                                     <td><%= sdt %></td>
                                     <td><%= (soluong != null ? soluong : 0) %></td>
                                     <td><%= fmtMoney(tongtien) %></td>
-                                    <td><span class="badge badge-danger">Đã huỷ</span></td>
+                                    <td><%= (lydoHuy != null ? lydoHuy : "") %></td>
                                 </tr>
                             <%
                                     }
@@ -805,6 +836,25 @@
                     console.error(err);
                     alert(err.message || "Không thể kết nối máy chủ.");
                 });
+            }
+            function huyDonHang(madon) {
+                const ok = confirm("Bạn có chắc muốn hủy đơn #" + madon + "?");
+                if (!ok) return;
+
+                fetch("admin_donhang", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+                    body: "action=cancel&id=" + encodeURIComponent(madon)
+                })
+                .then(r => r.text())
+                .then(t => {
+                    if (t === "OK") {
+                        location.reload();
+                    } else {
+                        alert("Hủy đơn thất bại: " + t);
+                    }
+                })
+                .catch(err => alert("Lỗi kết nối: " + err));
             }
         </script>
     </body>

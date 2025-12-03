@@ -4,6 +4,7 @@
     Author     : hathuu24
 --%>
 
+<%@page import="webnhoibong.DatabaseConnection"%>
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
@@ -24,15 +25,27 @@
         <%
             HttpSession ss = request.getSession(false);
 
-            String username = null;
-            String role     = null;
+            Integer userId    = null;
+            String username   = null;
+            String role       = null;
+            String avatarFile = null; 
 
             if (ss != null) {
-                username = (String) ss.getAttribute("username");  
-                role     = (String) ss.getAttribute("role");      
+                userId     = (Integer) ss.getAttribute("userId");
+                username   = (String) ss.getAttribute("username");  
+                role       = (String) ss.getAttribute("role");  
+                avatarFile = (String) ss.getAttribute("avatarPath"); 
             }
 
             boolean isLoggedIn = (username != null);
+            if (userId != null) isLoggedIn = true;
+
+            String avatarUrl;
+            if (avatarFile == null || avatarFile.trim().isEmpty()) {
+                avatarUrl = ctx + "/images/avatar-default.png";
+            } else {
+                avatarUrl = ctx + "/images/" + avatarFile;
+            }
         %>
         <header>
             <nav class="container">
@@ -46,7 +59,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -279,13 +292,14 @@
             <div class="modal-content">
                 <span class="close-modal" onclick="closeModal('editUserModal')">&times;</span>
                 <h3><i class="fas fa-edit"></i> Sửa thông tin tài khoản</h3>
-                <form action="<%=ctx%>/admin" method="POST" enctype="multipart/form-data">
+                <form action="<%= ctx %>/admin" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="id" id="edit-id">
                     <input type="hidden" name="existingAnh" id="edit-existing-anh">
                     <div class="form-group">
                         <label>Email:</label>
-                        <input class="form-control" type="email" name="tk_email" id="edit-tk-email" required>
+                        <input class="form-control" type="email"
+                               name="tk_email" id="edit-tk-email" required>
                     </div>
                     <div class="form-group">
                         <label>Vai trò:</label>
@@ -299,21 +313,25 @@
                         <div class="form-col">
                             <div class="form-group">
                                 <label>Họ và tên:</label>
-                                <input class="form-control" type="text" name="hoten">
+                                <input class="form-control" type="text"
+                                       name="hoten" id="edit-hoten">
                             </div>
                             <div class="form-group">
                                 <label>Ngày sinh:</label>
-                                <input class="form-control" type="date" name="ngaysinh">
+                                <input class="form-control" type="date"
+                                       name="ngaysinh" id="edit-ngaysinh">
                             </div>
                         </div>
                         <div class="form-col">
                             <div class="form-group">
                                 <label>Số điện thoại:</label>
-                                <input class="form-control" type="tel" name="sdt">
+                                <input class="form-control" type="tel"
+                                       name="sdt" id="edit-sdt">
                             </div>
                             <div class="form-group">
                                 <label>Địa chỉ:</label>
-                                <input class="form-control" type="text" name="diachi">
+                                <input class="form-control" type="text"
+                                       name="diachi" id="edit-diachi">
                             </div>
                         </div>
                     </div>
@@ -323,7 +341,11 @@
                         <div class="image-upload-container">
                             <img id="editPreview" src="" alt="Preview"
                                  style="max-width:100px;max-height:100px;display:none;border-radius:8px;">
-                            <input type="file" name="anhFile" id="edit-anh-file" accept="image/*"
+                            <div style="margin-top:6px;font-size:13px;color:#555;">
+                                <span id="edit-anh-name"></span>
+                            </div>
+                            <input type="file" name="anhFile" id="edit-anh-file"
+                                   accept="image/*"
                                    onchange="previewFile(this, 'editPreview')">
                         </div>
                     </div>

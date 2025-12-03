@@ -34,19 +34,8 @@
         return ts.toLocalDateTime().toLocalDate().toString(); // yyyy-MM-dd
     }
 %>
-
 <%
     String ctx = request.getContextPath();
-
-    HttpSession ss = request.getSession(false);
-    String username = null;
-    String role     = null;
-
-    if (ss != null) {
-        username = (String) ss.getAttribute("username");
-        role     = (String) ss.getAttribute("role");
-    }
-    boolean isLoggedIn = (username != null);
 
     List<Map<String,Object>> vouchers =
         (List<Map<String,Object>>) request.getAttribute("vouchers");
@@ -73,7 +62,6 @@
         );
     }
 %>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -85,9 +73,34 @@
     </head>
     <body>
         <!-- Header -->
+        <%
+            HttpSession ss = request.getSession(false);
+
+            Integer userId    = null;
+            String username   = null;
+            String role       = null;
+            String avatarFile = null; 
+
+            if (ss != null) {
+                userId     = (Integer) ss.getAttribute("userId");
+                username   = (String) ss.getAttribute("username");  
+                role       = (String) ss.getAttribute("role");  
+                avatarFile = (String) ss.getAttribute("avatarPath"); 
+            }
+
+            boolean isLoggedIn = (username != null);
+            if (userId != null) isLoggedIn = true;
+
+            String avatarUrl;
+            if (avatarFile == null || avatarFile.trim().isEmpty()) {
+                avatarUrl = ctx + "/images/avatar-default.png";
+            } else {
+                avatarUrl = ctx + "/images/" + avatarFile;
+            }
+        %>
         <header>
             <nav class="container">
-                <a href="<%= ctx %>/admin_voucher" id="logo">PetStuff</a>
+                <a href="<%= ctx %>/admin" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
                         <div class="user-menu">
@@ -97,12 +110,10 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
-                                    <div class="user-popup-role-pill">
-                                        <%= (role != null ? role : "admin") %>
-                                    </div>
+                                    <div class="user-popup-role-pill"><%= role %></div>
                                 </div>
                                 <div class="user-popup-body">
                                     <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
