@@ -15,7 +15,7 @@
 <%!
     private String fmtMoney(BigDecimal v) {
         if (v == null) return "0đ";
-        return String.valueOf(v.longValue()) + "đ";
+        return String.format("%,dđ", v.longValue());
     }
 
     private String fmtDate(Timestamp ts) {
@@ -27,7 +27,7 @@
         if (s == null) return "";
         switch (s) {
             case "PENDING":    return "Chờ duyệt";
-            case "PACKED":     return "Chờ đóng gói";
+            case "WAIT_PACK":  return "Chờ đóng gói";
             case "WAIT_SHIP":  return "Đang giao";
             case "DELIVERED":  return "Đã giao";
             case "CANCELED":   return "Đã hủy";
@@ -36,16 +36,16 @@
         }
     }
 
-    // status để lọc theo tab
     private String statusSlug(String s) {
         if (s == null) return "khac";
         switch (s) {
-            case "PENDING":
-            case "PACKED":    return "cho-duyet";
-            case "WAIT_SHIP": return "dang-giao";
-            case "DELIVERED": return "da-giao";
-            case "CANCELED":  return "da-huy";
-            default:          return "khac";
+            case "PENDING":    return "cho-duyet";
+            case "WAIT_PACK":  return "cho-dong-goi";
+            case "WAIT_SHIP":  return "dang-giao";
+            case "DELIVERED":  return "da-giao";
+            case "CANCELED":
+            case "RETURNED":   return "da-huy";
+            default:           return "khac";
         }
     }
 %>
@@ -54,21 +54,6 @@
     List<Map<String,Object>> orders =
         (List<Map<String,Object>>) request.getAttribute("orders");
     if (orders == null) orders = java.util.Collections.emptyList();
-
-    HttpSession ss = request.getSession(false);
-
-    boolean isLoggedIn = false;
-    String username = null;
-    String role     = null;
-
-    if (ss != null) {
-        Integer userId = (Integer) ss.getAttribute("userId");
-        if (userId != null) {
-            isLoggedIn = true;
-            username   = (String) ss.getAttribute("username");
-            role       = (String) ss.getAttribute("role");
-        }
-    }
 %>
 <!DOCTYPE html>
 <html>
@@ -80,29 +65,48 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </head>
     <body>
-        <!-- ========== HEADER ========== -->
+        <%
+            HttpSession ss = request.getSession(false);
+
+            boolean isLoggedIn = false;
+            String username = null;
+            String role = null;
+            String avatarFile = null; 
+
+            if (ss != null) {
+                Integer userId = (Integer) ss.getAttribute("userId");
+                if (userId != null) {
+                    isLoggedIn = true;
+                    username = (String) ss.getAttribute("username"); 
+                    role     = (String) ss.getAttribute("role");  
+                    avatarFile = (String) ss.getAttribute("avatarPath"); 
+                }
+            }
+            
+            String avatarUrl;
+            if (avatarFile == null || avatarFile.trim().isEmpty()) {
+                avatarUrl = ctx + "/images/avatar-default.png";
+            } else {
+                avatarUrl = ctx + "/images/" + avatarFile;
+            }
+        %>
         <header>
+            <!-- Header -->
             <nav class="container">
                 <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-                        <a class="icon-btn"
-                           href="<%= ctx %>/cart"
-                           aria-label="Giỏ hàng"
-                           title="Giỏ hàng">
+                        <a class="icon-btn" href="<%= ctx %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <div class="user-menu">
-                            <a class="icon-btn user-toggle"
-                               href="#"
-                               aria-label="Tài khoản"
-                               title="Tài khoản">
+                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
                                 <i class="fa-solid fa-user"></i>
                             </a>
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -123,7 +127,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
                         <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
@@ -131,6 +135,7 @@
                     <% } %>
                 </div>
             </nav>
+            <!-- Dropdown -->
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
@@ -171,6 +176,7 @@
                 <div class="orders-tabs">
                     <button class="tab-btn active" data-tab="all">Tất cả</button>
                     <button class="tab-btn" data-tab="cho-duyet">Chờ duyệt</button>
+                    <button class="tab-btn" data-tab="cho-dong-goi">Chờ đóng gói</button>
                     <button class="tab-btn" data-tab="dang-giao">Đang giao</button>
                     <button class="tab-btn" data-tab="da-giao">Đã giao</button>
                     <button class="tab-btn" data-tab="da-huy">Đã hủy</button>
@@ -214,7 +220,6 @@
                             </div>
                         </div>
                         <div class="order-card-footer">
-                            <!-- GỌI TRỰC TIẾP HÀM JS GLOBAL -->
                             <button type="button"
                                     class="btn-detail"
                                     onclick="showOrderDetail(<%= madon %>)">
@@ -234,6 +239,7 @@
                         Mua sắm ngay
                     </button>
                 </div>
+                <div class="orders-pagination" id="ordersPagination"></div>
             </section>
         </main>
 
@@ -266,7 +272,7 @@
                 </div>
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
-                    <p><a href="#">Giới thiệu</a></p>
+                    <p><a href="<%= ctx %>/introduction.jsp">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
                 <div class="footer-contact">
@@ -353,21 +359,15 @@
             </div>
         </div>
 
-        <!-- ========== SCRIPTS ========== -->
         <script>
             // Dùng lại context path trong JS
             var CTX = "<%= ctx %>";
 
-            /* ========= HÀM GLOBAL: DÙNG CHO onclick() ========= */
-
+            /* ========== HÀM GỌI API CHI TIẾT ĐƠN ========== */
             function showOrderDetail(id) {
-                console.log("showOrderDetail:", id);
-
                 fetch(CTX + "/donhang?action=detail&id=" + encodeURIComponent(id))
                     .then(function (res) {
-                        if (!res.ok) {
-                            throw new Error("HTTP " + res.status);
-                        }
+                        if (!res.ok) throw new Error("HTTP " + res.status);
                         return res.json();
                     })
                     .then(function (order) {
@@ -379,6 +379,7 @@
                     });
             }
 
+            /* ========== MODAL CHI TIẾT ========== */
             function openOrderModal(order) {
                 var modal     = document.getElementById("orderDetailModal");
                 if (!modal) return;
@@ -399,7 +400,6 @@
                 if (tongEl) {
                     tongEl.value = Number(order.tongtien || 0).toLocaleString("vi-VN") + "₫";
                 }
-
                 if (ptEl) {
                     ptEl.value = order.phuongthucLabel || "";
                 }
@@ -416,9 +416,9 @@
                             var gia  = Number(item.gia || 0).toLocaleString("vi-VN") + "₫";
 
                             div.innerHTML =
-                                  "<b>" + name + "</b><br>"
-                                + "Số lượng: " + sl + "<br>"
-                                + "Giá: " + gia;
+                                "<b>" + name + "</b><br>" +
+                                "Số lượng: " + sl + "<br>" +
+                                "Giá: " + gia;
 
                             itemsWrap.appendChild(div);
                         });
@@ -435,79 +435,171 @@
                 if (modal) modal.style.display = "none";
             }
 
-            /* ========= CÁC SETUP CHẠY SAU KHI DOM READY ========= */
+            /* ========== SETUP POPUP USER ========== */
+            function setupUserPopup() {
+                var userMenu   = document.querySelector(".user-menu");
+                var userToggle = document.querySelector(".user-toggle");
+                var userPopup  = document.getElementById("userPopup");
 
-            document.addEventListener("DOMContentLoaded", function () {
+                if (!userMenu || !userToggle || !userPopup) return;
 
-                // --- POPUP USER ---
-                (function setupUserPopup() {
-                    var userMenu   = document.querySelector(".user-menu");
-                    var userToggle = document.querySelector(".user-toggle");
-                    var userPopup  = document.getElementById("userPopup");
+                userToggle.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    userMenu.classList.toggle("open");
+                });
 
-                    if (!userMenu || !userToggle || !userPopup) return;
+                document.addEventListener("click", function (e) {
+                    if (!userMenu.contains(e.target)) {
+                        userMenu.classList.remove("open");
+                    }
+                });
 
-                    userToggle.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        userMenu.classList.toggle("open");
+                document.addEventListener("keydown", function (e) {
+                    if (e.key === "Escape") {
+                        userMenu.classList.remove("open");
+                        closeOrderModal();
+                    }
+                });
+            }
+
+            /* ========== CLICK NỀN ĐÓNG MODAL ========== */
+            function setupModalClose() {
+                var modal = document.getElementById("orderDetailModal");
+                if (!modal) return;
+
+                modal.addEventListener("click", function (e) {
+                    if (e.target === modal) {
+                        closeOrderModal();
+                    }
+                });
+            }
+
+            /* ========== TABS + PHÂN TRANG ========== */
+            function setupTabsAndPagination() {
+                var PAGE_SIZE = 5;
+
+                var tabs  = document.querySelectorAll(".tab-btn");
+                var cards = Array.from(document.querySelectorAll(".order-card"));
+                var empty = document.getElementById("ordersEmpty");
+                var pager = document.getElementById("ordersPagination");
+
+                // Không có đơn nào
+                if (!cards.length) {
+                    if (empty) empty.style.display = "flex";
+                    if (pager) pager.innerHTML = "";
+                    return;
+                }
+
+                var currentTab  = "all";
+                var currentPage = 1;
+
+                function filterCards() {
+                    if (currentTab === "all") return cards;
+                    return cards.filter(function (c) {
+                        return c.getAttribute("data-status") === currentTab;
                     });
+                }
 
-                    document.addEventListener("click", function (e) {
-                        if (!userMenu.contains(e.target)) {
-                            userMenu.classList.remove("open");
-                        }
-                    });
+                function render() {
+                    var list  = filterCards();
+                    var total = list.length;
+                    var pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-                    document.addEventListener("keydown", function (e) {
-                        if (e.key === "Escape") {
-                            userMenu.classList.remove("open");
-                            closeOrderModal();
-                        }
-                    });
-                })();
+                    if (currentPage > pages) currentPage = pages;
 
-                // --- TABS LỌC ĐƠN ---
-                (function setupTabs() {
-                    var tabs  = document.querySelectorAll(".tab-btn");
-                    var cards = document.querySelectorAll(".order-card");
-                    var empty = document.getElementById("ordersEmpty");
+                    // Ẩn hết
+                    cards.forEach(function (c) { c.style.display = "none"; });
 
-                    if (!tabs.length || !empty) return;
-
-                    function applyFilter(tab) {
-                        var shown = 0;
-                        cards.forEach(function (card) {
-                            var st   = card.getAttribute("data-status");
-                            var show = (tab === "all") || (st === tab);
-                            card.style.display = show ? "block" : "none";
-                            if (show) shown++;
-                        });
-                        empty.style.display = (shown === 0 ? "flex" : "none");
+                    // Không có đơn ở tab hiện tại
+                    if (total === 0) {
+                        if (empty) empty.style.display = "flex";
+                        if (pager) pager.innerHTML = "";
+                        return;
                     }
 
-                    tabs.forEach(function (btn) {
-                        btn.addEventListener("click", function () {
-                            tabs.forEach(function (b) { b.classList.remove("active"); });
-                            btn.classList.add("active");
-                            applyFilter(btn.getAttribute("data-tab"));
-                        });
+                    if (empty) empty.style.display = "none";
+
+                    // Hiện theo trang
+                    var start = (currentPage - 1) * PAGE_SIZE;
+                    list.slice(start, start + PAGE_SIZE).forEach(function (c) {
+                        c.style.display = "block";
                     });
 
-                    applyFilter("all");
-                })();
+                    // Không cần phân trang nếu chỉ 1 trang
+                    if (!pager || pages <= 1) {
+                        if (pager) pager.innerHTML = "";
+                        return;
+                    }
 
-                // --- CLICK NỀN ĐÓNG MODAL ---
-                (function setupModalClose() {
-                    var modal = document.getElementById("orderDetailModal");
-                    if (!modal) return;
+                    // Vẽ nút trang 
+                    var html = "";
 
-                    modal.addEventListener("click", function (e) {
-                        if (e.target === modal) {
-                            closeOrderModal();
+                    // prev
+                    html += '<button class="page-btn" data-page="prev"';
+                    if (currentPage === 1) html += ' disabled';
+                    html += '>&laquo;</button>';
+
+                    // số trang
+                    for (var i = 1; i <= pages; i++) {
+                        html += '<button class="page-btn';
+                        if (i === currentPage) html += ' active';
+                        html += '" data-page="' + i + '">' + i + '</button>';
+                    }
+
+                    // next
+                    html += '<button class="page-btn" data-page="next"';
+                    if (currentPage === pages) html += ' disabled';
+                    html += '>&raquo;</button>';
+
+                    pager.innerHTML = html;
+                }
+
+                // Click tab
+                tabs.forEach(function (btn) {
+                    btn.addEventListener("click", function () {
+                        tabs.forEach(function (b) { b.classList.remove("active"); });
+                        btn.classList.add("active");
+
+                        currentTab  = btn.getAttribute("data-tab");
+                        currentPage = 1;
+                        render();
+                    });
+                });
+
+                // Click phân trang
+                if (pager) {
+                    pager.addEventListener("click", function (e) {
+                        var target = e.target;
+                        if (!target.classList.contains("page-btn")) return;
+
+                        var p = target.getAttribute("data-page");
+                        var list  = filterCards();
+                        var total = list.length;
+                        var pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+                        if (p === "prev" && currentPage > 1) {
+                            currentPage--;
+                        } else if (p === "next" && currentPage < pages) {
+                            currentPage++;
+                        } else if (p !== "prev" && p !== "next") {
+                            var num = parseInt(p, 10);
+                            if (!isNaN(num)) currentPage = num;
                         }
+
+                        render();
                     });
-                })();
+                }
+
+                // Render lần đầu
+                render();
+            }
+
+            /* ========== CHẠY SAU KHI DOM SẴN SÀNG ========== */
+            document.addEventListener("DOMContentLoaded", function () {
+                setupUserPopup();
+                setupModalClose();
+                setupTabsAndPagination();
             });
         </script>
     </body>

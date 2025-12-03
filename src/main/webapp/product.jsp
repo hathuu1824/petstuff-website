@@ -21,22 +21,30 @@
     </head>
     <body>
         <%
-            // ==== Đăng nhập ====
             HttpSession ss = request.getSession(false);
+
             boolean isLoggedIn = false;
             String username = null;
-            String role     = null;
+            String role = null;
+            String avatarFile = null; 
 
             if (ss != null) {
                 Integer userId = (Integer) ss.getAttribute("userId");
                 if (userId != null) {
                     isLoggedIn = true;
-                    username   = (String) ss.getAttribute("username");
-                    role       = (String) ss.getAttribute("role");
+                    username = (String) ss.getAttribute("username"); 
+                    role     = (String) ss.getAttribute("role");  
+                    avatarFile = (String) ss.getAttribute("avatarPath"); 
                 }
             }
-
-            // ==== Dữ liệu từ servlet ====
+            
+            String avatarUrl;
+            if (avatarFile == null || avatarFile.trim().isEmpty()) {
+                avatarUrl = ctx + "/images/avatar-default.png";
+            } else {
+                avatarUrl = ctx + "/images/" + avatarFile;
+            }
+            
             @SuppressWarnings("unchecked")
             List<Map<String,Object>> products =
                 (List<Map<String,Object>>) request.getAttribute("products");
@@ -58,7 +66,6 @@
             tmp = request.getAttribute("totalCount");
             if (tmp instanceof Number) totalCount = ((Number) tmp).longValue();
 
-            // Format tiền
             NumberFormat vn = NumberFormat.getInstance(new java.util.Locale("vi","VN"));
 
             String qs = request.getQueryString();
@@ -80,8 +87,8 @@
             String[] bstParams = request.getParameterValues("bst");
             if (bstParams != null) Collections.addAll(bstSel, bstParams);
         %>
-        <!-- Header -->
         <header>
+            <!-- Header -->
             <nav class="container">
                 <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
@@ -96,7 +103,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -117,7 +124,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
                         <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
@@ -125,7 +132,7 @@
                     <% } %>
                 </div>
             </nav>
-            <!-- Subbar -->
+            <!-- Dropdown -->
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
@@ -274,7 +281,7 @@
 
         <!-- Liên hệ -->
         <div class="floating-actions" aria-label="Quick actions">
-            <a class="fa-btn contact" href="<%= ctx %>/lienhe.jsp" title="Liên hệ" aria-label="Liên hệ">
+            <a class="fa-btn contact" href="<%= ctx %>/contact.jsp" title="Liên hệ" aria-label="Liên hệ">
                 <i class="fa-solid fa-phone"></i>
             </a>
             <a class="fa-btn chat" href="https://chatgpt.com/g/g-68e0907641548191a2cdbdea080e601d-petstuff"
@@ -294,7 +301,7 @@
                 </div>
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
-                    <p><a href="#">Giới thiệu</a></p>
+                    <p><a href="<%= ctx %>/introduction.jsp">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
                 <div class="footer-contact">

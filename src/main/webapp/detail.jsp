@@ -8,23 +8,8 @@
 <%@ page import="java.math.BigDecimal" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
-
 <%
-    /* ================== Chuẩn bị dữ liệu ================== */
     String ctx = request.getContextPath();
-
-    HttpSession ss = request.getSession(false);
-    boolean isLoggedIn = false;
-    String username = null;
-    String role = null;
-    Integer userId = null;
-
-    if (ss != null) {
-        userId   = (Integer) ss.getAttribute("userId");
-        username = (String) ss.getAttribute("username");
-        role     = (String) ss.getAttribute("role");
-        if (userId != null) isLoggedIn = true;
-    }
 
     @SuppressWarnings("unchecked")
     Map<String,Object> productMap =
@@ -122,7 +107,6 @@
 
     int productIdInt = ((Number) productMap.get("id")).intValue();
 %>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -132,6 +116,31 @@
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </head>
+    <%
+            HttpSession ss = request.getSession(false);
+
+            boolean isLoggedIn = false;
+            String username = null;
+            String role = null;
+            String avatarFile = null; 
+
+            if (ss != null) {
+                Integer userId = (Integer) ss.getAttribute("userId");
+                if (userId != null) {
+                    isLoggedIn = true;
+                    username = (String) ss.getAttribute("username"); 
+                    role     = (String) ss.getAttribute("role");  
+                    avatarFile = (String) ss.getAttribute("avatarPath"); 
+                }
+            }
+            
+            String avatarUrl;
+            if (avatarFile == null || avatarFile.trim().isEmpty()) {
+                avatarUrl = ctx + "/images/avatar-default.png";
+            } else {
+                avatarUrl = ctx + "/images/" + avatarFile;
+            }
+        %>
     <body
         data-logged-in="<%= isLoggedIn %>"
         data-ctx="<%= ctx %>"
@@ -140,49 +149,43 @@
         data-account-name="KIEU HA THU"
         data-qr-template="compact">
         <header>
+            <!-- Header -->
             <nav class="container">
                 <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
-
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-                        <a class="icon-btn"
-                           href="<%= ctx %>/cart"
-                           aria-label="Giỏ hàng"
-                           title="Giỏ hàng">
+                        <a class="icon-btn" href="<%= ctx %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <div class="user-menu">
-                            <a class="icon-btn user-toggle"
-                               href="#"
-                               aria-label="Tài khoản"
-                               title="Tài khoản">
+                            <a class="icon-btn user-toggle" href="#" aria-label="Tài khoản" title="Tài khoản">
                                 <i class="fa-solid fa-user"></i>
                             </a>
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
                                 </div>
                                 <div class="user-popup-body">
-                                    <a href="<%= request.getContextPath() %>/profile" class="user-popup-item">
+                                    <a href="<%= ctx %>/profile" class="user-popup-item">
                                         <i class="fa-solid fa-user"></i>
                                         <span>Thông tin cá nhân</span>
                                     </a>
-                                    <a href="<%= request.getContextPath() %>/donhang" class="user-popup-item">
+                                    <a href="<%= ctx %>/donhang" class="user-popup-item">
                                         <i class="fa-solid fa-box"></i>
                                         <span>Đơn hàng của bạn</span>
                                     </a>
                                 </div>
                                 <div class="user-popup-footer">
-                                    <a href="<%= request.getContextPath() %>/dangxuat" class="home-btn logout-btn">
+                                    <a href="<%= ctx %>/dangxuat" class="home-btn logout-btn">
                                         <span>Đăng xuất</span>
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                         <span class="home">Xin chào, <%= username %>!</span>
                     <% } else { %>
                         <a href="<%= ctx %>/login.jsp" class="home-btn">Đăng nhập</a>
@@ -190,7 +193,6 @@
                     <% } %>
                 </div>
             </nav>
-
             <div class="subbar" id="subbar">
                 <nav class="subnav">
                     <ul class="subnav-list">
@@ -431,18 +433,6 @@
             </div>
         </div>
 
-        <!-- Popup tạo đơn hàng thành công -->
-        <div id="orderSuccessPopup" class="popup-overlay">
-            <div class="popup-box">
-                <h3>Tạo đơn hàng thành công</h3>
-                <p>Mã đơn hàng: <span id="successOrderId"></span></p>
-                <div class="popup-actions">
-                    <button id="orderStayBtn" class="btn-cancel">Đóng</button>
-                    <button id="orderViewBtn" class="btn-ok">Xem đơn hàng</button>
-                </div>
-            </div>
-        </div>
-
         <!-- Quick actions -->
         <div class="floating-actions" aria-label="Quick actions">
             <a class="fa-btn contact"
@@ -472,7 +462,7 @@
                 </div>
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
-                    <p><a href="#">Giới thiệu</a></p>
+                    <p><a href="<%= ctx %>/introduction.jsp">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
                 <div class="footer-contact">

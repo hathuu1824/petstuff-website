@@ -18,8 +18,8 @@
 
     if (ss != null) {
         userId      = (Integer) ss.getAttribute("userId");
-        username    = (String)  ss.getAttribute("username");
-        roleSession = (String)  ss.getAttribute("role");
+        username    = (String) ss.getAttribute("username");
+        roleSession = (String) ss.getAttribute("role");
 
         if (userId != null) {
             isLoggedIn = true;
@@ -31,7 +31,7 @@
         return;
     }
 
-    // ===== Dữ liệu hồ sơ lấy từ InfoServlet (doGet đã setAttribute) =====
+    // ===== Dữ liệu hồ sơ lấy từ InfoServlet =====
     String fullName  = (String) request.getAttribute("fullName");
     String dobStr    = (String) request.getAttribute("dobStr");
     String phone     = (String) request.getAttribute("phone");
@@ -40,18 +40,52 @@
     String email     = (String) request.getAttribute("email");
     String roleLabel = (String) request.getAttribute("roleLabel");
 
-    // Fallback nếu servlet chưa set roleLabel thì lấy từ session
+    // ===== Fallback nếu servlet chưa set roleLabel =====
     if (roleLabel == null || roleLabel.trim().isEmpty()) {
         roleLabel = (roleSession != null ? roleSession : "");
     }
 
     if (fullName == null)  fullName  = "";
     if (dobStr   == null)  dobStr    = "";
-    if (phone    == null)  phone     = "";
+   if (phone    == null)  phone     = "";
     if (address  == null)  address   = "";
-    if (imagePath== null)  imagePath = "";
     if (email    == null)  email     = "";
     if (roleLabel== null)  roleLabel = "";
+
+    // ============================================
+    //        Xử lý imagePath để lấy avatar đúng
+    // ============================================
+
+    // Nếu InfoServlet không set → thử lấy từ session
+    if (imagePath == null || imagePath.trim().isEmpty()) {
+        String avatarFromSession = (ss != null)
+                ? (String) ss.getAttribute("avatarPath")
+                : null;
+        if (avatarFromSession != null && !avatarFromSession.trim().isEmpty()) {
+            imagePath = avatarFromSession.trim();
+        }
+    }
+
+    // Tạo avatarUrl đúng
+    String avatarUrl;
+    if (imagePath == null || imagePath.trim().isEmpty()) {
+        // Không có gì → dùng ảnh default
+        avatarUrl = ctx + "/images/avatar-default.png";
+    } else {
+        String p = imagePath.trim();
+
+        // Nếu chỉ là tên file (không chứa "/") → tự động thêm folder images/
+        if (!p.contains("/")) {
+            p = "images/" + p;
+        }
+
+        // Nếu có dấu "/" đầu → bỏ đi
+        if (p.startsWith("/")) {
+            p = p.substring(1);
+        }
+
+        avatarUrl = ctx + "/" + p;
+    }
 
     // ===== Xác định có phải admin không =====
     boolean isAdmin = false;
@@ -59,12 +93,8 @@
         String rl = roleLabel.trim().toLowerCase();
         isAdmin = rl.equals("admin") || rl.equals("administrator") || rl.equals("role_admin");
     }
-
-    // Đường dẫn ảnh đại diện hiển thị
-    String avatarUrl = (imagePath != null && !imagePath.isEmpty())
-                        ? (ctx + "/" + imagePath)
-                        : (ctx + "/images/avatar-default.png");
 %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -74,8 +104,8 @@
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </head>
-    <body>
-        <!-- ================= HEADER ================= -->
+    <body class="<%= isAdmin ? "admin-layout" : "user-layout" %>">
+        <!-- Header -->
         <header>
             <nav class="container">
                 <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
@@ -95,7 +125,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= roleLabel %></div>
@@ -107,7 +137,7 @@
                                     </a>
                                     <% if (isAdmin) { %>
                                         <a href="<%= ctx %>/admin_donhang" class="user-popup-item">
-                                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                                            <i class="fa-solid fa-gear"></i>
                                             <span>Quản lý hệ thống</span>
                                         </a>
                                     <% } else { %>
@@ -131,45 +161,43 @@
                     <% } %>
                 </div>
             </nav>
-
-            <!-- Thanh menu phụ -->
-            <div class="subbar" id="subbar">
-                <nav class="subnav">
-                    <ul class="subnav-list">
-                        <li><a href="<%= ctx %>/trangchu">Trang chủ</a></li>
-
-                        <li class="has-dd">
-                            <button class="dd-toggle" type="button">
-                                <a href="<%= ctx %>/sanpham">Sản phẩm</a>
-                            </button>
-                            <ul class="dropdown">
-                                <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
-                                <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has-dd">
-                            <button class="dd-toggle" type="button">
-                                <a href="<%= ctx %>/bst">Bộ sưu tập</a>
-                            </button>
-                            <ul class="dropdown">
-                                <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
-                                <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
-                                <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
-                                <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
-                            </ul>
-                        </li>
-
-                        <li><a href="<%= ctx %>/giamgia">Khuyến mại</a></li>
-                        <li><a href="<%= ctx %>/tintuc">Tin tức</a></li>
-                    </ul>
-                </nav>
-            </div>
+            <!-- Dropdown -->
+            <% if (!isAdmin) { %>
+                <div class="subbar" id="subbar">
+                    <nav class="subnav">
+                        <ul class="subnav-list">
+                            <li><a href="<%= ctx %>/trangchu">Trang chủ</a></li>
+                            <li class="has-dd">
+                                <button class="dd-toggle" type="button">
+                                    <a href="<%= ctx %>/sanpham">Sản phẩm</a>
+                                </button>
+                                <ul class="dropdown">
+                                    <li><a href="<%= ctx %>/sanpham?loai=changoi">Chăn gối hình thú</a></li>
+                                    <li><a href="<%= ctx %>/sanpham?loai=mockhoa">Móc khóa</a></li>
+                                    <li><a href="<%= ctx %>/sanpham?loai=tnb">Thú nhồi bông</a></li>
+                                    <li><a href="<%= ctx %>/sanpham?loai=khac">Khác</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dd">
+                                <button class="dd-toggle" type="button">
+                                    <a href="<%= ctx %>/bst">Bộ sưu tập</a>
+                                </button>
+                                <ul class="dropdown">
+                                    <li><a href="<%= ctx %>/bst#babythree">Baby Three</a></li>
+                                    <li><a href="<%= ctx %>/bst#capybara">Capybara</a></li>
+                                    <li><a href="<%= ctx %>/bst#doraemon">Doraemon</a></li>
+                                    <li><a href="<%= ctx %>/bst#sanrio">Sanrio</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="<%= ctx %>/giamgia">Khuyến mại</a></li>
+                            <li><a href="<%= ctx %>/tintuc">Tin tức</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            <% } %>
         </header>
 
-        <!-- ================= MAIN ================= -->
+        <!-- Main -->
         <main class="main">
             <div class="profile-container">
                 <div class="profile-header">
@@ -181,14 +209,12 @@
                     </div>
                     <h2>Thông Tin Cá Nhân</h2>
                 </div>
-
                 <form class="profile-form"
                       method="POST"
                       action="<%= ctx %>/profile"
                       enctype="multipart/form-data">
-
                     <div class="form-grid">
-                        <!-- Hàng 1: Tài khoản + Vai trò (readonly) -->
+                        <!-- Tài khoản + Vai trò -->
                         <div class="form-group">
                             <label for="usernameDisplay">
                                 <i class="fas fa-id-badge"></i> Tài khoản
@@ -198,7 +224,6 @@
                                    value="<%= (username != null ? username : "") %>"
                                    readonly disabled>
                         </div>
-
                         <div class="form-group">
                             <label for="roleDisplay">
                                 <i class="fas fa-user-shield"></i> Vai trò
@@ -208,8 +233,7 @@
                                    value="<%= roleLabel %>"
                                    readonly disabled>
                         </div>
-
-                        <!-- Hàng 2: Họ tên + Email -->
+                        <!-- Họ tên + Email -->
                         <div class="form-group">
                             <label for="fullname">
                                 <i class="fas fa-user"></i> Họ và tên
@@ -220,7 +244,6 @@
                                    value="<%= fullName %>"
                                    placeholder="Nhập họ và tên">
                         </div>
-
                         <div class="form-group">
                             <label for="email">
                                 <i class="fas fa-envelope"></i> Email
@@ -231,8 +254,7 @@
                                    value="<%= email %>"
                                    placeholder="Nhập email">
                         </div>
-
-                        <!-- Hàng 3: Ngày sinh + SĐT -->
+                        <!-- Ngày sinh + SĐT -->
                         <div class="form-group">
                             <label for="dob">
                                 <i class="fas fa-birthday-cake"></i> Ngày sinh
@@ -242,7 +264,6 @@
                                    name="dob"
                                    value="<%= dobStr %>">
                         </div>
-
                         <div class="form-group">
                             <label for="phone">
                                 <i class="fas fa-phone"></i> Số điện thoại
@@ -253,8 +274,7 @@
                                    value="<%= phone %>"
                                    placeholder="Nhập số điện thoại">
                         </div>
-
-                        <!-- Hàng 4: Địa chỉ -->
+                        <!-- Địa chỉ -->
                         <div class="form-group full-width">
                             <label for="address">
                                 <i class="fas fa-map-marker-alt"></i> Địa chỉ
@@ -266,19 +286,17 @@
                                    placeholder="Nhập địa chỉ">
                         </div>
                     </div>
-
                     <div class="form-actions">
                         <button type="button" class="btn-toggle">
                             <i class="fas fa-edit"></i> Thêm/Chỉnh sửa
                         </button>
                     </div>
-
                     <input type="file" id="avatar" name="avatar" accept="image/*" style="display:none;">
                 </form>
             </div>
         </main>
 
-        <!-- ================= FLOATING CONTACT ================= -->
+        <!-- Liên hệ -->
         <div class="floating-actions" aria-label="Quick actions">
             <a class="fa-btn contact" href="<%= ctx %>/contact.jsp"
                title="Liên hệ" aria-label="Liên hệ">
@@ -292,7 +310,7 @@
             </a>
         </div>
 
-        <!-- ================= FOOTER ================= -->
+        <!-- Footer -->
         <footer>
             <div class="footer-container">
                 <div class="footer-infor">
@@ -303,7 +321,7 @@
                 </div>
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
-                    <p><a href="#">Giới thiệu</a></p>
+                    <p><a href="<%= ctx %>/introduction.jsp">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
                 <div class="footer-contact">
@@ -326,7 +344,6 @@
             </div>
         </footer>
 
-        <!-- ================= JS ================= -->
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const form        = document.querySelector('.profile-form');

@@ -25,14 +25,23 @@
             boolean isLoggedIn = false;
             String username = null;
             String role = null;
+            String avatarFile = null; 
 
             if (ss != null) {
                 Integer userId = (Integer) ss.getAttribute("userId");
                 if (userId != null) {
                     isLoggedIn = true;
                     username = (String) ss.getAttribute("username"); 
-                    role     = (String) ss.getAttribute("role");   
+                    role     = (String) ss.getAttribute("role");  
+                    avatarFile = (String) ss.getAttribute("avatarPath"); 
                 }
+            }
+            
+            String avatarUrl;
+            if (avatarFile == null || avatarFile.trim().isEmpty()) {
+                avatarUrl = ctx + "/images/avatar-default.png";
+            } else {
+                avatarUrl = ctx + "/images/" + avatarFile;
             }
         %>
         <header>
@@ -41,7 +50,7 @@
                 <a href="<%= ctx %>/trangchu" id="logo">PetStuff</a>
                 <div class="buttons">
                     <% if (isLoggedIn) { %>
-                        <a class="icon-btn" href="<%= request.getContextPath() %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
+                        <a class="icon-btn" href="<%= ctx %>/cart" aria-label="Giỏ hàng" title="Giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <div class="user-menu">
@@ -51,7 +60,7 @@
                             <div class="user-popup" id="userPopup">
                                 <div class="user-popup-header">
                                     <div class="user-popup-avatar">
-                                        <img src="<%= ctx %>/images/avatar-default.png" alt="Avatar">
+                                        <img src="<%= avatarUrl %>" alt="Avatar">
                                     </div>
                                     <div class="user-popup-name"><%= username %></div>
                                     <div class="user-popup-role-pill"><%= role %></div>
@@ -295,7 +304,7 @@
                 </div>
                 <div class="footer-about">
                     <h4>Về chúng tôi</h4>
-                    <p><a href="#">Giới thiệu</a></p>
+                    <p><a href="<%= ctx %>/introduction.jsp">Giới thiệu</a></p>
                     <p><a href="https://maps.app.goo.gl/9VwaAcHsmykw54mj9">Vị trí cửa hàng</a></p>
                 </div>
                 <div class="footer-contact">
