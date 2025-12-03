@@ -215,6 +215,7 @@
             <div class="footer-bottom">
                 <p>Copyright &copy; 2025</p>
             </div>
-        </footer>            
+        </footer>   
+        <script src="<%= ctx %>/javascript/cart.js"></script>
     </body>
 </html>
