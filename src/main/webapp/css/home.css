@@ -360,7 +360,7 @@ nav.container {
 .hero-slider {
     position: relative;
     width: 100%;
-    height: clamp(300px, 55vw, 620px);
+    height: clamp(300px, 55vw, 640px);
     overflow: hidden;
     background: #f6f7f9;
 }
