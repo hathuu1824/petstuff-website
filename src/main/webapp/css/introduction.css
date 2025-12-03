@@ -3,10 +3,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
 */
 /* 
-    Created on : 25 Nov 2025, 12:11:17 am
+    Created on : 3 Dec 2025, 10:47:39 am
     Author     : hathuu24
 */
-
 * {
     padding: 0;
     margin: 0;
@@ -18,6 +17,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 html, body { 
     height: 100%; 
+    background: #f6f7f9;
 }
 body {
     min-height: 100vh;
@@ -336,9 +336,6 @@ nav.container {
 .main {
     padding-top: calc(var(--header-h) + var(--subbar-h)) !important;
 }
-body.admin-layout {
-    --subbar-h: 0px;
-}
 @media (max-width: 900px) {
     .subnav-list {
         justify-content: flex-start;
@@ -349,156 +346,127 @@ body.admin-layout {
         display: none; 
     }
 }
-.profile-container {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    max-width: 700px;
-    margin: 20px auto;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    animation: fadeInUp 0.6s ease-out;
-}
-.profile-header {
-    background: linear-gradient(135deg, #ff8aa7, #3dade3);
-    padding: 30px;
-    text-align: center;
-    color: white;
-}
-.profile-header h2 {
-    margin: 20px 0 0;
-    font-size: 28px;
-    font-weight: 600;
-}
-.profile-avatar {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto;
-    position: relative;
-    border-radius: 50%;
-    border: 4px solid white;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-}
-.profile-avatar img {
+
+/* intro */
+
+.main {
+    flex: 1;                
+    padding-top: var(--header-h);   
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: rgba(255, 255, 255, 0.3);
+    background-repeat: no-repeat;
+    background-position: top;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
 }
-.avatar-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.3s ease;
-    color: white;
-    font-size: 24px;
+.intro-container{
+    max-width: 1350px;
+    margin: 24px auto 40px;
+    padding: 16px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(255, 188, 217, 0.25);
 }
-.profile-avatar.editing:hover .avatar-overlay {
-    opacity: 1;
-}
-.profile-avatar:hover {
-    transform: scale(1.05);
-}
-.profile-form {
-    padding: 30px;
-}
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-bottom: 25px;
-}
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
-.profile-form label {
-    display: flex;
-    align-items: center;
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
     margin-bottom: 8px;
-    padding-left: 5px;
-    font-weight: 500;
-    color: #2f3542;
-    font-size: 16px;
+    text-align: center;
+    color: #ff8dbd; 
 }
-.profile-form label i {
-    margin-right: 8px;
-    color: #2f3542;
+.page-subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 24px;
+    font-size: 1.5rem;
 }
-.profile-form input,
-.profile-form textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #dddddd;
+.about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+.about-text p {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+.about-highlight {
+    margin-top: 20px;
+    padding: 12px 14px;
+    background: #ffe6f1; 
+    border-left: 4px solid #ff8dbd;
     border-radius: 8px;
-    font-size: 15px;
-    transition: all 0.3s;
-    background-color: #f9f9f9;
+    font-size: 1.25rem;
 }
-.profile-form input:focus,
-.profile-form textarea:focus {
-    border-color: #333333;
-    box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.2);
-    outline: none;
-    background-color: white;
+.info-box {
+    background: #fdf2f7; 
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border: 1px solid #ffbcd9;
 }
-.profile-form textarea {
-    min-height: 100px;
-    resize: vertical;
+.info-box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #ff8dbd;
 }
-.form-actions {
+.info-box ul {
+    list-style: none;
+}
+.info-box li {
+    margin-bottom: 6px;
+}
+.info-label {
+    font-weight: 600;
+    color: #ff8dbd;
+}
+.section {
+    margin-top: 28px;
+}
+.section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #ff8dbd;
+}
+.section p {
+    font-size: 1rem;
+}
+.values-list {
+    list-style: disc;
+    margin-left: 18px;
+    margin-top: 6px;
+    font-size: 1rem;
+}
+.cta-box {
+    margin-top: 24px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ffbcd9, #d9f1f3); 
     display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-.btn-toggle {
-    display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-    background: #f1f1f1;             
-    color: #000000;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 15px;
+    justify-content: space-between;
+    gap: 10px;
+}
+.cta-box span {
+    font-size: 1.5rem;
     font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    color: #333;
 }
-.btn-toggle:hover {
-    transform: translateY(-2px);
+.cta-box a {
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ff8dbd;
+    border: 1px solid #ffc4de;
+    transition: 0.15s ease;
 }
-.btn-toggle:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-}
-.btn-toggle i {
-    font-size: 16px;
-}
-.btn-toggle.saving-mode {
-    background: #ff8aa7;   
-    color: #ffffff;
-}
-.btn-toggle.saving-mode:hover {
-    transform: translateY(-2px);
-}
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.cta-box a:hover {
+    background: #ffe6f1;
 }
 @media (max-width: 768px) {
-    .form-grid {
+    .about-grid {
         grid-template-columns: 1fr;
     }
 }

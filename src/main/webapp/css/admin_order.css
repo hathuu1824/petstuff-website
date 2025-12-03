@@ -498,6 +498,22 @@ tbody td {
 .btn-confirm:hover{ 
     filter:brightness(0.95); 
 }
+.btn-cancel {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+.btn-cancel i{ 
+    margin-right:4px; 
+}
+.btn-cancel:hover {
+    background: #c82333;
+}
+
 
 /* modal */
 

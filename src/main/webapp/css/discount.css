@@ -602,6 +602,7 @@ nav.container {
     overflow: hidden;
 }
 .deal-card{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     background-color: #ffffff;
     border-right: 1px solid #eee;  
     border-bottom: 1px solid #eee;
@@ -628,13 +629,13 @@ nav.container {
     height: 100%;
 }
 .deal-tag {
-    color: #e60000;
+    color: #3dade3;
     font-size: 18px;
     font-weight: 700;
     margin-top: 15px;
 }
 .deal-note {
-    color: #555;
+    color: #000000;
     font-size: 15px;
     margin-top: 10px;
 }

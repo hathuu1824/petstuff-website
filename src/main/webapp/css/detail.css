@@ -383,6 +383,13 @@ img {
     overflow: hidden;
     cursor: pointer;
     transition: transform .15s ease, box-shadow .15s ease;
+    aspect-ratio: 1 / 1;       
+    display: flex;
+}
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;         
 }
 .thumbnail:hover {
     transform: translateY(-2px);

@@ -437,6 +437,10 @@ main{
     background: #fff3cd; 
     color: #856404; 
 }
+.badge-cho-dong-goi{
+    background: #f5d5c5; 
+    color: #d93025; 
+}
 .badge-dang-giao { 
     background: #cce5ff; 
     color: #004085; 
@@ -496,6 +500,30 @@ main{
     filter: brightness(1.05);
     transform: translateY(-1px);
     box-shadow: 0 8px 18px rgba(255, 107, 138, .55);
+}
+.orders-pagination {
+    margin: 24px auto 8px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+.page-btn {
+    min-width: 32px;
+    padding: 6px 10px;
+    margin-top: 20px;
+    border-radius: 999px;
+    border: 1px solid #ff8fb8;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+.page-btn.active {
+    background: #ff8fb8;
+    color: #fff;
+}
+.page-btn:disabled {
+    opacity: .5;
+    cursor: default;
 }
 
 /* modal */

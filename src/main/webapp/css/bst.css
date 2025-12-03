@@ -710,15 +710,6 @@ html {
     text-decoration: line-through;
     margin-left: 4px;
 }
-.price-badge {
-    background: #ff4d6d;
-    color: white;
-    font-size: 14px;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: 600;
-    display: inline-block;
-}
 .promo-code {
     font-size: 14px;
     color: #ff4d6d;

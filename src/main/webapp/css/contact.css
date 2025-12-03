@@ -346,11 +346,11 @@ nav.container {
 
 .main{
     flex: 1;
-    background: #f9fafb;
+    background: #f6f7f9;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .contact-container {
-    width: min(1200px, 92%);
+    width: min(1350px, 92%);
     margin: calc(var(--header-h) + var(--subbar-h)) auto 50px;
     padding: 60px 80px;
     display: flex;
