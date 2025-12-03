@@ -501,6 +501,22 @@ main{
     transform: translateY(-1px);
     box-shadow: 0 8px 18px rgba(255, 107, 138, .55);
 }
+.return-btn {
+    background: #3dade3;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 999px;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: 0.2s;
+    box-shadow: 0 6px 16px rgba(255, 107, 138, .45);
+}
+.return-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(255, 107, 138, .55);
+}
 .orders-pagination {
     margin: 24px auto 8px;
     display: flex;
